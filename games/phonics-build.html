@@ -34,6 +34,15 @@
       background: linear-gradient(180deg, #eef8ff, #fff);
     }
 
+    .word-spelling {
+      color: var(--blue-d);
+      font-size: clamp(1.8rem, 6vw, 2.6rem);
+      font-weight: 800;
+      letter-spacing: .18em;
+      line-height: 1.1;
+      text-align: center;
+    }
+
     .word-emoji {
       font-size: clamp(4rem, 14vw, 6rem);
       line-height: 1;
@@ -144,8 +153,18 @@
       font-family: inherit;
       font-size: clamp(1.8rem, 6vw, 2.6rem);
       font-weight: 800;
-      cursor: pointer;
+      cursor: grab;
       transition: transform .12s ease, filter .12s ease;
+      touch-action: none;
+    }
+    .letter-tile.dragging {
+      opacity: .45;
+      cursor: grabbing;
+    }
+    .letter-slot.drop-target {
+      border-color: var(--yellow);
+      background: #fff8d6;
+      transform: scale(1.04);
     }
 
     .letter-tile:nth-child(3n+2) {
@@ -246,7 +265,7 @@
 
     <header class="center" style="margin-top:16px;">
       <h1 class="big-title" style="font-size:2.4rem;">🧩 Build the Word</h1>
-      <p class="subtitle">Tap the letters to build the word!</p>
+      <p class="subtitle">Drag or tap the letters to build the word!</p>
     </header>
 
     <div class="game-toolbar">
@@ -256,6 +275,7 @@
 
     <section class="phonics-board" aria-label="Build the word game">
       <div class="word-prompt">
+        <p class="word-spelling" id="word-spelling" aria-live="polite">MANGO</p>
         <div class="word-picture" id="word-picture" aria-hidden="true"></div>
         <p class="word-hint" id="word-hint">Build this word</p>
         <div class="prompt-actions">
@@ -283,6 +303,7 @@
   </div>
 
   <script src="../js/main.js"></script>
+  <script src="../js/letter-phonemes.js"></script>
   <script>
     const WORDS = [
       { word: 'MANGO', picture: '<span class="word-emoji">🥭</span>', hint: 'Build the word for this picture' },
@@ -290,6 +311,7 @@
       { word: 'MILK',  picture: '<span class="word-emoji">🥛</span>', hint: 'Build the word for this picture' }
     ];
 
+    const wordSpelling = document.getElementById('word-spelling');
     const wordPicture = document.getElementById('word-picture');
     const wordHint = document.getElementById('word-hint');
     const slotsRow = document.getElementById('slots-row');
@@ -307,6 +329,7 @@
     let locked = false;
     let placed = [];
     let usVoice = null;
+    let dragTile = null;
 
     const sounds = (() => {
       let ctx = null;
@@ -405,6 +428,19 @@
         slot.dataset.index = String(i);
         slot.setAttribute('aria-label', `Letter space ${i + 1}`);
         slot.addEventListener('click', () => removeFromSlot(i));
+        slot.addEventListener('dragover', event => {
+          if (locked || placed[i]) return;
+          event.preventDefault();
+          slot.classList.add('drop-target');
+        });
+        slot.addEventListener('dragleave', () => slot.classList.remove('drop-target'));
+        slot.addEventListener('drop', event => {
+          event.preventDefault();
+          slot.classList.remove('drop-target');
+          if (locked || placed[i] || !dragTile) return;
+          placeLetter(dragTile, i);
+          dragTile = null;
+        });
         slotsRow.appendChild(slot);
       }
     }
@@ -423,8 +459,24 @@
         tile.textContent = item.letter;
         tile.dataset.id = item.id;
         tile.dataset.letter = item.letter;
+        tile.draggable = true;
         tile.setAttribute('aria-label', `Letter ${item.letter}`);
         tile.addEventListener('click', () => placeLetter(tile));
+        tile.addEventListener('dragstart', event => {
+          if (locked || tile.classList.contains('used')) {
+            event.preventDefault();
+            return;
+          }
+          dragTile = tile;
+          tile.classList.add('dragging');
+          event.dataTransfer.setData('text/plain', item.letter);
+          event.dataTransfer.effectAllowed = 'move';
+        });
+        tile.addEventListener('dragend', () => {
+          tile.classList.remove('dragging');
+          dragTile = null;
+          slotsRow.querySelectorAll('.drop-target').forEach(slot => slot.classList.remove('drop-target'));
+        });
         lettersBank.appendChild(tile);
       });
     }
@@ -450,22 +502,27 @@
       }
     }
 
-    function placeLetter(tile) {
+    function placeLetter(tile, targetIndex = null) {
       if (locked || tile.classList.contains('used')) return;
-      const index = nextEmptyIndex();
-      if (index === -1) return;
+      const index = targetIndex == null ? nextEmptyIndex() : targetIndex;
+      if (index === -1 || placed[index]) return;
 
+      const letter = tile.dataset.letter;
       placed[index] = {
-        letter: tile.dataset.letter,
+        letter,
         tileId: tile.dataset.id
       };
       tile.classList.add('used');
       tile.disabled = true;
+      tile.draggable = false;
       updateSlot(index);
       sounds.place();
+      playLetterPhoneme(letter);
       statusText.textContent = '';
 
-      if (placed.every(Boolean)) checkWord();
+      if (placed.every(Boolean)) {
+        setTimeout(() => checkWord(), 450);
+      }
     }
 
     function removeFromSlot(index) {
@@ -480,6 +537,7 @@
       if (tile) {
         tile.classList.remove('used');
         tile.disabled = false;
+        tile.draggable = true;
       }
       statusText.textContent = '';
     }
@@ -493,6 +551,7 @@
       lettersBank.querySelectorAll('.letter-tile').forEach(tile => {
         tile.classList.remove('used');
         tile.disabled = false;
+        tile.draggable = true;
       });
       slotsRow.classList.remove('wrong');
       statusText.textContent = '';
@@ -518,8 +577,8 @@
       statusText.textContent = 'Almost! Try again.';
       setTimeout(() => {
         slotsRow.classList.remove('wrong');
-        clearWord();
         locked = false;
+        clearWord();
       }, 650);
     }
 
@@ -528,6 +587,7 @@
       successModal.hidden = true;
       statusText.textContent = '';
       pickWord();
+      wordSpelling.textContent = current.word.split('').join(' ');
       wordPicture.innerHTML = current.picture;
       wordHint.textContent = current.hint;
       renderSlots();

@@ -82,7 +82,8 @@ function setupSiteSounds() {
   updateSoundButton();
 
   document.querySelectorAll('button, a, [role="button"]').forEach((element) => {
-    if (element !== soundButton) element.addEventListener('click', playClickSound);
+    if (element === soundButton || element.hasAttribute('data-no-click-sound')) return;
+    element.addEventListener('click', playClickSound);
   });
 
   const unlockSound = () => {

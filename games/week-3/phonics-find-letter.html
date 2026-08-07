@@ -14,13 +14,40 @@
       margin-top: 18px;
     }
 
-    .find-instruction {
+    .find-instruction-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
       margin-top: 22px;
+    }
+
+    .find-instruction {
+      margin: 0;
       text-align: center;
       color: var(--text);
       font-size: clamp(1.4rem, 4.5vw, 2rem);
       font-weight: 800;
     }
+
+    .target-listen {
+      display: grid;
+      place-items: center;
+      width: 52px;
+      height: 52px;
+      border: none;
+      border-radius: 50%;
+      background: linear-gradient(180deg, var(--blue), var(--blue-d));
+      box-shadow: 0 5px 0 #1b7fae;
+      color: var(--white);
+      font-size: 1.5rem;
+      cursor: pointer;
+      transition: transform .12s ease;
+    }
+    .target-listen:hover { transform: scale(1.08); }
+    .target-listen:active { transform: translateY(2px); }
+    .target-listen:focus-visible { outline: 4px solid var(--yellow); outline-offset: 2px; }
 
     .find-board {
       max-width: 560px;
@@ -155,7 +182,11 @@
       <button class="pill-btn orange" id="new-board" type="button">🔄 New Board</button>
     </div>
 
-    <h2 class="find-instruction" id="find-instruction">Circle the letters: N, n</h2>
+    <div class="find-instruction-row">
+      <h2 class="find-instruction" id="find-instruction">Circle the letters: N, n</h2>
+      <button class="target-listen" id="target-listen" type="button" data-no-click-sound
+              aria-label="Hear the sound of letter N">🔊</button>
+    </div>
 
     <section class="find-board" aria-label="Letter finding board">
       <div class="letter-grid" id="letter-grid"></div>
@@ -174,6 +205,7 @@
   </div>
 
   <script src="../../js/main.js"></script>
+  <script src="../../js/letter-phonemes.js"></script>
   <script>
     const TARGET_UPPER = 'N';
     const TARGET_LOWER = 'n';
@@ -186,6 +218,7 @@
     const successModal = document.getElementById('success-modal');
     const continueBtn = document.getElementById('continue-btn');
     const newBoardBtn = document.getElementById('new-board');
+    const targetListen = document.getElementById('target-listen');
 
     let found = 0;
     let locked = false;
@@ -212,15 +245,6 @@
         osc.stop(start + duration + .02);
       }
       return {
-        correct() {
-          const now = audio().currentTime;
-          tone(620, now, .1, 'sine', .12);
-          tone(820, now + .07, .12, 'sine', .12);
-        },
-        wrong() {
-          const now = audio().currentTime;
-          tone(220, now, .12, 'sawtooth', .06);
-        },
         win() {
           const now = audio().currentTime;
           tone(523, now, .12, 'sine', .15);
@@ -273,6 +297,7 @@
         btn.textContent = letter;
         btn.dataset.letter = letter;
         btn.dataset.index = String(index);
+        btn.setAttribute('data-no-click-sound', '');
         btn.setAttribute('aria-label', `Letter ${letter}`);
         btn.addEventListener('click', () => chooseLetter(btn));
         letterGrid.appendChild(btn);
@@ -283,8 +308,9 @@
       if (locked || button.classList.contains('circled')) return;
 
       const letter = button.dataset.letter;
+      playLetterPhoneme(letter);
+
       if (!isTarget(letter)) {
-        sounds.wrong();
         button.classList.remove('wrong');
         void button.offsetWidth;
         button.classList.add('wrong');
@@ -295,17 +321,17 @@
       button.classList.add('circled');
       button.disabled = true;
       found += 1;
-      sounds.correct();
       statusText.textContent = `Found ${found} / ${TARGET_COUNT}`;
 
       if (found >= TARGET_COUNT) {
         locked = true;
-        sounds.win();
         successModal.hidden = false;
         continueBtn.focus();
+        setTimeout(() => sounds.win(), 350);
       }
     }
 
+    targetListen.addEventListener('click', () => playLetterPhoneme(TARGET_UPPER));
     newBoardBtn.addEventListener('click', startRound);
     continueBtn.addEventListener('click', startRound);
     startRound();

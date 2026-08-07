@@ -67,29 +67,24 @@
     }
   }
 
+  let clipStarted = false;
+
   function playDressupClip() {
-    if (!overlay) return;
+    if (!overlay || clipStarted) return;
     const wrap = overlay.querySelector('.dressup-character-wrap');
     const clip = clipEl();
     if (!wrap || !clip) return;
 
+    clipStarted = true;
     clearCompleteTimer();
-    stopVoice();
     wrap.classList.add('is-playing-clip');
     if (clip.getAttribute('src') !== CLIP_SRC) clip.src = CLIP_SRC;
     clip.currentTime = 0;
     clip.play().catch(() => {
+      clipStarted = false;
       wrap.classList.remove('is-playing-clip');
       if (typeof showToast === 'function') showToast('🎬 Dress-up video not found yet!');
     });
-  }
-
-  function scheduleDressupClip() {
-    clearCompleteTimer();
-    completeTimer = setTimeout(() => {
-      completeTimer = null;
-      playDressupClip();
-    }, 1000);
   }
 
   function playTennisVideo() {
@@ -134,6 +129,7 @@
   }
 
   function stopVoice() {
+    clearCompleteTimer();
     if (window.speechSynthesis) window.speechSynthesis.cancel();
   }
 
@@ -147,7 +143,73 @@
     utter.pitch = 1.12;
     utter.volume = 1;
     if (femaleVoice) utter.voice = femaleVoice;
-    window.speechSynthesis.speak(utter);
+    // Chrome needs a brief pause after cancel() or speech can fail silently
+    window.setTimeout(() => window.speechSynthesis.speak(utter), 60);
+  }
+
+  /** Speak the success line, then play the short dress-up clip when speech is done. */
+  function speakSuccessThenPlayClip() {
+    clearCompleteTimer();
+    clipStarted = false;
+
+    if (!window.speechSynthesis) {
+      playDressupClip();
+      return;
+    }
+
+    window.speechSynthesis.cancel();
+    if (!femaleVoice) femaleVoice = pickFemaleVoice();
+
+    window.setTimeout(() => {
+      const utter = new SpeechSynthesisUtterance(SUCCESS_LINE);
+      utter.rate = 0.92;
+      utter.pitch = 1.12;
+      utter.volume = 1;
+      if (femaleVoice) utter.voice = femaleVoice;
+
+      let finished = false;
+      const finish = () => {
+        if (finished || clipStarted) return;
+        finished = true;
+        clearCompleteTimer();
+        playDressupClip();
+      };
+
+      utter.onend = finish;
+      // Do NOT treat "interrupted"/"canceled" as done — Chrome fires those after cancel()
+      utter.onerror = (event) => {
+        const err = event && event.error;
+        if (err === 'interrupted' || err === 'canceled') return;
+        finish();
+      };
+
+      window.speechSynthesis.speak(utter);
+
+      // Reliable fallback: wait until speech has started, then until it stops
+      const startedAt = Date.now();
+      let heardSpeech = false;
+      const poll = () => {
+        if (finished || clipStarted) return;
+        const synth = window.speechSynthesis;
+        if (synth.speaking || synth.pending) heardSpeech = true;
+        const waited = Date.now() - startedAt;
+        if (heardSpeech && !synth.speaking && !synth.pending) {
+          finish();
+          return;
+        }
+        // Speech never started — still advance so the clip is not stuck
+        if (!heardSpeech && waited > 2800) {
+          finish();
+          return;
+        }
+        if (waited > 10000) {
+          finish();
+          return;
+        }
+        completeTimer = window.setTimeout(poll, 120);
+      };
+      completeTimer = window.setTimeout(poll, 200);
+    }, 80);
   }
 
   if (window.speechSynthesis) {
@@ -192,9 +254,7 @@
     success.hidden = false;
 
     if (typeof playClickSound === 'function') playClickSound();
-    speak(SUCCESS_LINE);
-    // Hold the finished look for 1s, then auto-play the short dress-up clip
-    scheduleDressupClip();
+    speakSuccessThenPlayClip();
   }
 
   function showStep() {
@@ -228,6 +288,7 @@
 
   function resetBoard() {
     stepIndex = 0;
+    clipStarted = false;
     stopClip();
     overlay.querySelector('.dressup-dropzone').classList.remove('is-target');
     overlay.querySelector('.dressup-stage-column').classList.remove('is-complete');
