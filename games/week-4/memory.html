@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Memory Game 🃏 — Athlete People</title>
+  <link rel="stylesheet" href="../../css/styles.css">
+  <style>
+    .board {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      max-width: 540px;
+      margin: 24px auto 0;
+    }
+
+    .mem-card {
+      aspect-ratio: 1;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      background: linear-gradient(180deg, var(--purple), var(--purple-d));
+      box-shadow: 0 5px 0 #6a41c0;
+      overflow: hidden;
+      padding: 9px;
+      position: relative;
+      transition: transform .2s ease, background .2s ease, box-shadow .2s ease;
+    }
+    .mem-card::after {
+      content: '⚽';
+      color: rgba(255,255,255,.85);
+      font-size: clamp(1.5rem, 5vw, 2.3rem);
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+    }
+    .card-picture {
+      width: 100%;
+      height: 100%;
+      display: grid;
+      place-items: center;
+      border-radius: 14px;
+      background: var(--white);
+      opacity: 0;
+      transform: scale(.72);
+      transition: opacity .18s ease, transform .18s ease;
+    }
+    .card-picture img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      border-radius: 12px;
+    }
+    .card-picture.emoji { font-size: clamp(3rem, 11vw, 5rem); }
+    .mem-card.flipped, .mem-card.matched, .mem-card.previewing {
+      background: var(--white);
+      transform: scale(1.02);
+      box-shadow: 0 5px 0 rgba(74,59,82,.15);
+    }
+    .mem-card.flipped::after, .mem-card.matched::after, .mem-card.previewing::after { content: ''; }
+    .mem-card.flipped .card-picture,
+    .mem-card.matched .card-picture,
+    .mem-card.previewing .card-picture {
+      opacity: 1;
+      transform: scale(1);
+    }
+    .mem-card.matched { background: #eaffe0; outline: 4px solid var(--green); cursor: default; }
+    .mem-card:focus-visible { outline: 5px solid var(--yellow); outline-offset: 3px; }
+
+    .status-row {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 20px;
+      margin-top: 20px;
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: var(--purple-d);
+    }
+    .game-actions {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-top: 18px;
+    }
+    .pill-btn:disabled {
+      cursor: not-allowed;
+      filter: grayscale(.35);
+      opacity: .6;
+      transform: none;
+    }
+    .celebration {
+      position: fixed;
+      inset: 0;
+      z-index: 200;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      background: rgba(75, 48, 105, .32);
+      overflow: hidden;
+    }
+    .celebration[hidden] { display: none; }
+    .celebration-card {
+      position: relative;
+      z-index: 2;
+      max-width: 560px;
+      padding: 34px 38px;
+      border: 7px solid var(--yellow);
+      border-radius: 34px;
+      background: var(--white);
+      box-shadow: 0 14px 0 rgba(106, 65, 192, .3), 0 24px 60px rgba(74, 59, 82, .28);
+      text-align: center;
+      animation: celebration-pop .55s cubic-bezier(.34, 1.56, .64, 1);
+    }
+    .celebration-emoji { font-size: clamp(3.5rem, 12vw, 6rem); line-height: 1; }
+    .celebration-title {
+      margin: 12px 0 20px;
+      color: var(--pink-d);
+      font-size: clamp(1.8rem, 6vw, 3rem);
+      line-height: 1.15;
+    }
+    .confetti-piece {
+      position: absolute;
+      top: -12vh;
+      width: 12px;
+      height: 22px;
+      border-radius: 4px;
+      animation: confetti-fall var(--fall-time) linear var(--delay) infinite;
+    }
+    @keyframes celebration-pop {
+      from { opacity: 0; transform: scale(.45) rotate(-6deg); }
+      to { opacity: 1; transform: scale(1) rotate(0); }
+    }
+    @keyframes confetti-fall {
+      to { transform: translate3d(var(--drift), 120vh, 0) rotate(900deg); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .celebration-card { animation: none; }
+      .confetti-piece { animation: none; top: var(--rest-top); }
+    }
+    @media (max-width: 480px) {
+      .board { gap: 9px; }
+      .mem-card { border-radius: 15px; padding: 6px; }
+      .card-picture { border-radius: 10px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="floaties" aria-hidden="true">
+    <span style="top:10%; left:4%;">🃏</span>
+    <span style="top:75%; left:93%;">⚽</span>
+  </div>
+
+  <div class="page">
+    <a class="back-link" href="../index.html?week=4">⬅️ All Games</a>
+
+    <header class="center" style="margin-top:16px;">
+      <h1 class="big-title" style="font-size:2.4rem;">🃏 Memory Game</h1>
+      <p class="subtitle">Look carefully, then find all 6 matching pairs!</p>
+    </header>
+
+    <div class="game-actions">
+      <button class="pill-btn blue" id="preview">👀 Look for 3 Seconds</button>
+      <button class="pill-btn orange" id="restart">🔄 New Arrangement</button>
+    </div>
+
+    <div class="board" id="board"></div>
+
+    <div class="status-row">
+      <span>Moves: <span id="moves">0</span></span>
+      <span>Pairs: <span id="pairs">0</span> / 6</span>
+    </div>
+  </div>
+
+  <div class="celebration" id="celebration" role="dialog" aria-modal="true"
+       aria-labelledby="celebration-title" hidden>
+    <div id="confetti" aria-hidden="true"></div>
+    <div class="celebration-card">
+      <div class="celebration-emoji" aria-hidden="true">🎉🏆🎉</div>
+      <h2 class="celebration-title" id="celebration-title">Yay! You found all the pairs!</h2>
+      <button class="pill-btn green" id="celebration-again">🔄 Play Again</button>
+    </div>
+  </div>
+
+  <script src="../../js/main.js"></script>
+  <script>
+    const PICTURES = [
+      { id: 'wash',   label: 'washing a cat',   src: '../../assets/images/week-1/memory/wash.png' },
+      { id: 'stroke', label: 'stroking a cat',  src: '../../assets/images/week-1/memory/stroke.png' },
+      { id: 'dry',    label: 'hair dryer',       src: '../../assets/images/week-1/memory/dry.png' },
+      { id: 'brush',  label: 'brush',            src: '../../assets/images/week-1/memory/brush.png' },
+      { id: 'cut',    label: 'scissors',         src: '../../assets/images/week-1/memory/cut.png' },
+      { id: 'kangaroo', label: 'kangaroo', src: '../../assets/images/week-1/memory/kangaroo.png' },
+      { id: 'key',      label: 'key',      src: '../../assets/images/week-1/memory/key.png' },
+      { id: 'kettle',   label: 'kettle',   src: '../../assets/images/week-1/memory/kettle.png' }
+    ];
+
+    const board = document.getElementById('board');
+    const movesEl = document.getElementById('moves');
+    const pairsEl = document.getElementById('pairs');
+    const previewButton = document.getElementById('preview');
+    const celebration = document.getElementById('celebration');
+    const celebrationAgain = document.getElementById('celebration-again');
+    const confetti = document.getElementById('confetti');
+    const sounds = (() => {
+      let ctx = null;
+
+      function getContext() {
+        if (!ctx) ctx = new (window.AudioContext || window.webkitAudioContext)();
+        if (ctx.state === 'suspended') ctx.resume();
+        return ctx;
+      }
+
+      function tone(frequency, start, duration, type = 'sine', volume = 0.18) {
+        const audio = getContext();
+        const osc = audio.createOscillator();
+        const gain = audio.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(frequency, start);
+        gain.gain.setValueAtTime(0.0001, start);
+        gain.gain.exponentialRampToValueAtTime(volume, start + 0.012);
+        gain.gain.exponentialRampToValueAtTime(0.0001, start + duration);
+        osc.connect(gain);
+        gain.connect(audio.destination);
+        osc.start(start);
+        osc.stop(start + duration + 0.02);
+      }
+
+      return {
+        click() {
+          const now = getContext().currentTime;
+          tone(620, now, 0.07, 'triangle', 0.14);
+        },
+        match() {
+          const now = getContext().currentTime;
+          tone(523.25, now, 0.12, 'sine', 0.16);
+          tone(659.25, now + 0.08, 0.12, 'sine', 0.16);
+          tone(783.99, now + 0.16, 0.18, 'sine', 0.18);
+        },
+        wrong() {
+          const now = getContext().currentTime;
+          tone(220, now, 0.14, 'sawtooth', 0.08);
+          tone(180, now + 0.1, 0.18, 'sawtooth', 0.07);
+        }
+      };
+    })();
+
+    let first = null;
+    let lock = false;
+    let moves = 0;
+    let matchedCount = 0;
+    let gameNumber = 0;
+    let activePictures = [];
+    let lastDeckSignature = '';
+    let previewInterval = null;
+    let previewTimeout = null;
+
+    let usVoice = null;
+
+    function pickVoice() {
+      const voices = speechSynthesis.getVoices();
+      usVoice = voices.find(v => v.lang === 'en-US' && /google|samantha|zira|jenny|aria|english/i.test(v.name))
+        || voices.find(v => v.lang.startsWith('en-US'))
+        || voices.find(v => v.lang.startsWith('en'))
+        || null;
+    }
+
+    if ('speechSynthesis' in window) {
+      pickVoice();
+      speechSynthesis.addEventListener('voiceschanged', pickVoice);
+    }
+
+    function speak(text) {
+      if (!('speechSynthesis' in window) || !text) return;
+      speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = .92;
+      if (usVoice) utterance.voice = usVoice;
+      speechSynthesis.speak(utterance);
+    }
+
+    function shuffle(items) {
+      const copy = [...items];
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
+    }
+
+    function showCelebration() {
+      const colors = ['#ff6fa5', '#ffd93d', '#4fc3f7', '#b388ff', '#7ed957', '#ffa62b'];
+      confetti.innerHTML = '';
+      for (let i = 0; i < 70; i++) {
+        const piece = document.createElement('i');
+        piece.className = 'confetti-piece';
+        piece.style.left = `${Math.random() * 100}%`;
+        piece.style.background = colors[i % colors.length];
+        piece.style.setProperty('--delay', `${Math.random() * -3}s`);
+        piece.style.setProperty('--fall-time', `${2.4 + Math.random() * 2}s`);
+        piece.style.setProperty('--drift', `${-90 + Math.random() * 180}px`);
+        piece.style.setProperty('--rest-top', `${Math.random() * 100}%`);
+        confetti.appendChild(piece);
+      }
+      celebration.hidden = false;
+      celebrationAgain.focus();
+    }
+
+    function startGame() {
+      gameNumber++;
+      clearInterval(previewInterval);
+      clearTimeout(previewTimeout);
+      celebration.hidden = true;
+      confetti.innerHTML = '';
+      activePictures = shuffle(PICTURES).slice(0, 6);
+      let deck;
+      let deckSignature;
+      do {
+        deck = shuffle([...activePictures, ...activePictures]);
+        deckSignature = deck.map(picture => picture.id).join(',');
+      } while (deckSignature === lastDeckSignature);
+      lastDeckSignature = deckSignature;
+      board.innerHTML = '';
+      first = null;
+      lock = false;
+      moves = 0;
+      matchedCount = 0;
+      movesEl.textContent = '0';
+      pairsEl.textContent = '0';
+      previewButton.disabled = false;
+      previewButton.textContent = '👀 Look for 3 Seconds';
+
+      deck.forEach((picture) => {
+        const card = document.createElement('button');
+        card.className = 'mem-card';
+        card.dataset.picture = picture.id;
+        card.dataset.label = picture.label;
+        card.type = 'button';
+        card.setAttribute('aria-label', 'Hidden memory card');
+
+        const pictureEl = document.createElement('span');
+        pictureEl.className = `card-picture${picture.emoji ? ' emoji' : ''}`;
+        if (picture.src) {
+          const image = document.createElement('img');
+          image.src = picture.src;
+          image.alt = picture.label;
+          image.draggable = false;
+          pictureEl.appendChild(image);
+        } else {
+          pictureEl.textContent = picture.emoji;
+          pictureEl.setAttribute('role', 'img');
+          pictureEl.setAttribute('aria-label', picture.label);
+        }
+        card.appendChild(pictureEl);
+        card.addEventListener('click', () => flip(card));
+        board.appendChild(card);
+      });
+    }
+
+    function flip(card) {
+      if (lock || card.classList.contains('flipped') || card.classList.contains('matched')) return;
+
+      card.classList.add('flipped');
+      card.setAttribute('aria-label', `Revealed ${card.dataset.label}`);
+      sounds.click();
+      speak(card.dataset.label);
+
+      if (!first) { first = card; return; }
+
+      moves++;
+      movesEl.textContent = moves;
+
+      if (first.dataset.picture === card.dataset.picture) {
+        sounds.match();
+        first.classList.add('matched');
+        card.classList.add('matched');
+        first = null;
+        matchedCount++;
+        pairsEl.textContent = matchedCount;
+        if (matchedCount === activePictures.length) {
+          setTimeout(showCelebration, 350);
+        }
+      } else {
+        sounds.wrong();
+        lock = true;
+        const a = first, b = card;
+        const currentGame = gameNumber;
+        first = null;
+        setTimeout(() => {
+          if (currentGame !== gameNumber) return;
+          a.classList.remove('flipped');
+          b.classList.remove('flipped');
+          a.setAttribute('aria-label', 'Hidden memory card');
+          b.setAttribute('aria-label', 'Hidden memory card');
+          lock = false;
+        }, 900);
+      }
+    }
+
+    function previewCards() {
+      if (lock || previewButton.disabled) return;
+      const currentGame = gameNumber;
+      lock = true;
+      previewButton.disabled = true;
+      board.querySelectorAll('.mem-card:not(.matched)').forEach(card => {
+        card.classList.add('previewing');
+        card.setAttribute('aria-label', `Previewing ${card.dataset.label}`);
+      });
+
+      let seconds = 3;
+      previewButton.textContent = `👀 Look: ${seconds}`;
+      previewInterval = setInterval(() => {
+        seconds--;
+        if (seconds > 0) previewButton.textContent = `👀 Look: ${seconds}`;
+      }, 1000);
+
+      previewTimeout = setTimeout(() => {
+        clearInterval(previewInterval);
+        if (currentGame !== gameNumber) return;
+        board.querySelectorAll('.previewing').forEach(card => {
+          card.classList.remove('previewing');
+          if (!card.classList.contains('flipped')) card.setAttribute('aria-label', 'Hidden memory card');
+        });
+        previewButton.disabled = false;
+        previewButton.textContent = '👀 Look for 3 Seconds';
+        lock = false;
+      }, 3000);
+    }
+
+    previewButton.addEventListener('click', previewCards);
+    document.getElementById('restart').addEventListener('click', startGame);
+    celebrationAgain.addEventListener('click', startGame);
+    startGame();
+  </script>
+</body>
+</html>

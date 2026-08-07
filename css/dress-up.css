@@ -1,0 +1,337 @@
+/* Tennis dress-up — sequential, black stage */
+.dressup-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: grid;
+  place-items: center;
+  padding: 14px;
+  background: rgba(12, 20, 36, .62);
+  backdrop-filter: blur(4px);
+}
+
+.dressup-overlay[hidden] { display: none; }
+
+.dressup-modal {
+  width: min(980px, 96vw);
+  max-height: min(94svh, 960px);
+  overflow: hidden;
+  border-radius: 32px;
+  background: linear-gradient(180deg, #e8f7ff, #fffef8 60%, #e9fff4);
+  box-shadow: 0 18px 40px rgba(20, 40, 70, .28);
+  padding: 14px 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.dressup-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.dressup-header h2 {
+  font-size: clamp(1.3rem, 3.4vw, 1.85rem);
+  color: var(--blue-d);
+  font-weight: 800;
+}
+
+.dressup-stage-column {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(260px, 0.95fr);
+  gap: 14px;
+  align-items: stretch;
+}
+
+.dressup-character-wrap {
+  position: relative;
+  width: 100%;
+  min-height: min(62svh, 520px);
+  height: min(62svh, 520px);
+  border-radius: 28px;
+  background:
+    radial-gradient(circle at 18% 18%, rgba(255, 236, 120, .95) 0%, rgba(255, 236, 120, 0) 42%),
+    radial-gradient(circle at 88% 22%, rgba(255, 140, 100, .55) 0%, rgba(255, 140, 100, 0) 38%),
+    linear-gradient(180deg, #6ecbff 0%, #a8e8ff 38%, #7dde7a 72%, #49c45d 100%);
+  box-shadow:
+    0 0 0 5px rgba(255, 255, 255, .8),
+    0 14px 28px rgba(20, 40, 70, .22);
+  overflow: hidden;
+}
+
+.dressup-character-wrap::before {
+  content: '';
+  position: absolute;
+  left: 8%;
+  right: 8%;
+  bottom: 7%;
+  height: 14%;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, .22);
+  filter: blur(1px);
+  z-index: 0;
+  pointer-events: none;
+}
+
+.dressup-character-wrap::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 70% 78%, rgba(255, 255, 255, .18) 0 8%, transparent 9%),
+    radial-gradient(circle at 30% 70%, rgba(255, 255, 255, .14) 0 6%, transparent 7%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.dressup-dropzone {
+  position: absolute;
+  inset: 4%;
+  border-radius: 22px;
+  border: 3px dashed transparent;
+  transition: border-color .15s ease, background .15s ease;
+  z-index: 2;
+}
+
+.dressup-dropzone.is-target {
+  border-color: rgba(255, 217, 61, .95);
+  background: rgba(255, 255, 255, .14);
+}
+
+.dressup-character {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center center;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
+  z-index: 1;
+  background: transparent;
+  image-rendering: auto;
+}
+
+.dressup-tray {
+  width: 100%;
+  height: 100%;
+  min-height: min(62svh, 520px);
+  border-radius: 26px;
+  background: rgba(255, 255, 255, .88);
+  box-shadow: 0 8px 0 rgba(30, 58, 95, .08);
+  padding: 14px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 8px;
+}
+
+.dressup-tray[hidden],
+.dressup-stage-column.is-complete .dressup-tray {
+  display: none !important;
+}
+
+.dressup-stage-column.is-complete {
+  grid-template-columns: 1fr;
+  justify-items: center;
+  gap: 12px;
+}
+
+/* Keep stage size stable on completion so the character does not jump */
+.dressup-stage-column.is-complete .dressup-character-wrap {
+  width: 100%;
+  min-height: min(62svh, 520px);
+  height: min(62svh, 520px);
+}
+
+.dressup-clip {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center center;
+  background: #0f2744;
+  border-radius: inherit;
+  z-index: 3;
+  display: none;
+}
+
+.dressup-character-wrap.is-playing-clip .dressup-character,
+.dressup-character-wrap.is-playing-clip .dressup-dropzone {
+  visibility: hidden;
+}
+
+.dressup-character-wrap.is-playing-clip .dressup-clip {
+  display: block;
+}
+
+.dressup-word {
+  font-size: clamp(1.25rem, 3vw, 1.7rem);
+  font-weight: 800;
+  color: var(--blue-d);
+}
+
+.dressup-step {
+  font-family: 'Fredoka', sans-serif;
+  font-size: .92rem;
+  color: #3d5a78;
+}
+
+.dressup-items {
+  display: grid;
+  place-items: center;
+  flex: 1;
+}
+
+.dressup-item {
+  display: grid;
+  place-items: center;
+  width: min(100%, 340px);
+  min-height: 280px;
+  padding: 18px;
+  border-radius: 24px;
+  background: linear-gradient(180deg, #f7fbff, #eef6ff);
+  border: 3px solid rgba(30, 111, 217, .18);
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  transition: transform .12s ease, opacity .15s ease;
+}
+
+.dressup-item:active { cursor: grabbing; }
+.dressup-item.is-dragging {
+  opacity: .35;
+  transform: scale(.96);
+}
+.dressup-item[hidden] { display: none; }
+
+.dressup-item img {
+  max-width: 100%;
+  max-height: 260px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  pointer-events: none;
+  -webkit-user-drag: none;
+  filter: drop-shadow(0 4px 6px rgba(30, 58, 95, .16));
+}
+
+/* Keep small/padded tray pieces (e.g. baseball helmet) visually matched */
+.dressup-item[data-piece="helmet"] {
+  overflow: visible;
+}
+.dressup-item[data-piece="helmet"] img {
+  max-height: 300px;
+  width: min(100%, 300px);
+  transform: scale(1.2);
+  transform-origin: center center;
+}
+
+.dressup-ghost {
+  position: fixed;
+  z-index: 300;
+  pointer-events: none;
+  width: 240px;
+  height: 240px;
+  object-fit: contain;
+  filter: drop-shadow(0 10px 14px rgba(20, 40, 70, .28));
+  transform: translate(-50%, -50%) scale(1.15);
+}
+
+/* Success sits BELOW the finished character */
+.dressup-success {
+  grid-column: 1 / -1;
+  width: min(520px, 100%);
+  z-index: 5;
+}
+
+.dressup-success[hidden] { display: none !important; }
+
+.dressup-stage-column.is-complete .dressup-success {
+  display: block;
+}
+
+.dressup-success-card {
+  text-align: center;
+  background: #fff;
+  border-radius: 28px;
+  padding: 18px 20px;
+  box-shadow: 0 10px 0 rgba(230, 184, 0, .35), 0 16px 28px rgba(20, 40, 70, .18);
+  animation: dressup-pop .35s cubic-bezier(.34, 1.45, .64, 1);
+}
+
+.dressup-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.dressup-icon-btn {
+  display: inline-grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border: 3px solid #fff;
+  border-radius: 50%;
+  background: linear-gradient(180deg, #3db5ff, #1e6fd9);
+  box-shadow: 0 5px 0 #1557ad;
+  font-size: 1.35rem;
+  cursor: pointer;
+  transition: transform .12s ease;
+}
+
+.dressup-icon-btn:hover { transform: translateY(-2px); }
+.dressup-icon-btn:active { transform: translateY(2px); }
+
+.dressup-success-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.dressup-success-line {
+  cursor: pointer;
+  font-size: clamp(1.55rem, 4vw, 2.15rem);
+  font-weight: 800;
+  color: var(--blue-d);
+  margin: 0 0 12px;
+  line-height: 1.2;
+}
+
+@keyframes dressup-pop {
+  from { transform: translateY(18px) scale(.92); opacity: 0; }
+  to { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+@media (max-width: 700px) {
+  .dressup-stage-column {
+    grid-template-columns: 1fr minmax(160px, 42%);
+    gap: 10px;
+  }
+  .dressup-character-wrap,
+  .dressup-tray {
+    min-height: min(52svh, 420px);
+    height: min(52svh, 420px);
+  }
+  .dressup-item {
+    width: min(100%, 240px);
+    min-height: 210px;
+    padding: 12px;
+  }
+  .dressup-item img { max-height: 190px; }
+  .dressup-ghost {
+    width: 190px;
+    height: 190px;
+  }
+  .dressup-word { font-size: 1.1rem; }
+  .dressup-step { font-size: .8rem; }
+}

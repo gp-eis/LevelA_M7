@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reading Week 2 — What do you practice? — Athlete People</title>
+  <link rel="stylesheet" href="../css/styles.css">
+  <style>
+    .reading-note {
+      margin-top: 14px;
+      font-family: 'Fredoka', sans-serif;
+      font-weight: 600;
+      font-size: 1.05rem;
+      color: #3d5a78;
+      text-align: center;
+    }
+    .video-slot {
+      position: relative;
+      width: min(100%, 720px);
+      margin: 0 auto;
+      aspect-ratio: 16 / 9;
+      border-radius: 24px;
+      overflow: hidden;
+      background:
+        linear-gradient(160deg, rgba(61, 181, 255, .18), rgba(126, 217, 87, .16)),
+        #0f2744;
+      box-shadow: inset 0 0 0 3px rgba(255, 255, 255, .18);
+      display: grid;
+      place-items: center;
+    }
+    .video-slot video.lesson-video {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      background: #0f2744;
+    }
+    .video-slot.is-empty::before {
+      content: '🎬';
+      font-size: 3rem;
+      line-height: 1;
+      opacity: .85;
+    }
+    .video-slot.is-empty::after {
+      content: 'Video coming soon';
+      position: absolute;
+      bottom: 18%;
+      font-family: 'Fredoka', sans-serif;
+      font-weight: 700;
+      font-size: clamp(1rem, 2.5vw, 1.25rem);
+      color: #fff;
+      text-shadow: 0 2px 8px rgba(0, 0, 0, .45);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="floaties" aria-hidden="true">
+    <span style="top:12%; left:4%;">📚</span>
+    <span style="top:70%; left:94%;">🏋️</span>
+  </div>
+
+  <div class="page">
+    <a class="back-link" href="index.html">⬅️ Reading</a>
+
+    <header class="center" style="margin-top:16px;">
+      <h1 class="big-title" style="font-size:2.4rem;">📚 Week 2 — What do you practice?</h1>
+    </header>
+
+    <section class="card center" style="margin-top:24px;">
+      <h2 class="section-title">🎬 Reading Videos</h2>
+      <div class="video-slot is-empty" id="reading-video-slot">
+        <video
+          id="reading-video"
+          class="lesson-video"
+          controls
+          preload="none"
+          hidden
+          aria-label="Reading video for Week 2"
+        ></video>
+      </div>
+      <p class="reading-note">Videos for this week will appear here once they are ready.</p>
+    </section>
+
+    <section class="card center" style="margin-top:24px;">
+      <h2 class="section-title">💬 Tap to Watch!</h2>
+      <div class="dialogue-grid">
+        <button class="pill-btn" type="button" data-dialogue data-line="Reading video 1 coming soon!">
+          <span aria-hidden="true">🎬</span> Video 1
+        </button>
+        <button class="pill-btn orange" type="button" data-dialogue data-line="Reading video 2 coming soon!">
+          <span aria-hidden="true">🎬</span> Video 2
+        </button>
+        <button class="pill-btn blue" type="button" data-dialogue data-line="Reading video 3 coming soon!">
+          <span aria-hidden="true">🎬</span> Video 3
+        </button>
+      </div>
+    </section>
+  </div>
+
+  <script src="../js/main.js"></script>
+</body>
+</html>

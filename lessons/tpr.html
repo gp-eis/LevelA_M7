@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TPR — Literacy — Athlete People</title>
+  <link rel="stylesheet" href="../css/styles.css">
+  <style>
+    .tpr-note {
+      margin-top: 14px;
+      font-family: 'Fredoka', sans-serif;
+      font-weight: 600;
+      font-size: 1.05rem;
+      color: #3d5a78;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="floaties" aria-hidden="true">
+    <span style="top:12%; left:4%;">🤸</span>
+    <span style="top:70%; left:94%;">⭐</span>
+  </div>
+
+  <div class="page">
+    <a class="back-link" id="back-week" href="index.html">⬅️ Back</a>
+
+    <header class="center" style="margin-top:16px;">
+      <h1 class="big-title" style="font-size:2.4rem;">🤸 TPR</h1>
+      <p class="subtitle" id="week-label">Total Physical Response activities</p>
+    </header>
+
+    <div id="tpr-ready" style="display:none;">
+      <section class="card" style="margin-top:24px;">
+        <h2 class="section-title">🎬 TPR Video</h2>
+        <video
+          id="dialogue-video"
+          class="lesson-video"
+          controls
+          preload="metadata"
+          src="../assets/video/week-1/TPR/Are%20you%20an%20athlete.mp4"
+          aria-label="TPR video for Week 1"
+        ></video>
+        <p class="tpr-note">Tap the button below to play the TPR video.</p>
+      </section>
+
+      <section class="card center" style="margin-top:24px;">
+        <h2 class="section-title">💬 Tap to Watch!</h2>
+        <div class="dialogue-grid">
+          <button
+            class="pill-btn"
+            type="button"
+            data-dialogue
+            data-video="../assets/video/week-1/TPR/Are%20you%20an%20athlete.mp4"
+            data-line="Are you an athlete?"
+          >
+            <span aria-hidden="true">🎬</span> Are you an athlete?
+          </button>
+        </div>
+      </section>
+    </div>
+
+    <div id="tpr-soon" class="card center" style="margin-top:24px; display:none;">
+      <h2 class="section-title">✨ Coming Soon</h2>
+      <p class="tpr-note">TPR activities for this week will appear here once the materials are ready.</p>
+    </div>
+  </div>
+
+  <script src="../js/main.js"></script>
+  <script>
+    const week = new URLSearchParams(location.search).get('week') || '1';
+    const titles = {
+      1: 'Week 1 — What sport do you play?',
+      2: 'Week 2 — What do you practice?',
+      3: 'Week 3 — What event is it?',
+      4: 'Week 4 — Where do Olympic athletes come from?'
+    };
+    const back = document.getElementById('back-week');
+    const label = document.getElementById('week-label');
+    back.href = 'page-0' + week + '.html';
+    back.textContent = '⬅️ Week ' + week;
+    label.textContent = titles[week] || ('Week ' + week);
+    document.title = 'TPR — Week ' + week + ' — Athlete People';
+
+    if (week === '1') {
+      document.getElementById('tpr-ready').style.display = '';
+    } else {
+      document.getElementById('tpr-soon').style.display = '';
+    }
+  </script>
+</body>
+</html>

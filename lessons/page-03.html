@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Week 3 — What event is it? — Athlete People</title>
+  <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+
+  <div class="floaties" aria-hidden="true">
+    <span style="top:12%; left:4%;">🛍️</span>
+    <span style="top:70%; left:94%;">⚽</span>
+  </div>
+
+  <div class="page">
+    <a class="back-link" href="index.html">⬅️ Literacy</a>
+
+    <header class="center" style="margin-top:16px;">
+      <h1 class="big-title" style="font-size:2.4rem;">🏅 Week 3 — What event is it?</h1>
+      <nav class="week-tools" aria-label="Week tools">
+        <a class="pill-btn orange" href="tpr.html?week=3">🤸 TPR</a>
+        <a class="pill-btn blue" href="flashcards.html?week=3">🃏 Flashcards</a>
+      </nav>
+    </header>
+
+    <!-- ============ LEARNING VIDEO ============ -->
+    <section class="card" style="margin-top:24px;">
+      <h2 class="section-title">✨ Learning</h2>
+      <video
+        id="dialogue-video"
+        class="lesson-video"
+        controls
+        preload="none"
+        aria-label="Learning video for How Can I Help You?"
+      ></video>
+    </section>
+
+    <!-- ============ DIALOGUE BUTTONS ============ -->
+    <!--
+      To hook up real audio later, add:  data-audio="../assets/audio/page-03-line-1.mp3"
+      To play a video instead, add:      data-video="../assets/video/week-3/page-03-line-1.mp4"
+    -->
+    <section class="card center" style="margin-top:24px;">
+      <h2 class="section-title">💬 Tap to Hear!</h2>
+      <div style="display:flex; flex-wrap:wrap; gap:14px; justify-content:center;">
+        <button class="pill-btn"        data-dialogue data-line="Dialogue 1 coming soon!">🔊 Dialogue 1</button>
+        <button class="pill-btn orange" data-dialogue data-line="Dialogue 2 coming soon!">🔊 Dialogue 2</button>
+        <button class="pill-btn blue"   data-dialogue data-line="Dialogue 3 coming soon!">🔊 Dialogue 3</button>
+      </div>
+    </section>
+
+    <!-- ============ PREV / NEXT ============ -->
+    <nav class="page-nav">
+      <a class="pill-btn green" href="page-02.html">⬅️ Previous Week</a>
+      <span class="spacer"></span>
+      <a class="pill-btn green" href="page-04.html">Next Week ➡️</a>
+    </nav>
+  </div>
+
+  <script src="../js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Happy Quiz ❓ — Athlete People</title>
+  <link rel="stylesheet" href="../css/styles.css">
+  <style>
+    .quiz-toolbar {
+      display: flex;
+      justify-content: center;
+      margin-top: 18px;
+    }
+    .quiz-board {
+      display: grid;
+      grid-template-columns: minmax(220px, .75fr) minmax(320px, 1.25fr);
+      gap: 26px;
+      max-width: 900px;
+      margin: 20px auto 0;
+      padding: 24px;
+      border-radius: 30px;
+      background: rgba(255,255,255,.82);
+      box-shadow: 0 10px 0 rgba(179,136,255,.18), 0 16px 30px rgba(74,59,82,.1);
+    }
+    .side-title {
+      margin-bottom: 12px;
+      color: var(--blue-d);
+      font-size: 1.3rem;
+      font-weight: 800;
+      text-align: center;
+    }
+    .tool-options {
+      display: flex;
+      min-height: 486px;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .quiz-option {
+      position: relative;
+      display: flex;
+      min-height: 148px;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      padding: 10px 16px;
+      border: 4px solid transparent;
+      border-radius: 22px;
+      background: var(--white);
+      color: var(--text);
+      font-family: inherit;
+      font-size: 1.05rem;
+      font-weight: 800;
+      box-shadow: 0 6px 0 rgba(74,59,82,.12);
+      cursor: grab;
+      touch-action: manipulation;
+      transition: transform .18s ease, border-color .18s ease, opacity .2s ease;
+    }
+    .quiz-option:hover { border-color: var(--yellow); transform: translateY(-3px); }
+    .quiz-option:active { cursor: grabbing; }
+    .quiz-option:focus-visible { outline: 5px solid var(--yellow); outline-offset: 2px; }
+    .quiz-option.selected { border-color: var(--blue); background: #e8f8ff; }
+    .quiz-option.dragging { opacity: .45; transform: scale(.95); }
+    .quiz-option img {
+      width: 112px;
+      height: 112px;
+      border-radius: 16px;
+      object-fit: contain;
+      pointer-events: none;
+      user-select: none;
+    }
+    .pet-column { min-width: 0; }
+    .pet-stage {
+      position: relative;
+      display: grid;
+      min-height: 486px;
+      place-items: center;
+      overflow: hidden;
+      border: 6px dashed var(--purple);
+      border-radius: 28px;
+      background: radial-gradient(circle, #fff 35%, #f5eeff 100%);
+      transition: border-color .2s ease, background .2s ease, box-shadow .2s ease;
+      cursor: pointer;
+    }
+    .pet-stage.drag-over {
+      border-color: var(--blue-d);
+      background: #e7f8ff;
+      box-shadow: 0 0 25px rgba(79,195,247,.5);
+    }
+    .pet-stage.wrong {
+      border-color: #e04b55;
+      background: #ffe9eb;
+      animation: wrong-shake .6s ease;
+      box-shadow: 0 0 24px rgba(224,75,85,.65);
+    }
+    .pet-stage.success {
+      border-style: solid;
+      border-color: var(--green);
+      background: radial-gradient(circle, #fff 30%, #eaffdf 100%);
+      box-shadow: 0 0 28px rgba(126,217,87,.65);
+    }
+    .pet-stage:focus-visible { outline: 5px solid var(--yellow); outline-offset: 3px; }
+    .pet-image {
+      display: block;
+      width: 92%;
+      height: 400px;
+      object-fit: contain;
+      filter: drop-shadow(0 10px 12px rgba(74,59,82,.18));
+      transition: opacity .35s ease, transform .35s ease;
+    }
+    .pet-stage.transforming .pet-image {
+      opacity: 0;
+      transform: scale(.72) rotate(-5deg);
+    }
+    .drop-instruction {
+      position: absolute;
+      right: 14px;
+      bottom: 12px;
+      left: 14px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.92);
+      color: var(--purple-d);
+      font-family: 'Fredoka', sans-serif;
+      font-weight: 600;
+      text-align: center;
+      box-shadow: 0 3px 0 rgba(74,59,82,.12);
+    }
+    .pet-stage .quiz-option {
+      position: absolute;
+      z-index: 5;
+      bottom: 55px;
+      left: 50%;
+      width: 190px;
+      min-height: 120px;
+      transform: translateX(-50%);
+    }
+    .pet-stage .quiz-option:hover { transform: translateX(-50%); }
+    .pet-stage .quiz-option img { width: 85px; height: 85px; }
+    .quiz-option.wrong-choice {
+      border-color: #e04b55;
+      background: #ffe9eb;
+      box-shadow: 0 0 22px rgba(224,75,85,.65);
+    }
+    .quiz-option.correct-choice {
+      border-color: var(--green);
+      background: #eaffdf;
+      opacity: 0;
+      transform: translateX(-50%) scale(.6);
+    }
+    .quiz-status {
+      min-height: 2rem;
+      margin-top: 14px;
+      color: var(--purple-d);
+      font-size: 1.3rem;
+      font-weight: 800;
+      text-align: center;
+    }
+    .quiz-status.correct-status { color: var(--green-d); }
+    .quiz-status.wrong-status { color: #d23b47; }
+    .stars {
+      position: absolute;
+      inset: 0;
+      z-index: 4;
+      overflow: hidden;
+      pointer-events: none;
+    }
+    .star {
+      position: absolute;
+      left: var(--x);
+      top: var(--y);
+      font-size: var(--size);
+      opacity: 0;
+      animation: star-burst 1.25s ease-out var(--delay) forwards;
+    }
+    @keyframes star-burst {
+      0% { opacity: 0; transform: scale(.2) rotate(0); }
+      30%, 70% { opacity: 1; transform: scale(1.25) rotate(180deg); }
+      100% { opacity: 0; transform: scale(.7) rotate(360deg) translateY(-35px); }
+    }
+    @keyframes wrong-shake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-9px); }
+      40%, 80% { transform: translateX(9px); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .quiz-option, .pet-image, .pet-stage { transition: none; }
+      .pet-stage.wrong, .star { animation-duration: .01ms; }
+    }
+    @media (max-width: 720px) {
+      .quiz-board {
+        grid-template-columns: minmax(130px, .7fr) minmax(180px, 1.3fr);
+        gap: 10px;
+        padding: 12px;
+      }
+      .tool-options, .pet-stage { min-height: 408px; }
+      .quiz-option {
+        min-height: 126px;
+        flex-direction: column;
+        gap: 2px;
+        padding: 6px;
+        font-size: .82rem;
+      }
+      .quiz-option img { width: 88px; height: 88px; }
+      .pet-image { height: 330px; }
+      .side-title { font-size: 1.05rem; }
+      .pet-stage .quiz-option { width: 140px; min-height: 105px; }
+      .pet-stage .quiz-option img { width: 70px; height: 70px; }
+    }
+    @media (max-width: 420px) {
+      .page { padding-inline: 7px; }
+      .quiz-board { gap: 6px; padding: 7px; }
+      .quiz-option img { width: 76px; height: 76px; }
+      .drop-instruction { font-size: .75rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="floaties" aria-hidden="true">
+    <span style="top:10%; left:4%;">❓</span>
+    <span style="top:75%; left:93%;">⭐</span>
+  </div>
+
+  <div class="page">
+    <a class="back-link" href="index.html?week=1">⬅️ All Games</a>
+
+    <header class="center" style="margin-top:16px;">
+      <h1 class="big-title" style="font-size:2.4rem;">😊 Happy Quiz</h1>
+      <p class="subtitle">Choose the right care to make the pet happy again!</p>
+    </header>
+
+    <div class="quiz-toolbar">
+      <button class="pill-btn orange" id="refresh" type="button">🔄 New Pet</button>
+    </div>
+
+    <section class="quiz-board">
+      <div>
+        <h2 class="side-title">Choose one</h2>
+        <div class="tool-options" id="tool-options"></div>
+      </div>
+
+      <div class="pet-column">
+        <h2 class="side-title">Help this pet!</h2>
+        <div class="pet-stage" id="pet-stage" role="button" tabindex="0"
+             aria-label="Pet picture. Drop the correct grooming choice here.">
+          <img class="pet-image" id="pet-image" src="" alt="">
+          <div class="stars" id="stars" aria-hidden="true"></div>
+          <p class="drop-instruction" id="drop-instruction">Drag a picture here</p>
+        </div>
+      </div>
+    </section>
+
+    <p class="quiz-status" id="quiz-status" role="status" aria-live="assertive"></p>
+  </div>
+
+  <script src="../js/main.js"></script>
+  <script>
+    const ACTIVITIES = [
+      {
+        id: 'brush',
+        label: 'Brush',
+        tool: '../assets/images/week-1/memory/brush.png',
+        pet: '../assets/images/week-1/happy/frizzy fur.png',
+        petLabel: 'Pet with frizzy fur'
+      },
+      {
+        id: 'dryer',
+        label: 'Blow dry',
+        tool: '../assets/images/week-1/memory/dry.png',
+        pet: '../assets/images/week-1/happy/wet fur.png',
+        petLabel: 'Pet with wet fur'
+      },
+      {
+        id: 'stroke',
+        label: 'Stroke its fur',
+        tool: '../assets/images/week-1/memory/stroke.png',
+        pet: '../assets/images/week-1/happy/sad.png',
+        petLabel: 'Sad pet'
+      },
+      {
+        id: 'scissors',
+        label: 'Scissors',
+        tool: '../assets/images/week-1/memory/cut.png',
+        pet: '../assets/images/week-1/happy/long fur.png',
+        petLabel: 'Pet with long fur'
+      },
+      {
+        id: 'bath',
+        label: 'Bath tub',
+        tool: '../assets/images/week-1/memory/wash.png',
+        pet: '../assets/images/week-1/happy/dirty fur.png',
+        petLabel: 'Pet with dirty fur'
+      }
+    ];
+    const ORIGINAL_PET = '../assets/images/week-1/happy/original.png';
+
+    const toolOptions = document.getElementById('tool-options');
+    const petStage = document.getElementById('pet-stage');
+    const petImage = document.getElementById('pet-image');
+    const stars = document.getElementById('stars');
+    const quizStatus = document.getElementById('quiz-status');
+    const dropInstruction = document.getElementById('drop-instruction');
+    let currentActivity = null;
+    let selectedCard = null;
+    let locked = false;
+    let gameNumber = 0;
+    let lastActivityId = '';
+    let feedbackTimer = null;
+
+    const sounds = (() => {
+      let context = null;
+      function audio() {
+        if (!context) context = new (window.AudioContext || window.webkitAudioContext)();
+        if (context.state === 'suspended') context.resume();
+        return context;
+      }
+      function tone(frequency, start, duration, type = 'sine', volume = .14) {
+        const ctx = audio();
+        const oscillator = ctx.createOscillator();
+        const gain = ctx.createGain();
+        oscillator.type = type;
+        oscillator.frequency.setValueAtTime(frequency, start);
+        gain.gain.setValueAtTime(.0001, start);
+        gain.gain.exponentialRampToValueAtTime(volume, start + .012);
+        gain.gain.exponentialRampToValueAtTime(.0001, start + duration);
+        oscillator.connect(gain);
+        gain.connect(ctx.destination);
+        oscillator.start(start);
+        oscillator.stop(start + duration + .02);
+      }
+      return {
+        correct() {
+          const now = audio().currentTime;
+          tone(523, now, .13, 'sine', .16);
+          tone(659, now + .09, .13, 'sine', .16);
+          tone(784, now + .18, .2, 'sine', .18);
+          tone(1047, now + .3, .26, 'sine', .16);
+        },
+        wrong() {
+          const now = audio().currentTime;
+          tone(220, now, .15, 'sawtooth', .07);
+          tone(175, now + .11, .2, 'sawtooth', .065);
+        }
+      };
+    })();
+
+    function shuffle(items) {
+      const copy = [...items];
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
+    }
+
+    function makeToolCard(activity, order) {
+      const card = document.createElement('button');
+      card.className = 'quiz-option';
+      card.id = `tool-${activity.id}`;
+      card.type = 'button';
+      card.draggable = true;
+      card.dataset.activity = activity.id;
+      card.dataset.order = order;
+      card.setAttribute('aria-label', `${activity.label}. Drag it to the pet, or select it and then select the pet.`);
+      card.innerHTML = `<img src="${activity.tool}" alt="${activity.label}" draggable="false">`;
+
+      card.addEventListener('click', () => {
+        if (locked || card.parentElement === petStage) return;
+        toolOptions.querySelectorAll('.quiz-option').forEach(item => item.classList.remove('selected'));
+        selectedCard = card;
+        card.classList.add('selected');
+        petStage.focus();
+      });
+      card.addEventListener('dragstart', event => {
+        if (locked) {
+          event.preventDefault();
+          return;
+        }
+        card.classList.add('dragging');
+        event.dataTransfer.effectAllowed = 'move';
+        event.dataTransfer.setData('text/plain', card.id);
+      });
+      card.addEventListener('dragend', () => card.classList.remove('dragging'));
+      return card;
+    }
+
+    function createStars() {
+      stars.innerHTML = '';
+      const symbols = ['⭐', '✨', '🌟'];
+      for (let i = 0; i < 28; i++) {
+        const star = document.createElement('span');
+        star.className = 'star';
+        star.textContent = symbols[i % symbols.length];
+        star.style.setProperty('--x', `${4 + Math.random() * 92}%`);
+        star.style.setProperty('--y', `${5 + Math.random() * 85}%`);
+        star.style.setProperty('--size', `${1.1 + Math.random() * 1.7}rem`);
+        star.style.setProperty('--delay', `${Math.random() * .35}s`);
+        stars.appendChild(star);
+      }
+    }
+
+    function returnCard(card) {
+      toolOptions.appendChild(card);
+      [...toolOptions.children]
+        .sort((a, b) => Number(a.dataset.order) - Number(b.dataset.order))
+        .forEach(item => toolOptions.appendChild(item));
+      card.classList.remove('wrong-choice', 'correct-choice', 'selected');
+      selectedCard = null;
+    }
+
+    function startGame() {
+      gameNumber++;
+      clearTimeout(feedbackTimer);
+      locked = false;
+      selectedCard = null;
+      stars.innerHTML = '';
+      petStage.className = 'pet-stage';
+      quizStatus.className = 'quiz-status';
+      quizStatus.textContent = '';
+      dropInstruction.textContent = 'Drag a picture here';
+      dropInstruction.hidden = false;
+      toolOptions.innerHTML = '';
+
+      do {
+        currentActivity = ACTIVITIES[Math.floor(Math.random() * ACTIVITIES.length)];
+      } while (currentActivity.id === lastActivityId);
+      lastActivityId = currentActivity.id;
+
+      const distractors = shuffle(ACTIVITIES.filter(item => item.id !== currentActivity.id)).slice(0, 2);
+      shuffle([currentActivity, ...distractors])
+        .forEach((activity, order) => toolOptions.appendChild(makeToolCard(activity, order)));
+
+      petImage.src = currentActivity.pet;
+      petImage.alt = currentActivity.petLabel;
+      petStage.setAttribute('aria-label', `${currentActivity.petLabel}. Drop the correct grooming choice here.`);
+    }
+
+    function evaluate(card) {
+      if (locked || !card) return;
+      locked = true;
+      selectedCard = null;
+      card.classList.remove('selected', 'dragging');
+      petStage.appendChild(card);
+
+      if (card.dataset.activity === currentActivity.id) {
+        sounds.correct();
+        card.classList.add('correct-choice');
+        petStage.classList.add('transforming');
+        quizStatus.className = 'quiz-status correct-status';
+        quizStatus.textContent = '⭐ Great job! The pet looks happy and presentable!';
+        dropInstruction.hidden = true;
+        const currentGame = gameNumber;
+
+        feedbackTimer = setTimeout(() => {
+          if (currentGame !== gameNumber) return;
+          card.remove();
+          petImage.src = ORIGINAL_PET;
+          petImage.alt = 'Happy and presentable pet';
+          petStage.classList.remove('transforming');
+          petStage.classList.add('success');
+          petStage.setAttribute('aria-label', 'Happy and presentable pet. Select New Pet to play again.');
+          createStars();
+        }, 350);
+      } else {
+        sounds.wrong();
+        card.classList.add('wrong-choice');
+        petStage.classList.add('wrong');
+        quizStatus.className = 'quiz-status wrong-status';
+        quizStatus.textContent = 'Try again!';
+        const currentGame = gameNumber;
+
+        feedbackTimer = setTimeout(() => {
+          if (currentGame !== gameNumber) return;
+          petStage.classList.remove('wrong');
+          returnCard(card);
+          quizStatus.textContent = '';
+          quizStatus.className = 'quiz-status';
+          locked = false;
+        }, 700);
+      }
+    }
+
+    petStage.addEventListener('dragover', event => {
+      if (locked) return;
+      event.preventDefault();
+      event.dataTransfer.dropEffect = 'move';
+      petStage.classList.add('drag-over');
+    });
+    petStage.addEventListener('dragleave', () => petStage.classList.remove('drag-over'));
+    petStage.addEventListener('drop', event => {
+      event.preventDefault();
+      petStage.classList.remove('drag-over');
+      evaluate(document.getElementById(event.dataTransfer.getData('text/plain')));
+    });
+    petStage.addEventListener('click', event => {
+      if (event.target.closest('.quiz-option')) return;
+      if (selectedCard) evaluate(selectedCard);
+    });
+    petStage.addEventListener('keydown', event => {
+      if ((event.key === 'Enter' || event.key === ' ') && selectedCard) {
+        event.preventDefault();
+        evaluate(selectedCard);
+      }
+    });
+    document.getElementById('refresh').addEventListener('click', startGame);
+    startGame();
+  </script>
+</body>
+</html>

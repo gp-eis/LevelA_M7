@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Matching Pairs 🧩 — Athlete People</title>
+  <link rel="stylesheet" href="../../css/styles.css">
+  <style>
+    .game-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 18px;
+      margin-top: 18px;
+    }
+    .score {
+      color: var(--purple-d);
+      font-size: 1.2rem;
+      font-weight: 800;
+    }
+    .match-columns {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      max-width: 900px;
+      margin: 20px auto 0;
+    }
+    .match-column {
+      min-width: 0;
+      padding: 18px;
+      border-radius: 26px;
+      background: rgba(255,255,255,.68);
+      box-shadow: 0 7px 0 rgba(74,59,82,.08);
+    }
+    .column-title {
+      margin-bottom: 12px;
+      color: var(--blue-d);
+      font-size: 1.35rem;
+      font-weight: 800;
+      text-align: center;
+    }
+    .options-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      min-height: 304px;
+    }
+    .match-item {
+      position: relative;
+      display: flex;
+      min-width: 0;
+      min-height: 140px;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      background: var(--white);
+      border: 4px solid transparent;
+      border-radius: 20px;
+      padding: 8px;
+      color: var(--text);
+      font-family: inherit;
+      font-size: .95rem;
+      font-weight: 800;
+      box-shadow: 0 6px 0 rgba(74,59,82,.10);
+      cursor: grab;
+      touch-action: manipulation;
+      transition: transform .18s ease, border-color .18s ease, background .18s ease;
+    }
+    .match-item:hover { transform: translateY(-3px); border-color: var(--yellow); }
+    .match-item:active { cursor: grabbing; }
+    .match-item:focus-visible { outline: 5px solid var(--yellow); outline-offset: 2px; }
+    .match-item.dragging { opacity: .45; transform: scale(.94); }
+    .match-item img {
+      display: block;
+      width: 100%;
+      height: 100px;
+      border-radius: 14px;
+      object-fit: contain;
+      pointer-events: none;
+      user-select: none;
+    }
+    .match-item.correct {
+      border-color: var(--green);
+      background: #eaffdf;
+      animation: correct-pop .45s ease;
+    }
+    .match-item.correct::after {
+      content: '✓';
+      position: absolute;
+      top: 7px;
+      right: 7px;
+      display: grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: var(--green-d);
+      color: var(--white);
+      font-size: 1.5rem;
+      box-shadow: 0 3px 0 #3d8c1e;
+    }
+    .match-item.wrong { animation: wrong-flash .6s ease; }
+    .drop-label {
+      margin: 20px 0 8px;
+      color: var(--purple-d);
+      font-weight: 800;
+      text-align: center;
+    }
+    .drop-zone {
+      display: grid;
+      min-height: 168px;
+      place-items: center;
+      padding: 10px;
+      border: 4px dashed var(--purple);
+      border-radius: 22px;
+      background: rgba(246,239,255,.7);
+      color: #8c72a7;
+      font-family: 'Fredoka', sans-serif;
+      font-weight: 600;
+      transition: border-color .16s ease, background .16s ease, transform .16s ease;
+    }
+    .drop-zone.drag-over {
+      border-color: var(--blue-d);
+      background: #e7f8ff;
+      transform: scale(1.02);
+    }
+    .drop-zone.correct { border-color: var(--green); background: #eaffdf; }
+    .drop-zone.wrong { animation: wrong-flash .6s ease; }
+    .drop-zone .match-item {
+      width: 100%;
+      min-height: 140px;
+    }
+    .feedback-popup {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      z-index: 150;
+      padding: 22px 42px;
+      border: 6px solid var(--white);
+      border-radius: 28px;
+      color: var(--white);
+      font-size: clamp(2rem, 6vw, 3.2rem);
+      font-weight: 800;
+      box-shadow: 0 12px 35px rgba(74,59,82,.3);
+      transform: translate(-50%, -50%) scale(0);
+      pointer-events: none;
+    }
+    .feedback-popup.show { animation: feedback-pop 1.05s ease; }
+    .feedback-popup.correct-feedback { background: var(--green-d); }
+    .feedback-popup.wrong-feedback { background: #e04b55; }
+    .correct-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 170;
+      display: grid;
+      place-items: center;
+      padding: 20px;
+      background: rgba(65,45,86,.48);
+      backdrop-filter: blur(3px);
+    }
+    .correct-modal[hidden] { display: none; }
+    .correct-dialog {
+      width: min(620px, 94vw);
+      padding: 26px;
+      border: 7px solid var(--green);
+      border-radius: 32px;
+      background: var(--white);
+      box-shadow: 0 12px 0 rgba(61,140,30,.25), 0 24px 55px rgba(74,59,82,.3);
+      text-align: center;
+      animation: correct-dialog-pop .5s cubic-bezier(.34,1.56,.64,1);
+    }
+    .correct-title {
+      margin-bottom: 18px;
+      color: var(--green-d);
+      font-size: clamp(2rem, 7vw, 3.2rem);
+      line-height: 1;
+    }
+    .correct-pictures {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+    .correct-picture {
+      position: relative;
+      min-width: 0;
+      padding: 10px;
+      border: 5px solid var(--green);
+      border-radius: 22px;
+      background: #eaffdf;
+      color: var(--text);
+      font-weight: 800;
+    }
+    .correct-picture::after {
+      content: '✓';
+      position: absolute;
+      top: 7px;
+      right: 7px;
+      display: grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: var(--green-d);
+      color: var(--white);
+      font-size: 1.45rem;
+      box-shadow: 0 3px 0 #3d8c1e;
+    }
+    .correct-picture img {
+      display: block;
+      width: 100%;
+      height: 180px;
+      border-radius: 15px;
+      object-fit: contain;
+    }
+    .correct-plus {
+      color: var(--pink-d);
+      font-size: 2.5rem;
+      font-weight: 800;
+    }
+    @keyframes correct-dialog-pop {
+      from { opacity: 0; transform: scale(.45) rotate(-5deg); }
+      to { opacity: 1; transform: scale(1) rotate(0); }
+    }
+    @keyframes feedback-pop {
+      0% { opacity: 0; transform: translate(-50%, -50%) scale(.35) rotate(-5deg); }
+      20%, 72% { opacity: 1; transform: translate(-50%, -50%) scale(1) rotate(0); }
+      100% { opacity: 0; transform: translate(-50%, -50%) scale(.8); }
+    }
+    @keyframes correct-pop {
+      50% { transform: scale(1.05); }
+    }
+    @keyframes wrong-flash {
+      0%, 100% { border-color: transparent; background: var(--white); transform: translateX(0); }
+      20%, 60% { border-color: #e04b55; background: #ffe8ea; transform: translateX(-7px); box-shadow: 0 0 20px #ff6974; }
+      40%, 80% { border-color: #e04b55; background: #ffe8ea; transform: translateX(7px); box-shadow: 0 0 20px #ff6974; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .match-item, .drop-zone { transition: none; }
+      .match-item.correct, .match-item.wrong, .drop-zone.wrong, .feedback-popup.show { animation-duration: .01ms; }
+      .correct-dialog { animation: none; }
+    }
+    @media (max-width: 700px) {
+      .match-columns { gap: 10px; }
+      .match-column { padding: 10px; }
+      .options-grid { grid-template-columns: 1fr; min-height: 576px; }
+      .match-item { min-height: 132px; font-size: .82rem; }
+      .match-item img { height: 92px; }
+      .column-title { font-size: 1.05rem; }
+      .drop-zone { min-height: 154px; }
+      .correct-dialog { padding: 18px 12px; }
+      .correct-pictures { gap: 7px; }
+      .correct-picture { padding: 6px; font-size: .82rem; }
+      .correct-picture img { height: 130px; }
+      .correct-plus { font-size: 1.7rem; }
+    }
+    @media (max-width: 420px) {
+      .page { padding-inline: 8px; }
+      .match-columns { gap: 6px; }
+      .match-column { padding: 7px; border-radius: 18px; }
+      .match-item { padding: 5px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="floaties" aria-hidden="true">
+    <span style="top:10%; left:4%;">🧩</span>
+    <span style="top:75%; left:93%;">⚽</span>
+  </div>
+
+  <div class="page">
+    <a class="back-link" href="../index.html?week=3">⬅️ All Games</a>
+
+    <header class="center" style="margin-top:16px;">
+      <h1 class="big-title" style="font-size:2.4rem;">🧩 Matching Pairs</h1>
+      <p class="subtitle">Drag one picture from each column into the boxes!</p>
+    </header>
+
+    <div class="game-toolbar">
+      <button class="pill-btn orange" id="refresh" type="button">🔄 New Set</button>
+      <span class="score">Pairs: <span id="score">0</span> / 4</span>
+    </div>
+
+    <section class="card" style="margin-top:18px;">
+      <div class="match-columns">
+        <div class="match-column">
+          <h2 class="column-title">Column A — Grooming</h2>
+          <div class="options-grid" id="column-a-options"></div>
+          <p class="drop-label">Drop a grooming picture here</p>
+          <div class="drop-zone" id="column-a-drop" data-accept="a">Empty box</div>
+        </div>
+
+        <div class="match-column">
+          <h2 class="column-title">Column B — Pets</h2>
+          <div class="options-grid" id="column-b-options"></div>
+          <p class="drop-label">Drop a pet picture here</p>
+          <div class="drop-zone" id="column-b-drop" data-accept="b">Empty box</div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div class="feedback-popup" id="feedback" role="status" aria-live="assertive"></div>
+
+  <div class="correct-modal" id="correct-modal" role="dialog" aria-modal="true"
+       aria-labelledby="correct-title" hidden>
+    <div class="correct-dialog">
+      <h2 class="correct-title" id="correct-title">Correct!</h2>
+      <div class="correct-pictures">
+        <div class="correct-picture">
+          <img id="correct-left-image" src="" alt="">
+          <span id="correct-left-label"></span>
+        </div>
+        <span class="correct-plus" aria-hidden="true">+</span>
+        <div class="correct-picture">
+          <img id="correct-right-image" src="" alt="">
+          <span id="correct-right-label"></span>
+        </div>
+      </div>
+      <button class="pill-btn green" id="continue-button" type="button">✓ Close &amp; Continue</button>
+    </div>
+  </div>
+
+  <script src="../../js/main.js"></script>
+  <script>
+    const PAIRS = [
+      {
+        id: 'scissors',
+        left: { label: 'Scissors', image: '../../assets/images/week-1/memory/cut.png' },
+        right: { label: 'Long fur', image: '../../assets/images/week-1/matching/long-fur.png' }
+      },
+      {
+        id: 'brush',
+        left: { label: 'Brush', image: '../../assets/images/week-1/memory/brush.png' },
+        right: { label: 'Frizzy fur', image: '../../assets/images/week-1/matching/frizzy-fur.png' }
+      },
+      {
+        id: 'dryer',
+        left: { label: 'Hair dryer', image: '../../assets/images/week-1/memory/dry.png' },
+        right: { label: 'Wet fur', image: '../../assets/images/week-1/matching/wet-fur.png' }
+      },
+      {
+        id: 'bath',
+        left: { label: 'Bath tub', image: '../../assets/images/week-1/memory/wash.png' },
+        right: { label: 'Dirty fur', image: '../../assets/images/week-1/matching/dirty-fur.png' }
+      },
+      {
+        id: 'stroke',
+        left: { label: 'Stroking hand', image: '../../assets/images/week-1/memory/stroke.png' },
+        right: { label: 'Sad pet', image: '../../assets/images/week-1/matching/sad-pet.png' }
+      }
+    ];
+
+    const columnA = document.getElementById('column-a-options');
+    const columnB = document.getElementById('column-b-options');
+    const dropA = document.getElementById('column-a-drop');
+    const dropB = document.getElementById('column-b-drop');
+    const scoreEl = document.getElementById('score');
+    const feedback = document.getElementById('feedback');
+    const correctModal = document.getElementById('correct-modal');
+    const continueButton = document.getElementById('continue-button');
+    const correctLeftImage = document.getElementById('correct-left-image');
+    const correctRightImage = document.getElementById('correct-right-image');
+    const correctLeftLabel = document.getElementById('correct-left-label');
+    const correctRightLabel = document.getElementById('correct-right-label');
+    let matchedCount = 0;
+    let locked = false;
+    let feedbackTimer = null;
+    let resolutionTimer = null;
+    let gameNumber = 0;
+    let lastSetSignature = '';
+    let pendingCorrectPair = null;
+
+    const sounds = (() => {
+      let context = null;
+      function audio() {
+        if (!context) context = new (window.AudioContext || window.webkitAudioContext)();
+        if (context.state === 'suspended') context.resume();
+        return context;
+      }
+      function tone(frequency, start, duration, type = 'sine', volume = .13) {
+        const ctx = audio();
+        const oscillator = ctx.createOscillator();
+        const gain = ctx.createGain();
+        oscillator.type = type;
+        oscillator.frequency.setValueAtTime(frequency, start);
+        gain.gain.setValueAtTime(.0001, start);
+        gain.gain.exponentialRampToValueAtTime(volume, start + .012);
+        gain.gain.exponentialRampToValueAtTime(.0001, start + duration);
+        oscillator.connect(gain);
+        gain.connect(ctx.destination);
+        oscillator.start(start);
+        oscillator.stop(start + duration + .02);
+      }
+      return {
+        click() {
+          const now = audio().currentTime;
+          tone(620, now, .07, 'triangle', .11);
+        },
+        drag() {
+          const now = audio().currentTime;
+          tone(360, now, .08, 'sine', .1);
+          tone(480, now + .05, .1, 'sine', .1);
+        },
+        correct() {
+          const now = audio().currentTime;
+          tone(523, now, .12, 'sine', .15);
+          tone(659, now + .08, .12, 'sine', .15);
+          tone(784, now + .16, .2, 'sine', .17);
+        },
+        wrong() {
+          const now = audio().currentTime;
+          tone(220, now, .14, 'sawtooth', .07);
+          tone(175, now + .1, .18, 'sawtooth', .065);
+        }
+      };
+    })();
+
+    function shuffle(items) {
+      const copy = [...items];
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
+    }
+
+    function showFeedback(message, correct) {
+      clearTimeout(feedbackTimer);
+      feedback.textContent = message;
+      feedback.className = `feedback-popup ${correct ? 'correct-feedback' : 'wrong-feedback'}`;
+      void feedback.offsetWidth;
+      feedback.classList.add('show');
+      feedbackTimer = setTimeout(() => feedback.classList.remove('show'), 1050);
+    }
+
+    function showCorrectModal(left, right, currentGame) {
+      const leftImage = left.querySelector('img');
+      const rightImage = right.querySelector('img');
+      correctLeftImage.src = leftImage.src;
+      correctLeftImage.alt = leftImage.alt;
+      correctRightImage.src = rightImage.src;
+      correctRightImage.alt = rightImage.alt;
+      correctLeftLabel.textContent = left.querySelector('span').textContent;
+      correctRightLabel.textContent = right.querySelector('span').textContent;
+      pendingCorrectPair = { left, right, currentGame };
+      correctModal.hidden = false;
+      continueButton.focus();
+    }
+
+    function makeCard(pair, column, order) {
+      const data = column === 'a' ? pair.left : pair.right;
+      const card = document.createElement('button');
+      card.className = 'match-item';
+      card.id = `${column}-${pair.id}`;
+      card.type = 'button';
+      card.draggable = true;
+      card.dataset.column = column;
+      card.dataset.pair = pair.id;
+      card.dataset.order = order;
+      card.setAttribute('aria-label', `${data.label}. Drag or click to move it to the matching box.`);
+      card.innerHTML = `<img src="${data.image}" alt="${data.label}" draggable="false"><span>${data.label}</span>`;
+
+      card.addEventListener('click', () => {
+        if (locked) return;
+        sounds.click();
+        if (card.parentElement.classList.contains('drop-zone')) {
+          returnToSource(card);
+        } else {
+          placeInZone(card, column === 'a' ? dropA : dropB);
+        }
+      });
+      card.addEventListener('dragstart', (event) => {
+        if (locked) {
+          event.preventDefault();
+          return;
+        }
+        sounds.drag();
+        card.classList.add('dragging');
+        event.dataTransfer.effectAllowed = 'move';
+        event.dataTransfer.setData('text/plain', card.id);
+      });
+      card.addEventListener('dragend', () => card.classList.remove('dragging'));
+      return card;
+    }
+
+    function resetZone(zone) {
+      zone.classList.remove('correct', 'wrong', 'drag-over');
+      if (!zone.querySelector('.match-item')) zone.textContent = 'Empty box';
+    }
+
+    function startGame() {
+      gameNumber++;
+      clearTimeout(resolutionTimer);
+      clearTimeout(feedbackTimer);
+      feedback.classList.remove('show');
+      correctModal.hidden = true;
+      pendingCorrectPair = null;
+      locked = false;
+      matchedCount = 0;
+      scoreEl.textContent = '0';
+      columnA.innerHTML = '';
+      columnB.innerHTML = '';
+      dropA.innerHTML = 'Empty box';
+      dropB.innerHTML = 'Empty box';
+      resetZone(dropA);
+      resetZone(dropB);
+
+      let set;
+      let signature;
+      do {
+        set = shuffle(PAIRS).slice(0, 4);
+        signature = set.map(pair => pair.id).sort().join(',');
+      } while (signature === lastSetSignature);
+      lastSetSignature = signature;
+      shuffle(set).forEach((pair, index) => columnA.appendChild(makeCard(pair, 'a', index)));
+      shuffle(set).forEach((pair, index) => columnB.appendChild(makeCard(pair, 'b', index)));
+    }
+
+    function returnToSource(card) {
+      const source = card.dataset.column === 'a' ? columnA : columnB;
+      source.appendChild(card);
+      [...source.children]
+        .sort((a, b) => Number(a.dataset.order) - Number(b.dataset.order))
+        .forEach(item => source.appendChild(item));
+      card.classList.remove('wrong', 'correct');
+      card.setAttribute('aria-label', `${card.querySelector('span').textContent}. Drag or click to move it to the matching box.`);
+      resetZone(card.dataset.column === 'a' ? dropA : dropB);
+    }
+
+    function placeInZone(card, zone) {
+      if (locked || card.dataset.column !== zone.dataset.accept) return;
+      const existing = zone.querySelector('.match-item');
+      if (existing && existing !== card) returnToSource(existing);
+      zone.textContent = '';
+      zone.appendChild(card);
+      card.setAttribute('aria-label', `${card.querySelector('span').textContent} is in the matching box. Click to return it.`);
+      checkPair();
+    }
+
+    function checkPair() {
+      const left = dropA.querySelector('.match-item');
+      const right = dropB.querySelector('.match-item');
+      if (!left || !right) return;
+      locked = true;
+      const currentGame = gameNumber;
+
+      if (left.dataset.pair === right.dataset.pair) {
+        sounds.correct();
+        left.classList.add('correct');
+        right.classList.add('correct');
+        dropA.classList.add('correct');
+        dropB.classList.add('correct');
+        matchedCount++;
+        scoreEl.textContent = matchedCount;
+        showCorrectModal(left, right, currentGame);
+      } else {
+        sounds.wrong();
+        showFeedback('Try again.', false);
+        left.classList.add('wrong');
+        right.classList.add('wrong');
+        dropA.classList.add('wrong');
+        dropB.classList.add('wrong');
+
+        resolutionTimer = setTimeout(() => {
+          if (currentGame !== gameNumber) return;
+          returnToSource(left);
+          returnToSource(right);
+          resetZone(dropA);
+          resetZone(dropB);
+          locked = false;
+        }, 650);
+      }
+    }
+
+    [dropA, dropB].forEach(zone => {
+      zone.addEventListener('dragover', event => {
+        event.preventDefault();
+        event.dataTransfer.dropEffect = 'move';
+        zone.classList.add('drag-over');
+      });
+      zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
+      zone.addEventListener('drop', event => {
+        event.preventDefault();
+        zone.classList.remove('drag-over');
+        const card = document.getElementById(event.dataTransfer.getData('text/plain'));
+        if (card) placeInZone(card, zone);
+      });
+    });
+
+    document.getElementById('refresh').addEventListener('click', () => {
+      sounds.click();
+      startGame();
+    });
+    continueButton.addEventListener('click', () => {
+      if (!pendingCorrectPair) return;
+      sounds.click();
+      const { left, right, currentGame } = pendingCorrectPair;
+      correctModal.hidden = true;
+      pendingCorrectPair = null;
+      if (currentGame !== gameNumber) return;
+      left.remove();
+      right.remove();
+      dropA.textContent = 'Empty box';
+      dropB.textContent = 'Empty box';
+      resetZone(dropA);
+      resetZone(dropB);
+      locked = false;
+      if (matchedCount === 4) {
+        showFeedback('All matched!', true);
+      } else {
+        const nextCard = columnA.querySelector('.match-item');
+        (nextCard || document.getElementById('refresh')).focus();
+      }
+    });
+    startGame();
+  </script>
+</body>
+</html>

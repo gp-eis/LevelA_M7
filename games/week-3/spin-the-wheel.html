@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spin the Wheel 🎡 — Athlete People</title>
+  <link rel="stylesheet" href="../../css/styles.css">
+  <style>
+    body { overflow: hidden; }
+    .page {
+      height: 100vh;
+      padding-top: 18px;
+      padding-bottom: 12px;
+    }
+    .wheel-wrap {
+      position: relative;
+      width: min(400px, 55vh, 88vw);
+      margin: 18px auto 0;
+    }
+
+    .pointer {
+      position: absolute;
+      top: -18px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0; height: 0;
+      border-left: 22px solid transparent;
+      border-right: 22px solid transparent;
+      border-top: 38px solid var(--pink-d);
+      z-index: 3;
+      filter: drop-shadow(0 3px 2px rgba(0,0,0,.2));
+    }
+
+    #wheel {
+      position: relative;
+      container-type: inline-size;
+      width: 100%;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      border: 12px solid var(--white);
+      box-shadow: 0 10px 0 rgba(74,59,82,.15), 0 16px 30px rgba(74,59,82,.15);
+      background: conic-gradient(
+        #ff6fa5 0deg 45deg,
+        #ffd93d 45deg 90deg,
+        #4fc3f7 90deg 135deg,
+        #7ed957 135deg 180deg,
+        #b388ff 180deg 225deg,
+        #ffa62b 225deg 270deg,
+        #ff8f66 270deg 315deg,
+        #5dd4c8 315deg 360deg
+      );
+      will-change: transform;
+    }
+    #wheel::after {
+      content: '⚽';
+      position: absolute;
+      inset: 50% auto auto 50%;
+      display: grid;
+      place-items: center;
+      width: 76px;
+      height: 76px;
+      transform: translate(-50%, -50%);
+      border: 7px solid var(--white);
+      border-radius: 50%;
+      background: var(--purple-d);
+      color: var(--white);
+      font-size: 2rem;
+      box-shadow: 0 4px 10px rgba(74,59,82,.25);
+    }
+    .wheel-label {
+      position: absolute;
+      top: var(--label-y);
+      left: var(--label-x);
+      width: 30%;
+      color: #3f3049;
+      font-size: clamp(.55rem, 3.4cqw, .95rem);
+      font-weight: 800;
+      line-height: 1;
+      text-align: center;
+      text-shadow: 0 1px 1px rgba(255,255,255,.7);
+      white-space: nowrap;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+
+    #result {
+      margin-top: 12px;
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--pink-d);
+      min-height: 2.1rem;
+    }
+    .wheel-actions {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-top: 4px;
+    }
+    .stop-btn {
+      background: linear-gradient(180deg, #ff6f6f, #d94343);
+      box-shadow: 0 5px 0 #a62929;
+    }
+    .stop-btn[hidden] { display: none; }
+    .pill-btn:disabled {
+      cursor: not-allowed;
+      filter: grayscale(.35);
+      opacity: .6;
+      transform: none;
+    }
+    .selected-area {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      padding: 20px;
+      margin: 0;
+      background: rgba(65, 45, 86, .42);
+      backdrop-filter: blur(3px);
+    }
+    .selected-area[hidden] { display: none; }
+    .flip-hint {
+      padding: 9px 20px;
+      border-radius: 999px;
+      background: var(--white);
+      color: var(--purple-d);
+      font-family: 'Fredoka', sans-serif;
+      font-weight: 600;
+      box-shadow: 0 4px 0 rgba(74,59,82,.14);
+    }
+    .word-card {
+      display: block;
+      width: min(330px, 86vw);
+      height: min(350px, 62vh);
+      margin: 0;
+      padding: 0;
+      border: none;
+      border-radius: 28px;
+      background: transparent;
+      cursor: pointer;
+      perspective: 1100px;
+    }
+    .selected-area:not([hidden]) .word-card {
+      animation: card-pop .55s cubic-bezier(.34, 1.56, .64, 1);
+    }
+    .word-card:focus-visible {
+      outline: 5px solid var(--yellow);
+      outline-offset: 5px;
+    }
+    .card-inner {
+      position: relative;
+      display: block;
+      width: 100%;
+      height: 100%;
+      transition: transform .65s cubic-bezier(.2,.75,.25,1);
+      transform-style: preserve-3d;
+    }
+    .word-card.flipped .card-inner { transform: rotateY(180deg); }
+    .card-face {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      padding: 22px;
+      border: 8px solid var(--selected-color, var(--purple));
+      border-radius: 28px;
+      background: var(--white);
+      box-shadow: 0 9px 0 rgba(74,59,82,.16), 0 16px 30px rgba(74,59,82,.16);
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+    }
+    .card-back { transform: rotateY(180deg); }
+    .card-face img {
+      width: 100%;
+      height: min(230px, 65%);
+      object-fit: contain;
+      border-radius: 18px;
+    }
+    .card-front img { height: 100%; }
+    .card-front .card-word { display: none; }
+    .card-back img { height: min(205px, 62%); }
+    .card-word {
+      color: var(--pink-d);
+      font-size: 1.9rem;
+      font-weight: 800;
+      text-transform: capitalize;
+    }
+    .card-sentence {
+      color: var(--text);
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 600;
+      line-height: 1.25;
+    }
+    .return-btn {
+      background: linear-gradient(180deg, var(--blue), var(--blue-d));
+      box-shadow: 0 5px 0 #1b7fae;
+    }
+    @keyframes card-pop {
+      from { opacity: 0; transform: translateY(35px) scale(.55) rotate(-5deg); }
+      to { opacity: 1; transform: translateY(0) scale(1) rotate(0); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .card-inner { transition: none; }
+      .selected-area:not([hidden]) .word-card { animation: none; }
+    }
+    @media (max-width: 480px) {
+      .page { padding-top: 12px; }
+      .wheel-wrap { width: min(330px, 50vh, 91vw); margin-top: 12px; }
+      #wheel::after { width: 62px; height: 62px; }
+      .word-card { height: min(325px, 60vh); }
+      .card-face { padding: 16px; }
+      .card-sentence { font-size: 1.1rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="floaties" aria-hidden="true">
+    <span style="top:10%; left:4%;">🎡</span>
+    <span style="top:75%; left:93%;">⭐</span>
+  </div>
+
+  <div class="page center">
+    <div style="text-align:left;"><a class="back-link" href="../index.html?week=3">⬅️ All Games</a></div>
+
+    <header style="margin-top:16px;">
+      <h1 class="big-title" style="font-size:2.4rem;">🎡 Spin the Wheel</h1>
+      <p class="subtitle">Spin slowly, press stop, then flip your picture card!</p>
+    </header>
+
+    <div class="wheel-wrap">
+      <div class="pointer"></div>
+      <div id="wheel"></div>
+    </div>
+
+    <div id="result"></div>
+
+    <div class="wheel-actions">
+      <button class="pill-btn" id="spin-btn" style="font-size:1.4rem; padding:16px 44px;">🎡 SPIN!</button>
+      <button class="pill-btn stop-btn" id="stop-btn" style="font-size:1.4rem; padding:16px 44px;" hidden>🛑 STOP!</button>
+    </div>
+
+    <section class="selected-area" id="selected-area" role="dialog" aria-modal="true"
+             aria-label="Selected word card" aria-live="polite" hidden>
+      <p class="flip-hint">👆 Click the card to flip it!</p>
+      <button class="word-card" id="word-card" type="button" aria-pressed="false">
+        <span class="card-inner">
+          <span class="card-face card-front">
+            <img id="front-image" src="" alt="">
+            <span class="card-word" id="card-word"></span>
+          </span>
+          <span class="card-face card-back">
+            <img id="back-image" src="" alt="">
+            <span class="card-sentence" id="card-sentence"></span>
+          </span>
+        </span>
+      </button>
+      <button class="pill-btn return-btn" id="return-btn" type="button">🎡 Back to Wheel</button>
+    </section>
+  </div>
+
+  <script src="../../js/main.js"></script>
+  <script>
+    const SEGMENTS = [
+      { word: 'cut',      color: '#ff6fa5', sentence: 'I can cut its fur.',    image: '../../assets/images/week-1/memory/cut.png' },
+      { word: 'wash',     color: '#ffd93d', sentence: 'I can wash its fur.',   image: '../../assets/images/week-1/memory/wash.png' },
+      { word: 'stroke',   color: '#4fc3f7', sentence: 'I can stroke its fur.', image: '../../assets/images/week-1/memory/stroke.png' },
+      { word: 'dry',      color: '#7ed957', sentence: 'I can dry its fur.',    image: '../../assets/images/week-1/memory/dry.png' },
+      { word: 'brush',    color: '#b388ff', sentence: 'I can brush its fur.',  image: '../../assets/images/week-1/memory/brush.png' },
+      { word: 'kangaroo', color: '#ffa62b', sentence: 'I found a kangaroo.',   image: '../../assets/images/week-1/memory/kangaroo.png' },
+      { word: 'key',      color: '#ff8f66', sentence: 'I found a key.',        image: '../../assets/images/week-1/memory/key.png' },
+      { word: 'kettle',   color: '#5dd4c8', sentence: 'I found a kettle.',     image: '../../assets/images/week-1/memory/kettle.png' }
+    ];
+
+    const wheel = document.getElementById('wheel');
+    const resultEl = document.getElementById('result');
+    const spinBtn = document.getElementById('spin-btn');
+    const stopBtn = document.getElementById('stop-btn');
+    const selectedArea = document.getElementById('selected-area');
+    const wordCard = document.getElementById('word-card');
+    const returnBtn = document.getElementById('return-btn');
+    const frontImage = document.getElementById('front-image');
+    const backImage = document.getElementById('back-image');
+    const cardWord = document.getElementById('card-word');
+    const cardSentence = document.getElementById('card-sentence');
+    const SPIN_SPEED = 75;
+    let rotation = 0;
+    let spinning = false;
+    let stopping = false;
+    let animationFrame = null;
+    let lastFrameTime = 0;
+
+    SEGMENTS.forEach((segment, index) => {
+      const label = document.createElement('span');
+      const angle = (index * 45 + 22.5) * Math.PI / 180;
+      label.className = 'wheel-label';
+      label.textContent = segment.word;
+      label.style.setProperty('--label-x', `${50 + Math.sin(angle) * 31}%`);
+      label.style.setProperty('--label-y', `${50 - Math.cos(angle) * 31}%`);
+      wheel.appendChild(label);
+    });
+
+    function renderWheel() {
+      wheel.style.transform = `rotate(${rotation}deg)`;
+    }
+
+    function spinFrame(time) {
+      if (!spinning || stopping) return;
+      if (!lastFrameTime) lastFrameTime = time;
+      const elapsed = Math.min(time - lastFrameTime, 40);
+      lastFrameTime = time;
+      rotation += SPIN_SPEED * elapsed / 1000;
+      renderWheel();
+      animationFrame = requestAnimationFrame(spinFrame);
+    }
+
+    function showSelectedCard(segment) {
+      resultEl.textContent = `🎉 You landed on ${segment.word}!`;
+      frontImage.src = segment.image;
+      frontImage.alt = segment.word;
+      backImage.src = segment.image;
+      backImage.alt = segment.word;
+      cardWord.textContent = segment.word;
+      cardSentence.textContent = segment.sentence;
+      wordCard.style.setProperty('--selected-color', segment.color);
+      wordCard.classList.remove('flipped');
+      wordCard.setAttribute('aria-pressed', 'false');
+      wordCard.setAttribute('aria-label', `${segment.word} picture card. Click to reveal the sentence.`);
+      selectedArea.hidden = false;
+      wordCard.focus();
+      showToast(`🎉 ${segment.word}!`);
+    }
+
+    function finishSpin() {
+      const segmentAngle = 360 / SEGMENTS.length;
+      const normalizedRotation = ((rotation % 360) + 360) % 360;
+      const pointerAngle = (360 - normalizedRotation) % 360;
+      const index = Math.floor(pointerAngle / segmentAngle);
+      spinning = false;
+      stopping = false;
+      stopBtn.hidden = true;
+      stopBtn.disabled = false;
+      spinBtn.disabled = false;
+      showSelectedCard(SEGMENTS[index]);
+    }
+
+    spinBtn.addEventListener('click', () => {
+      if (spinning) return;
+      spinning = true;
+      stopping = false;
+      lastFrameTime = 0;
+      resultEl.textContent = '';
+      selectedArea.hidden = true;
+      spinBtn.disabled = true;
+      stopBtn.hidden = false;
+      animationFrame = requestAnimationFrame(spinFrame);
+    });
+
+    stopBtn.addEventListener('click', () => {
+      if (!spinning || stopping) return;
+      stopping = true;
+      stopBtn.disabled = true;
+      cancelAnimationFrame(animationFrame);
+
+      const startRotation = rotation;
+      const startTime = performance.now();
+      const duration = 1800;
+      const coastDistance = SPIN_SPEED * (duration / 1000) / 2;
+
+      function slowDown(time) {
+        const progress = Math.min((time - startTime) / duration, 1);
+        rotation = startRotation + coastDistance * (2 * progress - progress * progress);
+        renderWheel();
+        if (progress < 1) {
+          animationFrame = requestAnimationFrame(slowDown);
+        } else {
+          finishSpin();
+        }
+      }
+      animationFrame = requestAnimationFrame(slowDown);
+    });
+
+    wordCard.addEventListener('click', () => {
+      const flipped = wordCard.classList.toggle('flipped');
+      wordCard.setAttribute('aria-pressed', String(flipped));
+      wordCard.setAttribute(
+        'aria-label',
+        flipped ? `${cardSentence.textContent} Click to see the word card again.` : `${cardWord.textContent} picture card. Click to reveal the sentence.`
+      );
+    });
+
+    returnBtn.addEventListener('click', () => {
+      selectedArea.hidden = true;
+      spinBtn.focus();
+    });
+  </script>
+</body>
+</html>
