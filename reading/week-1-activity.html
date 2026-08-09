@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bike Race Day Activity — Athlete People</title>
+  <link rel="stylesheet" href="../css/styles.css">
+  <style>
+    .activity-page {
+      width: min(1100px, 94vw);
+      padding-bottom: 46px;
+    }
+    .activity-header {
+      margin-top: 12px;
+      text-align: center;
+    }
+    .activity-header .subtitle { margin-top: 4px; }
+    .activity-intro-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+    .activity-intro-row .speaker-btn {
+      width: 42px;
+      height: 42px;
+      font-size: 1.05rem;
+      box-shadow: 0 4px 0 #106caa;
+    }
+    .activity-board {
+      position: relative;
+      margin-top: 20px;
+      padding: clamp(18px, 3vw, 30px);
+      overflow: hidden;
+      border: 7px solid #fff;
+      border-radius: 34px;
+      background:
+        radial-gradient(circle at 10% 14%, rgba(255,255,255,.9) 0 5px, transparent 6px),
+        radial-gradient(circle at 90% 16%, rgba(255,255,255,.82) 0 7px, transparent 8px),
+        linear-gradient(160deg, #fff9d9, #edfaff 54%, #f5eaff);
+      box-shadow: 0 11px 0 rgba(66,158,210,.2), 0 20px 38px rgba(74,59,82,.13);
+    }
+    .activity-progress {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 16px;
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #365979;
+    }
+    .progress-dots { display: flex; gap: 8px; }
+    .progress-dot {
+      width: 17px;
+      height: 17px;
+      border: 3px solid #79bfe9;
+      border-radius: 50%;
+      background: #fff;
+    }
+    .progress-dot.done { border-color: var(--green-d); background: var(--green); }
+    .progress-dot.current { border-color: var(--orange-d); background: var(--yellow); transform: scale(1.18); }
+    .question-panel {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      gap: 16px;
+      width: min(760px, 100%);
+      margin: 0 auto;
+      padding: 18px 20px;
+      border: 5px solid #78c8f5;
+      border-radius: 27px;
+      background: rgba(255,255,255,.94);
+      box-shadow: 0 7px 0 rgba(57,149,203,.17);
+    }
+    .question-panel.has-picture {
+      grid-template-columns: minmax(150px, 210px) 1fr auto;
+      width: min(920px, 100%);
+    }
+    .question-illustration {
+      display: block;
+      width: 100%;
+      aspect-ratio: 1;
+      border: 4px solid #fff;
+      border-radius: 22px;
+      object-fit: cover;
+      box-shadow: 0 5px 0 rgba(57,149,203,.16), 0 9px 18px rgba(45,80,110,.12);
+    }
+    .question-illustration[hidden] { display: none; }
+    .question-copy { text-align: center; }
+    .question-main {
+      margin: 0;
+      font-size: clamp(1.35rem, 3vw, 1.9rem);
+      line-height: 1.18;
+      color: var(--text);
+    }
+    .question-detail {
+      margin: 7px 0 0;
+      font-family: 'Fredoka', sans-serif;
+      font-size: clamp(1.2rem, 2.8vw, 1.65rem);
+      font-weight: 700;
+      color: #1879bf;
+    }
+    .speaker-btn {
+      display: grid;
+      place-items: center;
+      width: 54px;
+      height: 54px;
+      flex: 0 0 auto;
+      border: 0;
+      border-radius: 50%;
+      color: #fff;
+      background: linear-gradient(180deg, #55c9ff, #198fd7);
+      box-shadow: 0 6px 0 #106caa;
+      font-size: 1.45rem;
+      cursor: pointer;
+      transition: transform .12s ease;
+    }
+    .speaker-btn:hover { transform: translateY(-2px) scale(1.05); }
+    .speaker-btn:active { transform: translateY(3px); }
+    .speaker-btn:disabled { opacity: .55; cursor: default; transform: none; }
+    .speaker-btn:focus-visible,
+    .answer-card:focus-visible { outline: 5px solid var(--yellow); outline-offset: 3px; }
+    .answers-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: clamp(12px, 2vw, 22px);
+      margin-top: 24px;
+    }
+    .answers-grid.final-round { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .answer-card {
+      position: relative;
+      display: flex;
+      min-width: 0;
+      min-height: 250px;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 8px;
+      padding: 12px 12px 16px;
+      border: 5px solid #fff;
+      border-radius: 28px;
+      background: linear-gradient(180deg, #fff, #f3fbff);
+      box-shadow: 0 8px 0 rgba(61,132,180,.18), 0 14px 24px rgba(74,59,82,.08);
+      color: var(--text);
+      font: inherit;
+      cursor: pointer;
+      transition: transform .16s ease, border-color .16s ease, background .16s ease;
+    }
+    .answer-card:hover:not(:disabled) { transform: translateY(-5px) rotate(-.5deg); border-color: var(--yellow); }
+    .answer-card:nth-child(2):hover:not(:disabled) { transform: translateY(-5px) rotate(.5deg); }
+    .answer-card:disabled { cursor: default; }
+    .answer-card.is-correct { border-color: var(--green-d); background: #eaffdf; animation: correct-pop .55s ease; }
+    .answer-card.is-wrong { border-color: #e04b55; background: #ffe9eb; animation: wrong-shake .5s ease; }
+    .medal-picture {
+      position: relative;
+      width: min(100%, 205px);
+      aspect-ratio: 1 / 1.5;
+      overflow: hidden;
+      border-radius: 22px;
+    }
+    .medal-sprite {
+      position: absolute;
+      inset: 0;
+      background-image: url('../assets/images/reading/medals-3d.png');
+      background-repeat: no-repeat;
+      background-size: 300% auto;
+      background-position-y: center;
+    }
+    .medal-picture[data-medal="gold"] .medal-sprite { background-position-x: 0; }
+    .medal-picture[data-medal="silver"] .medal-sprite { background-position-x: 50%; }
+    .medal-picture[data-medal="bronze"] .medal-sprite { background-position-x: 100%; }
+    .ordinal-mark {
+      position: absolute;
+      left: 50%;
+      top: 66%;
+      transform: translate(-50%, -50%);
+      color: rgba(75,55,25,.62);
+      font-family: 'Fredoka', sans-serif;
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 800;
+      text-shadow: 0 2px 1px rgba(255,255,255,.5);
+      pointer-events: none;
+    }
+    .answer-label {
+      font-family: 'Fredoka', sans-serif;
+      font-size: clamp(1.15rem, 2.4vw, 1.45rem);
+      font-weight: 700;
+      line-height: 1.18;
+      text-align: center;
+    }
+    .answer-listen {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: 44px;
+      height: 44px;
+      font-size: 1.15rem;
+      z-index: 2;
+    }
+    .final-answer {
+      justify-content: center;
+      min-height: 420px;
+      gap: 14px;
+      padding: 18px 62px 22px 16px;
+    }
+    .final-choice-picture {
+      display: block;
+      width: min(100%, 290px);
+      aspect-ratio: 1;
+      border: 4px solid #fff;
+      border-radius: 23px;
+      object-fit: cover;
+      box-shadow: 0 6px 0 rgba(74,59,82,.12), 0 10px 20px rgba(74,59,82,.1);
+    }
+    .final-answer .answer-label { font-size: clamp(1.3rem, 3vw, 1.75rem); }
+    .feedback-line {
+      min-height: 34px;
+      margin: 18px 0 0;
+      color: #35627f;
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1.2rem;
+      font-weight: 700;
+      text-align: center;
+    }
+    .feedback-line.good { color: var(--green-d); }
+    .feedback-line.try { color: #d23b47; }
+    .completion-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 180;
+      display: grid;
+      place-items: center;
+      padding: 20px;
+      background: rgba(48,52,86,.48);
+      backdrop-filter: blur(5px);
+    }
+    .completion-overlay[hidden] { display: none; }
+    .completion-card {
+      width: min(570px, 94vw);
+      padding: 30px 26px 26px;
+      border: 8px solid var(--yellow);
+      border-radius: 36px;
+      background: linear-gradient(180deg, #fff, #f5fff0);
+      box-shadow: 0 12px 0 rgba(217,151,0,.28), 0 28px 60px rgba(44,36,67,.28);
+      text-align: center;
+      animation: completion-pop .55s cubic-bezier(.34,1.56,.64,1);
+    }
+    .completion-medal { font-size: 4.2rem; line-height: 1; }
+    .completion-card h2 { margin: 10px 0 5px; color: var(--green-d); font-size: clamp(2rem, 7vw, 2.8rem); }
+    .completion-card p { margin: 0 0 20px; font-family: 'Fredoka', sans-serif; font-size: 1.25rem; font-weight: 700; color: var(--text); }
+    .completion-actions { display: flex; justify-content: center; flex-wrap: wrap; gap: 12px; }
+    @keyframes wrong-shake {
+      0%, 100% { transform: translateX(0); }
+      25%, 75% { transform: translateX(-9px); }
+      50% { transform: translateX(9px); }
+    }
+    @keyframes correct-pop {
+      50% { transform: scale(1.04); }
+    }
+    @keyframes completion-pop {
+      from { opacity: 0; transform: scale(.55) rotate(-4deg); }
+      to { opacity: 1; transform: scale(1) rotate(0); }
+    }
+    @media (max-width: 720px) {
+      .question-panel.has-picture { grid-template-columns: 1fr auto; }
+      .question-panel.has-picture .question-illustration {
+        grid-column: 1 / -1;
+        width: min(240px, 100%);
+        justify-self: center;
+      }
+      .answers-grid { grid-template-columns: 1fr; }
+      .answers-grid.final-round { grid-template-columns: 1fr; }
+      .answer-card { min-height: 190px; }
+      .medal-picture { width: 170px; }
+      .final-answer { min-height: 380px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .answer-card, .completion-card { animation-duration: .01ms !important; transition: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="floaties" aria-hidden="true">
+    <span style="top:12%; left:4%;">🏅</span>
+    <span style="top:72%; left:94%;">🚲</span>
+  </div>
+
+  <main class="page activity-page">
+    <a class="back-link" href="week-1.html">⬅️ Bike Race Day</a>
+
+    <header class="activity-header">
+      <h1 class="big-title page-title-with-icon" style="font-size:2.4rem;"><img class="page-title-icon" src="../assets/images/ui/reading-3d.png" alt="">Medal Challenge</h1>
+      <div class="activity-intro-row">
+        <p class="subtitle">Listen carefully, then choose the right answer!</p>
+        <button class="speaker-btn" id="intro-speaker" type="button" aria-label="Listen to the activity instructions">🔊</button>
+      </div>
+    </header>
+
+    <section class="activity-board" aria-labelledby="question-main">
+      <div class="activity-progress">
+        <span id="progress-label">Question 1 of 4</span>
+        <span class="progress-dots" id="progress-dots" aria-hidden="true"></span>
+      </div>
+
+      <div class="question-panel">
+        <img
+          class="question-illustration"
+          id="question-illustration"
+          src="../assets/images/reading/last-question-finished-last.png"
+          alt="A child finishes the bicycle race last and looks disappointed."
+          hidden
+        >
+        <div class="question-copy">
+          <h2 class="question-main" id="question-main"></h2>
+          <p class="question-detail" id="question-detail"></p>
+        </div>
+        <button class="speaker-btn" id="question-speaker" type="button" aria-label="Listen to the question">🔊</button>
+      </div>
+
+      <div class="answers-grid" id="answers-grid"></div>
+      <p class="feedback-line" id="feedback-line" aria-live="polite"></p>
+    </section>
+  </main>
+
+  <div class="completion-overlay" id="completion-overlay" role="dialog" aria-modal="true" aria-labelledby="completion-title" hidden>
+    <div class="completion-card">
+      <div class="completion-medal" aria-hidden="true">🏆</div>
+      <h2 id="completion-title">Great job!</h2>
+      <p id="completion-message">You finished the Bike Race Day activity!</p>
+      <div class="completion-actions">
+        <button class="speaker-btn" id="completion-speaker" type="button" aria-label="Listen to the congratulations message">🔊</button>
+        <button class="pill-btn green" id="try-again" type="button">🔄 Try Again</button>
+        <a class="pill-btn blue" href="week-1.html">🎬 Back to Reading</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="../js/main.js"></script>
+  <script src="../js/reading-week-1-activity.js"></script>
+</body>
+</html>

@@ -19,17 +19,22 @@
       border: none;
       border-radius: 20px;
       cursor: pointer;
-      background: linear-gradient(180deg, var(--purple), var(--purple-d));
-      box-shadow: 0 5px 0 #6a41c0;
+      border: 4px solid rgba(255,255,255,.82);
+      background:
+        radial-gradient(circle at 28% 20%, rgba(255,255,255,.58), transparent 24%),
+        linear-gradient(145deg, #42d8c8, var(--purple-d));
+      box-shadow: inset 0 -10px 16px rgba(8,83,66,.22), inset 0 5px 8px rgba(255,255,255,.42), 0 8px 0 #08765e, 0 14px 18px rgba(30,58,95,.2);
       overflow: hidden;
       padding: 9px;
       position: relative;
       transition: transform .2s ease, background .2s ease, box-shadow .2s ease;
     }
     .mem-card::after {
-      content: '⚽';
-      color: rgba(255,255,255,.85);
-      font-size: clamp(1.5rem, 5vw, 2.3rem);
+      content: '?';
+      color: #fff7b0;
+      font-size: clamp(2.4rem, 8vw, 4rem);
+      font-weight: 800;
+      text-shadow: 0 4px 0 #d68d00, 0 8px 12px rgba(30,58,95,.25);
       position: absolute;
       inset: 0;
       display: grid;
@@ -41,7 +46,9 @@
       display: grid;
       place-items: center;
       border-radius: 14px;
-      background: var(--white);
+      border: 3px solid #fff;
+      background: radial-gradient(circle at 35% 24%, #ffffff, #e9f8ff 74%);
+      box-shadow: inset 0 -8px 13px rgba(30,111,217,.09);
       opacity: 0;
       transform: scale(.72);
       transition: opacity .18s ease, transform .18s ease;
@@ -52,12 +59,13 @@
       height: 100%;
       object-fit: contain;
       border-radius: 12px;
+      filter: drop-shadow(0 9px 6px rgba(30,58,95,.2));
     }
     .card-picture.emoji { font-size: clamp(3rem, 11vw, 5rem); }
     .mem-card.flipped, .mem-card.matched, .mem-card.previewing {
       background: var(--white);
       transform: scale(1.02);
-      box-shadow: 0 5px 0 rgba(74,59,82,.15);
+      box-shadow: 0 8px 0 rgba(30,111,217,.16), 0 14px 18px rgba(30,58,95,.16);
     }
     .mem-card.flipped::after, .mem-card.matched::after, .mem-card.previewing::after { content: ''; }
     .mem-card.flipped .card-picture,
@@ -104,6 +112,43 @@
       overflow: hidden;
     }
     .celebration[hidden] { display: none; }
+    .match-sentence-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 180;
+      display: grid;
+      place-items: center;
+      padding: 22px;
+      background: rgba(30,58,95,.38);
+      backdrop-filter: blur(4px);
+    }
+    .match-sentence-modal[hidden] { display: none; }
+    .match-sentence-card {
+      width: min(470px, 94vw);
+      padding: 24px 26px 26px;
+      border: 7px solid var(--yellow);
+      border-radius: 34px;
+      background: radial-gradient(circle at 35% 18%, #fff, #eefaff 82%);
+      box-shadow: inset 0 -10px 18px rgba(30,111,217,.07), 0 12px 0 #d9aa00, 0 24px 46px rgba(30,58,95,.28);
+      text-align: center;
+      animation: celebration-pop .42s cubic-bezier(.34,1.56,.64,1);
+    }
+    .match-sentence-card img {
+      display: block;
+      width: min(230px, 64vw);
+      height: 210px;
+      margin: 0 auto 8px;
+      object-fit: contain;
+      filter: drop-shadow(0 12px 7px rgba(30,58,95,.2));
+    }
+    .match-sentence-card h2 { color: var(--green-d); font-size: 2rem; }
+    .match-key-sentence {
+      margin: 8px 0 20px;
+      color: var(--text);
+      font-family: 'Fredoka', sans-serif;
+      font-size: clamp(1.35rem, 5vw, 1.85rem);
+      font-weight: 600;
+    }
     .celebration-card {
       position: relative;
       z-index: 2;
@@ -160,8 +205,8 @@
     <a class="back-link" href="index.html?week=1">⬅️ All Games</a>
 
     <header class="center" style="margin-top:16px;">
-      <h1 class="big-title" style="font-size:2.4rem;">🃏 Memory Game</h1>
-      <p class="subtitle">Look carefully, then find all 6 matching pairs!</p>
+      <h1 class="big-title page-title-with-icon" style="font-size:2.4rem;"><img class="page-title-icon" src="../assets/images/ui/game-memory.png" alt="">Memory Game</h1>
+      <p class="subtitle">Look carefully, then find the 6 matching pairs!</p>
     </header>
 
     <div class="game-actions">
@@ -174,6 +219,16 @@
     <div class="status-row">
       <span>Moves: <span id="moves">0</span></span>
       <span>Pairs: <span id="pairs">0</span> / 6</span>
+    </div>
+  </div>
+
+  <div class="match-sentence-modal" id="match-sentence-modal" role="dialog" aria-modal="true"
+       aria-labelledby="match-sentence-title" hidden>
+    <div class="match-sentence-card">
+      <h2 id="match-sentence-title">Great match!</h2>
+      <img id="match-sentence-image" src="" alt="">
+      <p class="match-key-sentence" id="match-key-sentence"></p>
+      <button class="pill-btn green" id="match-sentence-continue" type="button">✓ Continue</button>
     </div>
   </div>
 
@@ -190,13 +245,14 @@
   <script src="../js/main.js"></script>
   <script>
     const PICTURES = [
-      { id: 'tennis',   label: 'tennis',   emoji: '🎾', src: '../assets/images/week-1/memory/tennis.png' },
-      { id: 'baseball', label: 'baseball', emoji: '⚾', src: '../assets/images/week-1/memory/baseball.png' },
-      { id: 'soccer',   label: 'soccer',   emoji: '⚽', src: '../assets/images/week-1/memory/soccer.png' },
-      { id: 'golf',     label: 'golf',     emoji: '⛳', src: '../assets/images/week-1/memory/golf.png' },
-      { id: 'meat',     label: 'meat',     emoji: '🥩', src: '../assets/images/week-1/memory/meat.png' },
-      { id: 'milk',     label: 'milk',     emoji: '🥛', src: '../assets/images/week-1/memory/milk.png' },
-      { id: 'mango',    label: 'mango',    emoji: '🥭', src: '../assets/images/week-1/memory/mango.png' }
+      { id: 'tennis',   label: 'tennis',   sentence: 'I play tennis.',     emoji: '🎾', src: '../assets/images/week-1/memory/tennis.png' },
+      { id: 'baseball', label: 'baseball', sentence: 'I play baseball.',   emoji: '⚾', src: '../assets/images/week-1/memory/baseball.png' },
+      { id: 'soccer',   label: 'soccer',   sentence: 'I play soccer.',     emoji: '⚽', src: '../assets/images/week-1/memory/soccer.png' },
+      { id: 'golf',     label: 'golf',     sentence: 'I play golf.',       emoji: '⛳', src: '../assets/images/week-1/memory/golf.png' },
+      { id: 'mango',    label: 'mango',    sentence: 'The mango is here.', emoji: '🥭', src: '../assets/images/week-1/memory/mango.png' },
+      { id: 'meat',     label: 'meat',     sentence: 'The meat is here.',  emoji: '🥩', src: '../assets/images/week-1/memory/meat.png' },
+      { id: 'milk',     label: 'milk',     sentence: 'The milk is here.',  emoji: '🥛', src: '../assets/images/week-1/memory/milk.png' },
+      { id: 'athlete',  label: 'athlete',  sentence: 'I am an athlete.',   emoji: '🏃', src: '../assets/images/week-1/memory/athlete.png' }
     ];
 
     const board = document.getElementById('board');
@@ -206,6 +262,10 @@
     const celebration = document.getElementById('celebration');
     const celebrationAgain = document.getElementById('celebration-again');
     const confetti = document.getElementById('confetti');
+    const matchSentenceModal = document.getElementById('match-sentence-modal');
+    const matchSentenceImage = document.getElementById('match-sentence-image');
+    const matchKeySentence = document.getElementById('match-key-sentence');
+    const matchSentenceContinue = document.getElementById('match-sentence-continue');
     const sounds = (() => {
       let ctx = null;
 
@@ -258,6 +318,7 @@
     let lastDeckSignature = '';
     let previewInterval = null;
     let previewTimeout = null;
+    let celebrateAfterSentence = false;
 
     let usVoice = null;
 
@@ -311,12 +372,27 @@
       celebrationAgain.focus();
     }
 
+    function showMatchSentence(pictureId) {
+      const picture = PICTURES.find(item => item.id === pictureId);
+      if (!picture) { lock = false; return; }
+      celebrateAfterSentence = matchedCount === activePictures.length;
+      matchSentenceImage.src = picture.src;
+      matchSentenceImage.alt = picture.label;
+      matchKeySentence.textContent = picture.sentence;
+      matchSentenceModal.hidden = false;
+      speak(picture.sentence);
+      matchSentenceContinue.focus();
+    }
+
     function startGame() {
       gameNumber++;
       clearInterval(previewInterval);
       clearTimeout(previewTimeout);
       celebration.hidden = true;
+      matchSentenceModal.hidden = true;
+      celebrateAfterSentence = false;
       confetti.innerHTML = '';
+      // Twelve cards total: six randomly selected matching pairs.
       activePictures = shuffle(PICTURES).slice(0, 6);
       let deck;
       let deckSignature;
@@ -385,15 +461,14 @@
       movesEl.textContent = moves;
 
       if (first.dataset.picture === card.dataset.picture) {
+        lock = true;
         sounds.match();
         first.classList.add('matched');
         card.classList.add('matched');
         first = null;
         matchedCount++;
         pairsEl.textContent = matchedCount;
-        if (matchedCount === activePictures.length) {
-          setTimeout(showCelebration, 350);
-        }
+        setTimeout(() => showMatchSentence(card.dataset.picture), 300);
       } else {
         sounds.wrong();
         lock = true;
@@ -444,6 +519,12 @@
     previewButton.addEventListener('click', previewCards);
     document.getElementById('restart').addEventListener('click', startGame);
     celebrationAgain.addEventListener('click', startGame);
+    matchSentenceContinue.addEventListener('click', () => {
+      matchSentenceModal.hidden = true;
+      if ('speechSynthesis' in window) speechSynthesis.cancel();
+      if (celebrateAfterSentence) showCelebration();
+      else lock = false;
+    });
     startGame();
   </script>
 </body>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Week 1 — Page 4 — Athlete People</title>
+  <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+  <div class="page static-literacy-page">
+    <nav class="top-page-nav" aria-label="Page navigation">
+      <a class="back-link" href="week-1-page-03.html#lesson-focus">⬅️ Previous Page</a>
+      <a class="back-link next-page-link" href="week-1-page-05.html#lesson-focus">Next Page ➡️</a>
+    </nav>
+    <a class="literacy-list-link" href="index.html">📚 Weekly Literacy List</a>
+
+    <header class="center" style="margin-top:16px;">
+      <h1 class="big-title" style="font-size:2.4rem;">Week 1 - What sports do you play?</h1>
+      <nav class="week-tools" aria-label="Week tools">
+        <a class="pill-btn orange" href="tpr.html?week=1">🤸 TPR</a>
+        <a class="pill-btn blue" href="flashcards.html?week=1">🃏 Flashcards</a>
+      </nav>
+    </header>
+
+    <main id="lesson-focus" class="card static-literacy-card page4-activity-card" aria-label="Count the sports activity">
+      <div class="page4-picture-stage">
+        <img
+          src="../assets/images/week-1/page-04-many-sports.png"
+          width="1412"
+          height="1114"
+          alt="I play many sports. How many sports does she play? Soccer plus tennis equals an empty answer box."
+        >
+
+        <video
+          id="page4-intro-video"
+          class="page4-intro-video"
+          src="../assets/video/week-1/page-04-intro.mp4"
+          playsinline
+          preload="auto"
+          hidden
+        ></video>
+        <button id="page4-start-activity" class="page4-start-activity" type="button" hidden>▶ Start Activity</button>
+
+        <div id="sports-number-box" class="sports-number-box" aria-live="polite" aria-label="Selected answer: 0">
+          <span id="sports-number-value">0</span>
+        </div>
+        <div class="sports-step-controls" aria-label="Change the number">
+          <button id="sports-number-up" type="button" aria-label="Increase number" disabled>▲</button>
+          <button id="sports-number-down" type="button" aria-label="Decrease number" disabled>▼</button>
+        </div>
+        <button id="sports-number-go" class="sports-number-go" type="button" disabled>Go!</button>
+
+        <video
+          id="page4-good-job-video"
+          class="page4-good-job-video"
+          src="../assets/video/week-1/page-04-good-job.mp4"
+          playsinline
+          preload="auto"
+          hidden
+        ></video>
+
+        <div id="page4-complete" class="page4-complete" hidden>
+          <strong>Great job! She plays two sports.</strong>
+          <button id="restart-page4" class="pill-btn blue" type="button">↻ Try Again</button>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="../js/main.js"></script>
+  <script src="../js/week-1-page-04.js"></script>
+</body>
+</html>

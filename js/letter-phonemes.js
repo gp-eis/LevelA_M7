@@ -1,260 +1,129 @@
 /* ============================================================
-   Athlete People — American English phoneme audio system
+   Letter phonemes for Athlete People phonics games
 
-   - Prerecorded WAV playback only (no browser TTS / speechSynthesis)
-   - Each grapheme stores IPA, example word, and audio path
-   - Letters may have multiple sounds; click plays the primary (index 0)
-     or a chosen alternate via playLetterPhoneme(letter, soundIndex)
+   Primary classroom sound when a letter has more than one:
+   A /æ/ cat  B /b/ bat  C /k/ cat  D /d/ dog  E /ĕ/ bed
+   F /f/ fan  G /g/ go   H /h/ hat  I /ĭ/ igloo J /j/ jam
+   K /k/ kite L /l/ leg  M /em/     N /n/ net  O /ŏ/ pot
+   P /p/ pen  Q /kw/ queen R /r/ run S /s/ sun T /t/ top
+   U /ŭ/ cup  V /v/ van  W /w/ water X /ks/ box Y /y/ yellow
+   Z /z/ zoo
+
+   Each click plays ONE short sound (previous speech is cancelled).
    ============================================================ */
 
-(function initPhonemeAudioBase() {
-  const script = document.currentScript;
-  window.PHONEME_AUDIO_BASE = script
-    ? new URL('../assets/audio/phonemes/', script.src).href
-    : '../assets/audio/phonemes/';
-})();
-
-/**
- * @typedef {{ ipa: string, example: string, file: string }} PhonemeSound
- * @typedef {{ grapheme: string, sounds: PhonemeSound[] }} GraphemeEntry
- */
-
-/** @type {Record<string, GraphemeEntry>} */
-window.LETTER_PHONEMES = {
-  a: {
-    grapheme: 'Aa',
-    sounds: [
-      { ipa: '/æ/', example: 'cat', file: 'a-ae.wav' },
-      { ipa: '/eɪ/', example: 'acorn', file: 'a-ei.wav' }
-    ]
-  },
-  b: {
-    grapheme: 'Bb',
-    sounds: [
-      { ipa: '/b/', example: 'bat', file: 'b.wav' }
-    ]
-  },
-  c: {
-    grapheme: 'Cc',
-    sounds: [
-      { ipa: '/k/', example: 'cat', file: 'c-k.wav' },
-      { ipa: '/s/', example: 'cent', file: 'c-s.wav' }
-    ]
-  },
-  d: {
-    grapheme: 'Dd',
-    sounds: [
-      { ipa: '/d/', example: 'dog', file: 'd.wav' }
-    ]
-  },
-  e: {
-    grapheme: 'Ee',
-    sounds: [
-      { ipa: '/ɛ/', example: 'bed', file: 'e-eh.wav' },
-      { ipa: '/i/', example: 'me', file: 'e-ee.wav' }
-    ]
-  },
-  f: {
-    grapheme: 'Ff',
-    sounds: [
-      { ipa: '/f/', example: 'fan', file: 'f.wav' }
-    ]
-  },
-  g: {
-    grapheme: 'Gg',
-    sounds: [
-      { ipa: '/ɡ/', example: 'go', file: 'g-g.wav' },
-      { ipa: '/dʒ/', example: 'gem', file: 'g-j.wav' }
-    ]
-  },
-  h: {
-    grapheme: 'Hh',
-    sounds: [
-      { ipa: '/h/', example: 'hat', file: 'h.wav' }
-    ]
-  },
-  i: {
-    grapheme: 'Ii',
-    sounds: [
-      { ipa: '/ɪ/', example: 'igloo', file: 'i-ih.wav' },
-      { ipa: '/aɪ/', example: 'ice', file: 'i-ai.wav' }
-    ]
-  },
-  j: {
-    grapheme: 'Jj',
-    sounds: [
-      { ipa: '/dʒ/', example: 'jam', file: 'j.wav' }
-    ]
-  },
-  k: {
-    grapheme: 'Kk',
-    sounds: [
-      { ipa: '/k/', example: 'kite', file: 'k.wav' }
-    ]
-  },
-  l: {
-    grapheme: 'Ll',
-    sounds: [
-      { ipa: '/l/', example: 'leg', file: 'l.wav' }
-    ]
-  },
-  m: {
-    grapheme: 'Mm',
-    sounds: [
-      { ipa: '/m/', example: 'mop', file: 'm.wav' }
-    ]
-  },
-  n: {
-    grapheme: 'Nn',
-    sounds: [
-      { ipa: '/n/', example: 'net', file: 'n.wav' }
-    ]
-  },
-  o: {
-    grapheme: 'Oo',
-    sounds: [
-      { ipa: '/ɑ/', example: 'pot', file: 'o-ah.wav' },
-      { ipa: '/oʊ/', example: 'go', file: 'o-ou.wav' }
-    ]
-  },
-  p: {
-    grapheme: 'Pp',
-    sounds: [
-      { ipa: '/p/', example: 'pen', file: 'p.wav' }
-    ]
-  },
-  q: {
-    grapheme: 'Qq',
-    sounds: [
-      { ipa: '/kw/', example: 'queen', file: 'q-kw.wav' }
-    ]
-  },
-  r: {
-    grapheme: 'Rr',
-    sounds: [
-      { ipa: '/ɹ/', example: 'run', file: 'r.wav' }
-    ]
-  },
-  s: {
-    grapheme: 'Ss',
-    sounds: [
-      { ipa: '/s/', example: 'sun', file: 's.wav' },
-      { ipa: '/z/', example: 'bugs', file: 's-z.wav' }
-    ]
-  },
-  t: {
-    grapheme: 'Tt',
-    sounds: [
-      { ipa: '/t/', example: 'top', file: 't.wav' }
-    ]
-  },
-  u: {
-    grapheme: 'Uu',
-    sounds: [
-      { ipa: '/ʌ/', example: 'cup', file: 'u-uh.wav' },
-      { ipa: '/ju/', example: 'unicorn', file: 'u-yu.wav' }
-    ]
-  },
-  v: {
-    grapheme: 'Vv',
-    sounds: [
-      { ipa: '/v/', example: 'van', file: 'v.wav' }
-    ]
-  },
-  w: {
-    grapheme: 'Ww',
-    sounds: [
-      { ipa: '/w/', example: 'water', file: 'w.wav' }
-    ]
-  },
-  x: {
-    grapheme: 'Xx',
-    sounds: [
-      { ipa: '/ks/', example: 'box', file: 'x-ks.wav' }
-    ]
-  },
-  y: {
-    grapheme: 'Yy',
-    sounds: [
-      { ipa: '/j/', example: 'yellow', file: 'y-y.wav' },
-      { ipa: '/ɪ/', example: 'gym', file: 'y-ih.wav' },
-      { ipa: '/aɪ/', example: 'sky', file: 'y-ai.wav' }
-    ]
-  },
-  z: {
-    grapheme: 'Zz',
-    sounds: [
-      { ipa: '/z/', example: 'zoo', file: 'z.wav' }
-    ]
-  }
+window.LETTER_PHONEME_SAY = {
+  a: 'ae',       // /æ/ as in cat
+  b: 'buh',      // /b/ as in bat
+  c: 'kuh',      // /k/ as in cat
+  d: 'duh',      // /d/ as in dog
+  e: 'eh',       // /ĕ/ as in bed
+  f: 'fff',      // /f/ as in fan
+  g: 'guh',      // /g/ as in go
+  h: 'huh',      // /h/ as in hat
+  i: 'ih',       // /ĭ/ as in igloo
+  j: 'juh',      // /j/ as in jam
+  k: 'kuh',      // /k/ as in kite
+  l: 'lll',      // /l/ as in leg
+  m: 'em',       // /em/ — once only
+  n: 'nnn',      // /n/ as in net
+  o: 'ah',       // /ŏ/ as in pot
+  p: 'puh',      // /p/ as in pen
+  q: 'kwuh',     // /kw/ as in queen
+  r: 'rrr',      // /r/ as in run
+  s: 'sss',      // /s/ as in sun
+  t: 'tuh',      // /t/ as in top
+  u: 'uh',       // /ŭ/ as in cup
+  v: 'vvv',      // /v/ as in van
+  w: 'wuh',      // /w/ as in water
+  x: 'ks',       // /ks/ as in box
+  y: 'yuh',      // /y/ as in yellow
+  z: 'zzz'       // /z/ as in zoo
 };
 
-window._phonemeAudio = null;
+window._phonemeVoice = null;
 window._phonemeToken = 0;
+window._phonemeAudio = null;
+window._phonemeResolve = null;
 
-function resolvePhonemeUrl(fileName) {
-  return new URL(fileName, window.PHONEME_AUDIO_BASE).href;
+function getLetterRecordingBase() {
+  const script = document.querySelector('script[src*="letter-phonemes.js"]');
+  if (!script) return '../assets/audio/phonics/letters/';
+  return script.getAttribute('src').replace(/js\/letter-phonemes\.js(?:\?.*)?$/, 'assets/audio/phonics/letters/');
 }
 
-function getLetterPhonemeEntry(letter) {
-  if (!letter) return null;
-  return window.LETTER_PHONEMES[String(letter).toLowerCase()] || null;
+function pickPhonemeVoice() {
+  if (!('speechSynthesis' in window)) return;
+  const voices = speechSynthesis.getVoices();
+  window._phonemeVoice =
+    voices.find(v => v.lang === 'en-US' && /google|samantha|zira|jenny|aria|english/i.test(v.name))
+    || voices.find(v => v.lang.startsWith('en-US'))
+    || voices.find(v => v.lang.startsWith('en'))
+    || null;
 }
 
-function getLetterPhonemeSound(letter, soundIndex = 0) {
-  const entry = getLetterPhonemeEntry(letter);
-  if (!entry || !entry.sounds.length) return null;
-  const index = Math.max(0, Math.min(soundIndex, entry.sounds.length - 1));
-  return entry.sounds[index];
+if ('speechSynthesis' in window) {
+  pickPhonemeVoice();
+  speechSynthesis.addEventListener('voiceschanged', pickPhonemeVoice);
 }
 
 /**
- * Immediately play the grapheme's assigned audio file.
- * @param {string} letter - grapheme (e.g. "M" or "m")
- * @param {number} [soundIndex=0] - which sound to play when multiple exist
+ * Play the letter phoneme once per click.
  */
-window.playLetterPhoneme = function playLetterPhoneme(letter, soundIndex = 0) {
-  const sound = getLetterPhonemeSound(letter, soundIndex);
-  if (!sound) return;
+window.playLetterPhoneme = function playLetterPhoneme(letter) {
+  if (!letter) return Promise.resolve();
+
+  const key = String(letter).toLowerCase();
+  if (!/^[a-z]$/.test(key)) return Promise.resolve();
 
   const token = ++window._phonemeToken;
+
+  if (window._phonemeResolve) window._phonemeResolve();
 
   if (window._phonemeAudio) {
     window._phonemeAudio.pause();
     window._phonemeAudio.currentTime = 0;
-    window._phonemeAudio = null;
   }
+  if ('speechSynthesis' in window) speechSynthesis.cancel();
 
-  const audio = new Audio(resolvePhonemeUrl(sound.file));
-  window._phonemeAudio = audio;
+  const recording = new Audio(`${getLetterRecordingBase()}${key}.mp3`);
+  window._phonemeAudio = recording;
+  recording.preload = 'auto';
+  recording.volume = 1;
 
-  audio.addEventListener('ended', () => {
-    if (token === window._phonemeToken) window._phonemeAudio = null;
-  });
+  return new Promise((resolve) => {
+    let finished = false;
+    const finish = () => {
+      if (finished) return;
+      finished = true;
+      if (window._phonemeResolve === finish) window._phonemeResolve = null;
+      resolve();
+    };
+    window._phonemeResolve = finish;
+    recording.addEventListener('ended', finish, { once: true });
 
-  const playPromise = audio.play();
-  if (playPromise && typeof playPromise.catch === 'function') {
-    playPromise.catch(() => {
-      if (token === window._phonemeToken) {
-        console.warn(`Phoneme audio missing or blocked: ${sound.file} (${sound.ipa} as in ${sound.example})`);
+    recording.play().catch(() => {
+      if (token !== window._phonemeToken || !('speechSynthesis' in window)) {
+        finish();
+        return;
       }
+
+      // Keep the original synthetic pronunciation as an offline fallback.
+      const say = (window.LETTER_PHONEME_SAY && window.LETTER_PHONEME_SAY[key]) || key;
+      const utterance = new SpeechSynthesisUtterance(say);
+      utterance.lang = 'en-US';
+      utterance.rate = key === 'm' ? 0.95 : 0.8;
+      utterance.pitch = 1;
+      utterance.volume = 1;
+      utterance.onend = finish;
+      utterance.onerror = finish;
+      if (window._phonemeVoice) utterance.voice = window._phonemeVoice;
+      speechSynthesis.speak(utterance);
     });
-  }
+  });
 };
 
-/** Play every sound for a letter once, in order (useful for multi-sound letters). */
-window.playAllLetterPhonemes = function playAllLetterPhonemes(letter) {
-  const entry = getLetterPhonemeEntry(letter);
-  if (!entry) return;
-
-  let i = 0;
-  const playNext = () => {
-    if (i >= entry.sounds.length) return;
-    playLetterPhoneme(letter, i);
-    const audio = window._phonemeAudio;
-    i += 1;
-    if (!audio) return;
-    audio.addEventListener('ended', playNext, { once: true });
-  };
-  playNext();
-};
+/*
+ * Each recording says the letter name followed by its classroom phoneme.
+ * The text-to-speech table above remains only as a missing-file fallback.
+ */

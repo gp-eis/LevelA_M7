@@ -1,2 +1,7 @@
-# Auto detect text files and perform LF normalization
+# Normalize text files while preserving binary learning media.
 * text=auto
+*.mp4 binary
+*.mp3 binary
+*.png binary
+*.jpg binary
+*.jpeg binary

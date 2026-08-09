@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Week 1 — Cyclist Order — Athlete People</title>
+  <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body class="cyclist-activity-body">
+  <div class="page cyclist-page">
+    <svg class="chroma-filter-defs" width="0" height="0" aria-hidden="true">
+      <filter id="green-screen-key" x="-10%" y="-10%" width="120%" height="120%" color-interpolation-filters="sRGB">
+        <feColorMatrix in="SourceGraphic" result="green-vs-red" values="
+          0 0 0 0 0
+          0 0 0 0 0
+          0 0 0 0 0
+         -1 1 0 0 0" />
+        <feColorMatrix in="SourceGraphic" result="green-vs-blue" values="
+          0 0 0 0 0
+          0 0 0 0 0
+          0 0 0 0 0
+          0 1 -1 0 0" />
+        <feComposite in="green-vs-red" in2="green-vs-blue" operator="arithmetic" k1="1" result="green-key" />
+        <feComponentTransfer in="green-key" result="keep-mask">
+          <feFuncA type="linear" slope="-5" intercept="1.15" />
+        </feComponentTransfer>
+        <feComposite in="SourceGraphic" in2="keep-mask" operator="in" />
+      </filter>
+    </svg>
+
+    <nav class="top-page-nav" aria-label="Page navigation">
+      <a class="back-link cyclist-back" href="week-1-page-02.html#lesson-focus">⬅️ Previous Page</a>
+      <a class="back-link next-page-link" href="week-1-page-04.html#lesson-focus">Next Page ➡️</a>
+    </nav>
+    <a class="literacy-list-link" href="index.html">📚 Weekly Literacy List</a>
+
+    <header class="center cyclist-header">
+      <h1 class="big-title">Week 1 - What sports do you play?</h1>
+      <nav class="week-tools" aria-label="Week tools">
+        <a class="pill-btn orange" href="tpr.html?week=1">🤸 TPR</a>
+        <a class="pill-btn blue" href="flashcards.html?week=1">🃏 Flashcards</a>
+      </nav>
+    </header>
+
+    <main id="lesson-focus" class="card cyclist-activity" aria-labelledby="cyclist-question">
+      <div class="cyclist-picture-stage">
+        <img
+          src="../assets/images/week-1/page-03-cyclists.png"
+          width="1412"
+          height="1114"
+          alt="Four cyclists approaching a finish line. From left to right they are last, third, second, and first."
+        >
+
+        <button class="cyclist-hotspot cyclist-last" type="button" data-position="last" aria-label="Choose the cyclist who is last">
+          <img src="../assets/images/week-1/cyclists/cyclist-last.png" alt=""><span>Last cyclist</span>
+        </button>
+        <button class="cyclist-hotspot cyclist-third" type="button" data-position="third" aria-label="Choose the cyclist who is third">
+          <img src="../assets/images/week-1/cyclists/cyclist-third.png" alt=""><span>Third cyclist</span>
+        </button>
+        <button class="cyclist-hotspot cyclist-second" type="button" data-position="second" aria-label="Choose the cyclist who is second">
+          <img src="../assets/images/week-1/cyclists/cyclist-second.png" alt=""><span>Second cyclist</span>
+        </button>
+        <button class="cyclist-hotspot cyclist-first" type="button" data-position="first" aria-label="Choose the cyclist who is first">
+          <img src="../assets/images/week-1/cyclists/cyclist-first.png" alt=""><span>First cyclist</span>
+        </button>
+
+        <div id="cyclist-complete" class="cyclist-complete" hidden>
+          <strong>Great job!</strong>
+          <span>You found all four cyclists!</span>
+          <button id="restart-cyclists" class="pill-btn blue" type="button">↻ Try Again</button>
+        </div>
+        <video
+          id="cyclist-good-job-video"
+          class="cyclist-good-job-video"
+          data-src="../assets/video/week-1/page-03-good-job.mp4"
+          playsinline
+          preload="auto"
+          hidden
+        ></video>
+      </div>
+
+      <section class="cyclist-question-panel">
+        <button id="speak-cyclist-question" class="sentence-speaker" type="button" aria-label="Listen to the question">🔊</button>
+        <h2 id="cyclist-question">Who is first (1st)?</h2>
+        <span id="cyclist-progress" class="cyclist-progress">1 of 4</span>
+      </section>
+    </main>
+  </div>
+
+  <script src="../js/main.js"></script>
+  <script src="../js/week-1-page-03.js"></script>
+</body>
+</html>

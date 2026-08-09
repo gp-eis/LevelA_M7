@@ -245,7 +245,7 @@
     <a class="back-link" href="phonics.html">⬅️ Phonics</a>
 
     <header class="center" style="margin-top:16px;">
-      <h1 class="big-title" style="font-size:2.4rem;">🧩 Build the Word</h1>
+      <h1 class="big-title page-title-with-icon" style="font-size:2.4rem;"><img class="page-title-icon" src="../../assets/images/ui/game-matching.png" alt="">Build the Word</h1>
       <p class="subtitle">Tap the letters to build the word!</p>
     </header>
 
@@ -443,6 +443,7 @@
         tile.dataset.id = item.id;
         tile.dataset.letter = item.letter;
         tile.setAttribute('aria-label', `Letter ${item.letter}`);
+        tile.setAttribute('data-no-click-sound', '');
         tile.addEventListener('click', () => placeLetter(tile));
         lettersBank.appendChild(tile);
       });
@@ -484,7 +485,14 @@
       sounds.place();
       statusText.textContent = '';
 
-      if (placed.every(Boolean)) checkWord();
+      if (placed.every(Boolean)) {
+        locked = true;
+        window.setTimeout(() => {
+          Promise.resolve(playLetterPhoneme(tile.dataset.letter)).then(checkWord);
+        }, 90);
+      } else {
+        window.setTimeout(() => playLetterPhoneme(tile.dataset.letter), 90);
+      }
     }
 
     function removeFromSlot(index) {
@@ -523,12 +531,12 @@
 
       if (built === current.word) {
         [...slotsRow.children].forEach(slot => slot.classList.add('correct'));
-        sounds.correct();
         statusText.textContent = `You built ${current.word}!`;
+        await speak(current.word.toLowerCase());
+        sounds.correct();
         successWord.textContent = current.word;
         successModal.hidden = false;
         continueBtn.focus();
-        await speak(current.word.toLowerCase());
         return;
       }
 
@@ -537,8 +545,8 @@
       statusText.textContent = 'Almost! Try again.';
       setTimeout(() => {
         slotsRow.classList.remove('wrong');
-        clearWord();
         locked = false;
+        clearWord();
       }, 650);
     }
 

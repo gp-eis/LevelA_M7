@@ -1,0 +1,153 @@
+(() => {
+  const CORRECT_ANSWER = 2;
+  const MIN_ANSWER = 0;
+  const MAX_ANSWER = 5;
+  const QUESTION_AUDIO = '../assets/audio/week-1/page-04-question.mp3';
+
+  function speakCompletion() {
+    if (typeof soundEnabled !== 'undefined' && !soundEnabled) return;
+    if (!('speechSynthesis' in window)) return;
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance('Great job! She plays two sports.');
+    utterance.lang = 'en-US';
+    utterance.rate = 0.82;
+    utterance.pitch = 1.05;
+    window.speechSynthesis.speak(utterance);
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const valueElement = document.getElementById('sports-number-value');
+    const numberBox = document.getElementById('sports-number-box');
+    const upButton = document.getElementById('sports-number-up');
+    const downButton = document.getElementById('sports-number-down');
+    const goButton = document.getElementById('sports-number-go');
+    const introVideo = document.getElementById('page4-intro-video');
+    const startButton = document.getElementById('page4-start-activity');
+    const goodJobVideo = document.getElementById('page4-good-job-video');
+    const completePanel = document.getElementById('page4-complete');
+    const restartButton = document.getElementById('restart-page4');
+    let selectedNumber = 0;
+    let completed = false;
+    let activityReady = false;
+    let questionAudio;
+
+    function updateNumber(nextNumber) {
+      selectedNumber = Math.max(MIN_ANSWER, Math.min(MAX_ANSWER, nextNumber));
+      valueElement.textContent = selectedNumber;
+      numberBox.setAttribute('aria-label', `Selected answer: ${selectedNumber}`);
+      numberBox.classList.remove('is-wrong');
+      upButton.disabled = !activityReady || selectedNumber >= MAX_ANSWER;
+      downButton.disabled = !activityReady || selectedNumber <= MIN_ANSWER;
+      goButton.disabled = !activityReady;
+    }
+
+    function playCorrectSound() {
+      if (typeof playTone !== 'function') return;
+      playTone(620, 0.14, 0.08, 'triangle');
+      playTone(880, 0.18, 0.08, 'triangle', 0.12);
+    }
+
+    function playWrongAnswerSound() {
+      if (typeof playTone !== 'function') return;
+      playTone(210, 0.18, 0.1, 'sawtooth');
+      playTone(145, 0.25, 0.08, 'sawtooth', 0.16);
+    }
+
+    function showStaticCharacter() {
+      introVideo.pause();
+      introVideo.currentTime = 0;
+      introVideo.hidden = false;
+    }
+
+    function submitAnswer() {
+      if (completed || !activityReady) return;
+      if (selectedNumber !== CORRECT_ANSWER) {
+        numberBox.classList.remove('is-wrong');
+        void numberBox.offsetWidth;
+        numberBox.classList.add('is-wrong');
+        playWrongAnswerSound();
+        window.setTimeout(() => numberBox.classList.remove('is-wrong'), 700);
+        return;
+      }
+
+      completed = true;
+      activityReady = false;
+      playCorrectSound();
+      introVideo.hidden = true;
+      upButton.disabled = true;
+      downButton.disabled = true;
+      goButton.disabled = true;
+      goodJobVideo.hidden = false;
+      goodJobVideo.currentTime = 0;
+      goodJobVideo.play().catch(() => {
+        goodJobVideo.hidden = true;
+        showStaticCharacter();
+        completePanel.hidden = false;
+        speakCompletion();
+      });
+    }
+
+    function enableActivity() {
+      activityReady = true;
+      updateNumber(selectedNumber);
+    }
+
+    function playQuestionAudio() {
+      if (typeof soundEnabled !== 'undefined' && !soundEnabled) {
+        enableActivity();
+        return;
+      }
+      questionAudio = new Audio(QUESTION_AUDIO);
+      questionAudio.addEventListener('ended', enableActivity, { once: true });
+      questionAudio.play().catch(enableActivity);
+    }
+
+    function startIntroSequence() {
+      completed = false;
+      activityReady = false;
+      completePanel.hidden = true;
+      goodJobVideo.pause();
+      goodJobVideo.hidden = true;
+      if (questionAudio) {
+        questionAudio.pause();
+        questionAudio.currentTime = 0;
+      }
+      updateNumber(0);
+      introVideo.hidden = false;
+      introVideo.muted = false;
+      introVideo.currentTime = 0;
+      startButton.hidden = true;
+      introVideo.play().catch(() => {
+        startButton.hidden = false;
+      });
+    }
+
+    function restartActivity() {
+      startIntroSequence();
+    }
+
+    upButton.addEventListener('click', () => updateNumber(selectedNumber + 1));
+    downButton.addEventListener('click', () => updateNumber(selectedNumber - 1));
+    goButton.addEventListener('click', submitAnswer);
+    restartButton.addEventListener('click', restartActivity);
+    startButton.addEventListener('click', () => {
+      startButton.hidden = true;
+      introVideo.muted = false;
+      introVideo.play().catch(() => { startButton.hidden = false; });
+    });
+    introVideo.addEventListener('ended', () => {
+      startButton.hidden = true;
+      introVideo.pause();
+      introVideo.currentTime = 0;
+      playQuestionAudio();
+    });
+    goodJobVideo.addEventListener('ended', () => {
+      goodJobVideo.hidden = true;
+      showStaticCharacter();
+      completePanel.hidden = false;
+      speakCompletion();
+    });
+
+    startIntroSequence();
+  });
+})();

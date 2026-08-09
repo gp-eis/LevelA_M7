@@ -33,8 +33,9 @@
     }
 
     .title-row .title-mark {
-      font-size: clamp(2.4rem, 7vw, 3.8rem);
-      line-height: 1;
+      width: clamp(60px, 8vw, 86px);
+      height: clamp(60px, 8vw, 86px);
+      object-fit: contain;
       filter: drop-shadow(0 6px 5px rgba(30, 58, 95, .18));
       animation: medal-bounce 2.6s ease-in-out infinite;
     }
@@ -71,9 +72,7 @@
     .athlete-icon {
       width: min(17.5%, 120px);
       height: 120px;
-      display: grid;
-      place-items: center;
-      font-size: clamp(3.2rem, 8vw, 4.6rem);
+      object-fit: contain;
       filter: drop-shadow(0 8px 6px rgba(30, 58, 95, .14));
       animation: athlete-bob 2.8s ease-in-out infinite;
     }
@@ -98,9 +97,14 @@
 
     .menu-buttons .big-btn {
       width: min(274px, 40vw);
-      min-height: 91px;
-      padding: 20px 32px;
+      min-height: 128px;
+      padding: 18px 24px 18px 18px;
       font-size: clamp(1.55rem, 3vw, 2rem);
+    }
+
+    .menu-buttons .button-icon-3d {
+      width: 88px;
+      height: 88px;
     }
 
     .sun {
@@ -146,7 +150,7 @@
       .hero { padding-top: 90px; }
       .title-row .title-mark { display: none; }
       .athletes-row { gap: 2px; }
-      .athlete-icon { width: 19.5%; height: 88px; font-size: 2.8rem; }
+      .athlete-icon { width: 19.5%; height: 88px; }
       .menu-buttons { gap: 20px; margin-top: 34px; }
       .menu-buttons .big-btn {
         width: min(330px, 86vw);
@@ -162,36 +166,26 @@
   <div class="cloud c1"></div>
   <div class="cloud c2"></div>
 
-  <div class="floaties" aria-hidden="true">
-    <span style="top:8%;  left:6%;">⚽</span>
-    <span style="top:22%; left:88%;">🏀</span>
-    <span style="top:55%; left:4%;">🏃</span>
-    <span style="top:70%; left:92%;">🎾</span>
-    <span style="top:85%; left:12%;">⭐</span>
-    <span style="top:40%; left:80%;">🏆</span>
-    <span style="top:90%; left:70%;">🏅</span>
-  </div>
-
   <main class="hero">
     <div class="title-row">
-      <span class="title-mark" aria-hidden="true">🏅</span>
+      <img class="title-mark" src="assets/images/ui/sport-medal-3d.png" alt="">
       <h1 class="big-title">Athlete People!</h1>
-      <span class="title-mark" aria-hidden="true">🏆</span>
+      <img class="title-mark" src="assets/images/ui/sport-trophy-3d.png" alt="">
     </div>
     <p class="subtitle">Let's run, jump, and cheer for every sport star! ✨</p>
 
     <div class="athletes-row" aria-hidden="true">
-      <span class="athlete-icon">🏃</span>
-      <span class="athlete-icon">⚽</span>
-      <span class="athlete-icon">🏀</span>
-      <span class="athlete-icon">🎾</span>
-      <span class="athlete-icon">🏊</span>
+      <img class="athlete-icon" src="assets/images/ui/gp-runner-3d.png" alt="">
+      <img class="athlete-icon" src="assets/images/week-1/memory/soccer.png" alt="">
+      <img class="athlete-icon" src="assets/images/ui/sport-basketball-3d.png" alt="">
+      <img class="athlete-icon" src="assets/images/week-1/memory/tennis.png" alt="">
+      <img class="athlete-icon" src="assets/images/ui/gp-swimmer-3d.png" alt="">
     </div>
 
     <nav class="menu-buttons" aria-label="Main menu">
-      <a class="big-btn btn-pink" href="lessons/index.html">📖 Literacy</a>
-      <a class="big-btn btn-blue" href="reading/index.html">📚 Reading</a>
-      <a class="big-btn btn-green" href="games/index.html">🎮 Games</a>
+      <a class="big-btn btn-pink" href="lessons/index.html"><img class="button-icon-3d" src="assets/images/ui/literacy-3d.png" alt=""> <span>Literacy</span></a>
+      <a class="big-btn btn-blue" href="reading/index.html"><img class="button-icon-3d" src="assets/images/ui/reading-3d.png" alt=""> <span>Reading</span></a>
+      <a class="big-btn btn-green" href="games/index.html"><img class="button-icon-3d" src="assets/images/ui/games-3d.png" alt=""> <span>Games</span></a>
     </nav>
   </main>
 

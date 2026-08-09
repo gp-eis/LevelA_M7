@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Week 1 — Page 2 — Athlete People</title>
+  <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+  <div class="floaties" aria-hidden="true">
+    <span style="top:12%; left:4%;">🌾</span>
+    <span style="top:70%; left:94%;">🏅</span>
+    <span style="top:42%; left:3%;">📚</span>
+  </div>
+
+  <div class="page literacy-activity-page">
+    <nav class="top-page-nav" aria-label="Page navigation">
+      <a class="back-link" href="week-1-page-01.html#lesson-focus">⬅️ Previous Page</a>
+      <a class="back-link next-page-link" href="week-1-page-03.html#lesson-focus">Next Page ➡️</a>
+    </nav>
+    <a class="literacy-list-link" href="index.html">📚 Weekly Literacy List</a>
+
+    <header class="center" style="margin-top:16px;">
+      <h1 class="big-title" style="font-size:2.4rem;">Week 1 - What sports do you play?</h1>
+      <nav class="week-tools" aria-label="Week tools">
+        <a class="pill-btn orange" href="tpr.html?week=1">🤸 TPR</a>
+        <a class="pill-btn blue" href="flashcards.html?week=1">🃏 Flashcards</a>
+      </nav>
+    </header>
+
+    <section id="lesson-focus" class="card literacy-quiz" aria-label="Who am I activity">
+      <div class="activity-video-panel">
+        <img
+          id="page-two-background"
+          class="activity-background"
+          src="../assets/images/week-1/page-02-background.png"
+          width="1412"
+          height="1114"
+          alt="What sports do you play? Circle the right answer."
+        >
+        <video
+          id="page-two-video"
+          class="activity-source-video"
+          src="../assets/video/week-1/page-02.mp4"
+          playsinline
+          preload="auto"
+          aria-label="Week 1 page 2 activity video"
+        ></video>
+
+        <div class="answer-panel">
+          <div class="answer-list" role="radiogroup" aria-label="Choose who the person is">
+          <div class="sentence-choice" role="radio" aria-checked="false" tabindex="0" data-answer="farmer" data-sentence="I am a farmer.">
+            <span class="choice-circle" aria-hidden="true"><span></span></span>
+            <span class="choice-text">I am a farmer.</span>
+            <button class="sentence-speaker" type="button" aria-label="Listen to: I am a farmer." data-speak="I am a farmer.">🔊</button>
+          </div>
+
+          <div class="sentence-choice" role="radio" aria-checked="false" tabindex="0" data-answer="athlete" data-sentence="I am an athlete.">
+            <span class="choice-circle" aria-hidden="true"><span></span></span>
+            <span class="choice-text">I am an athlete.</span>
+            <button class="sentence-speaker" type="button" aria-label="Listen to: I am an athlete." data-speak="I am an athlete.">🔊</button>
+          </div>
+
+          <div class="sentence-choice" role="radio" aria-checked="false" tabindex="0" data-answer="student" data-sentence="I am a student.">
+            <span class="choice-circle" aria-hidden="true"><span></span></span>
+            <span class="choice-text">I am a student.</span>
+            <button class="sentence-speaker" type="button" aria-label="Listen to: I am a student." data-speak="I am a student.">🔊</button>
+          </div>
+          </div>
+          <p id="answer-feedback" class="answer-feedback" role="status" aria-live="polite">Choose one answer.</p>
+        </div>
+
+        <button id="restart-activity" class="pill-btn blue restart-activity" type="button">↻ Try Again</button>
+      </div>
+    </section>
+
+  </div>
+
+  <script src="../js/main.js"></script>
+  <script src="../js/week-1-page-02.js"></script>
+</body>
+</html>
