@@ -236,19 +236,19 @@ function guardClosedWeeks() {
 
   const lessonMatch = path.match(/\/lessons\/page-0([2-4])\.html$/i);
   if (lessonMatch && !isWeekOpen(lessonMatch[1])) {
-    window.location.replace('index.html');
+    window.location.replace('../index.html');
     return true;
   }
 
   const gamesMatch = path.match(/\/games\/week-([2-4])\//i);
   if (gamesMatch && !isWeekOpen(gamesMatch[1])) {
-    window.location.replace('../index.html');
+    window.location.replace('../../index.html');
     return true;
   }
 
   const readingMatch = path.match(/\/reading\/week-([2-4])\.html$/i);
   if (readingMatch && !isWeekOpen(readingMatch[1])) {
-    window.location.replace('index.html');
+    window.location.replace('../index.html');
     return true;
   }
 

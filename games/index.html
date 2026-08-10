@@ -377,7 +377,7 @@
     });
 
     document.querySelectorAll('.back-weeks').forEach(button => {
-      button.addEventListener('click', () => showWeekPicker());
+      button.addEventListener('click', () => { window.location.href = '../index.html'; });
     });
 
     const requestedWeek = new URLSearchParams(window.location.search).get('week');
@@ -388,7 +388,9 @@
     ) {
       showWeek(requestedWeek, false);
     } else if (requestedWeek && typeof isWeekOpen === 'function' && !isWeekOpen(requestedWeek)) {
-      showWeekPicker(false);
+      window.location.replace('../index.html');
+    } else {
+      showWeek(1, false);
     }
   </script>
 </body>
