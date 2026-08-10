@@ -10,16 +10,13 @@
     body { background:linear-gradient(180deg,#9cddff 0%,#e6fff2 100%); }
     .phonics-page { width:min(980px,94vw); }
     .phonics-title { color:#ee9412; text-shadow:3px 3px #fff,6px 6px rgba(201,140,0,.18); }
-    .phonics-video-placeholder {
-      min-height:min(52vw,470px); display:grid; place-items:center; align-content:center; gap:14px;
-      border:7px solid #fff; border-radius:32px;
-      background:linear-gradient(145deg,#ffe577,#f7c52d 58%,#dda100);
+    .phonics-video {
+      display:block; width:100%; height:auto; aspect-ratio:1264/720; object-fit:contain;
+      border:7px solid #fff; border-radius:32px; background:#101820;
       box-shadow:0 9px 0 var(--phonics-dark),0 18px 25px rgba(30,58,95,.18);
-      color:#674700; text-align:center; padding:28px;
     }
-    .phonics-video-placeholder img { width:min(230px,52vw); height:210px; object-fit:contain; filter:drop-shadow(0 9px 6px rgba(60,45,0,.2)); }
-    .phonics-video-placeholder strong { font-size:clamp(1.35rem,3vw,2rem); }
-    .phonics-video-placeholder span { font-weight:700; }
+    .phonics-video:fullscreen,
+    .phonics-video:-webkit-full-screen { width:100vw; height:100vh; border:0; border-radius:0; object-fit:contain; background:#000; }
     .phonics-activity-card { text-align:center; border-top:9px solid var(--phonics-yellow); }
     .phonics-activity-btn {
       width:min(420px,90%); margin:18px auto 4px;
@@ -38,11 +35,10 @@
 
     <section class="card" style="margin-top:24px;">
       <h2 class="section-title">🎬 Phonics Video</h2>
-      <div class="phonics-video-placeholder" role="img" aria-label="Phonics lesson video placeholder">
-        <img src="../assets/images/ui/week-home/phonics-guide.png" alt="Koala GP Friend holding the letter A">
-        <strong>Your Week 1 phonics video will go here.</strong>
-        <span>The video can be added as soon as you provide it.</span>
-      </div>
+      <video class="phonics-video" controls playsinline preload="metadata" aria-label="Week 1 phonics lesson video">
+        <source src="../assets/video/week-1/phonics/week-1.mp4" type="video/mp4">
+        Your browser does not support this video.
+      </video>
     </section>
 
     <section class="card phonics-activity-card" style="margin-top:28px;">
