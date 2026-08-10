@@ -144,8 +144,8 @@
     const picture = document.createElement('img');
     picture.className = 'final-choice-picture';
     picture.src = isKind
-      ? '../assets/images/reading/last-answer-kind.png'
-      : '../assets/images/reading/last-answer-unkind.png';
+      ? '../assets/images/reading/last-answer-kind.webp'
+      : '../assets/images/reading/last-answer-unkind.webp';
     picture.alt = isKind
       ? 'A friend smiles, gives a thumbs-up, and shares a supportive high-five.'
       : 'A child crosses their arms, turns away, and responds unkindly.';

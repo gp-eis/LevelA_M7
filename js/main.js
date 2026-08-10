@@ -157,11 +157,6 @@ function showToast(message) {
  * Dialogue buttons.
  *
  * Any button with [data-dialogue] becomes a dialogue trigger.
- * Later, point it at your media with data attributes:
- *
- *   <button data-dialogue data-audio="../assets/audio/page1-line1.mp3">...</button>
- *   <button data-dialogue data-video="../assets/video/week-1/page1-3d.mp4">...</button>
- *
  * - data-audio : plays the audio file
  * - data-video : plays the file in the <video id="dialogue-video"> element (if present)
  * - neither    : shows a "coming soon" toast so buttons work from day one
@@ -217,7 +212,7 @@ function setupSiteLogo() {
   bar.setAttribute('aria-hidden', 'false');
 
   const img = document.createElement('img');
-  img.src = getAssetsBase() + 'images/ui/giiip-eis-logo.png';
+  img.src = getAssetsBase() + 'images/ui/giiip-eis-logo.webp';
   img.alt = 'GIIIP EIS logo';
   img.width = 118;
   img.height = 118;

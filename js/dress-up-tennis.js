@@ -12,30 +12,30 @@
     {
       id: 'attire',
       word: 'Tennis uniform',
-      item: ASSET + 'item-attire.png',
-      state: ASSET + 'state-attire.png'
+      item: ASSET + 'item-attire.webp',
+      state: ASSET + 'state-attire.webp'
     },
     {
       id: 'shoes',
       word: 'Tennis Shoes',
-      item: ASSET + 'item-shoes.png',
-      state: ASSET + 'state-attire-shoes.png'
+      item: ASSET + 'item-shoes.webp',
+      state: ASSET + 'state-attire-shoes.webp'
     },
     {
       id: 'racket',
       word: 'Tennis Racket',
-      item: ASSET + 'item-racket.png',
-      state: ASSET + 'state-attire-shoes-racket.png'
+      item: ASSET + 'item-racket.webp',
+      state: ASSET + 'state-attire-shoes-racket.webp'
     },
     {
       id: 'ball',
       word: 'Tennis ball',
-      item: ASSET + 'item-ball.png',
-      state: ASSET + 'state-complete.png'
+      item: ASSET + 'item-ball.webp',
+      state: ASSET + 'state-complete.webp'
     }
   ];
 
-  const BASE = ASSET + 'character.png';
+  const BASE = ASSET + 'character.webp';
 
   let overlay;
   let stepIndex = 0;

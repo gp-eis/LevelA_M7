@@ -12,36 +12,36 @@
     {
       id: 'uniform',
       word: 'Golf uniform',
-      item: ASSET + 'item-uniform.png',
-      state: ASSET + 'state-attire.png'
+      item: ASSET + 'item-uniform.webp',
+      state: ASSET + 'state-attire.webp'
     },
     {
       id: 'shoes',
       word: 'Golf shoes',
-      item: ASSET + 'item-shoes.png',
-      state: ASSET + 'state-attire-shoes.png'
+      item: ASSET + 'item-shoes.webp',
+      state: ASSET + 'state-attire-shoes.webp'
     },
     {
       id: 'hat',
       word: 'Golf hat',
-      item: ASSET + 'item-hat.png',
-      state: ASSET + 'state-attire-shoes-hat.png'
+      item: ASSET + 'item-hat.webp',
+      state: ASSET + 'state-attire-shoes-hat.webp'
     },
     {
       id: 'club',
       word: 'Golf club',
-      item: ASSET + 'item-golfclub.png',
-      state: ASSET + 'state-attire-shoes-hat-club.png'
+      item: ASSET + 'item-golfclub.webp',
+      state: ASSET + 'state-attire-shoes-hat-club.webp'
     },
     {
       id: 'ball',
       word: 'Golf ball',
-      item: ASSET + 'item-golfball.png',
-      state: ASSET + 'state-attire-shoes-hat-club-ball.png'
+      item: ASSET + 'item-golfball.webp',
+      state: ASSET + 'state-attire-shoes-hat-club-ball.webp'
     }
   ];
 
-  const BASE = ASSET + 'character.png';
+  const BASE = ASSET + 'character.webp';
 
   let overlay;
   let stepIndex = 0;

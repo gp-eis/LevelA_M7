@@ -12,24 +12,24 @@
     {
       id: 'attire',
       word: 'Soccer uniform',
-      item: ASSET + 'item-uniform.png',
-      state: ASSET + 'state-attire.png'
+      item: ASSET + 'item-uniform.webp',
+      state: ASSET + 'state-attire.webp'
     },
     {
       id: 'shoes',
       word: 'Soccer shoes',
-      item: ASSET + 'item-shoes.png',
-      state: ASSET + 'state-attire-shoes.png'
+      item: ASSET + 'item-shoes.webp',
+      state: ASSET + 'state-attire-shoes.webp'
     },
     {
       id: 'ball',
       word: 'Soccer ball',
-      item: ASSET + 'item-ball.png',
-      state: ASSET + 'state-attire-shoes-ball.png'
+      item: ASSET + 'item-ball.webp',
+      state: ASSET + 'state-attire-shoes-ball.webp'
     }
   ];
 
-  const BASE = ASSET + 'character.png';
+  const BASE = ASSET + 'character.webp';
 
   let overlay;
   let stepIndex = 0;

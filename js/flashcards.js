@@ -18,12 +18,12 @@
     1: {
       base: '../assets/images/week-1/flashcards/',
       cards: [
-        { id: 'sports', file: 'many-sports-flashcard.png', label: 'Many sports', phrase: 'many sports' },
-        { id: 'baseball', file: 'baseball-flashcard.png', label: 'Baseball', phrase: 'baseball' },
-        { id: 'tennis', file: 'tennis-flashcard.png', label: 'Tennis', phrase: 'tennis' },
-        { id: 'soccer', file: 'soccer-flashcard.png', label: 'Soccer', phrase: 'soccer' },
-        { id: 'golf', file: 'golf-flashcard.png', label: 'Golf', phrase: 'golf' },
-        { id: 'athlete', file: 'athlete-flashcard.png', label: 'Athlete', phrase: null }
+        { id: 'sports', file: 'many-sports-flashcard.webp', label: 'Many sports', phrase: 'many sports' },
+        { id: 'baseball', file: 'baseball-flashcard.webp', label: 'Baseball', phrase: 'baseball' },
+        { id: 'tennis', file: 'tennis-flashcard.webp', label: 'Tennis', phrase: 'tennis' },
+        { id: 'soccer', file: 'soccer-flashcard.webp', label: 'Soccer', phrase: 'soccer' },
+        { id: 'golf', file: 'golf-flashcard.webp', label: 'Golf', phrase: 'golf' },
+        { id: 'athlete', file: 'athlete-flashcard.webp', label: 'Athlete', phrase: null }
       ]
     }
   };

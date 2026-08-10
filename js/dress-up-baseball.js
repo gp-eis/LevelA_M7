@@ -12,36 +12,36 @@
     {
       id: 'uniform',
       word: 'Baseball uniform',
-      item: ASSET + 'item-uniform.png',
-      state: ASSET + 'state-uniform.png'
+      item: ASSET + 'item-uniform.webp',
+      state: ASSET + 'state-uniform.webp'
     },
     {
       id: 'shoes',
       word: 'Baseball shoes',
-      item: ASSET + 'item-shoes.png',
-      state: ASSET + 'state-uniform-shoes.png'
+      item: ASSET + 'item-shoes.webp',
+      state: ASSET + 'state-uniform-shoes.webp'
     },
     {
       id: 'bat',
       word: 'Baseball bat',
-      item: ASSET + 'item-bat.png',
-      state: ASSET + 'state-uniform-shoes-bat.png'
+      item: ASSET + 'item-bat.webp',
+      state: ASSET + 'state-uniform-shoes-bat.webp'
     },
     {
       id: 'ball',
       word: 'Baseball',
-      item: ASSET + 'item-ball.png',
-      state: ASSET + 'state-uniform-shoes-bat-ball.png'
+      item: ASSET + 'item-ball.webp',
+      state: ASSET + 'state-uniform-shoes-bat-ball.webp'
     },
     {
       id: 'helmet',
       word: 'Baseball helmet',
-      item: ASSET + 'item-helmet.png',
-      state: ASSET + 'state-uniform-shoes-bat-ball-helmet.png'
+      item: ASSET + 'item-helmet.webp',
+      state: ASSET + 'state-uniform-shoes-bat-ball-helmet.webp'
     }
   ];
 
-  const BASE = ASSET + 'character.png';
+  const BASE = ASSET + 'character.webp';
 
   let overlay;
   let stepIndex = 0;
