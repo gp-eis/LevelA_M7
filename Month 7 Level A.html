@@ -85,19 +85,19 @@
       <h1>Week 1 — Athlete People!</h1>
       <p>What sport do you play?</p>
     </header>
-    <div class="carousel-wrap">
+    <div class="carousel-wrap" id="lesson-focus">
       <button class="carousel-arrow prev" type="button" aria-label="Previous choice">‹</button>
       <nav class="learning-carousel" aria-label="Week 1 learning choices">
-        <a class="learning-card literacy" href="lessons/page-01.html" data-card="0"><h2>Literacy</h2><img src="assets/images/ui/week-home/literacy-guide.png" alt="GP Friend reading a letter book"></a>
-        <a class="learning-card reading is-active" href="reading/week-1.html" data-card="1"><h2>Reading</h2><img src="assets/images/ui/week-home/reading-guide.png" alt="GP Friend reading a sports story"></a>
+        <a class="learning-card literacy is-active" href="lessons/page-01.html" data-card="0"><h2>Literacy</h2><img src="assets/images/ui/week-home/literacy-guide.png" alt="GP Friend reading a letter book"></a>
+        <a class="learning-card reading" href="reading/week-1.html" data-card="1"><h2>Reading</h2><img src="assets/images/ui/week-home/reading-guide.png" alt="GP Friend reading a sports story"></a>
         <a class="learning-card phonics" href="phonics/week-1.html" data-card="2"><h2>Phonics</h2><img src="assets/images/ui/week-home/phonics-guide.png" alt="Koala GP Friend holding the letter A"></a>
         <a class="learning-card games" href="games/index.html?week=1" data-card="3"><h2>Games</h2><img src="assets/images/ui/week-home/games-guide.png" alt="Beaver GP Friend holding a game controller"></a>
       </nav>
       <button class="carousel-arrow next" type="button" aria-label="Next choice">›</button>
     </div>
     <div class="carousel-dots" aria-label="Carousel position">
-      <button class="carousel-dot" data-card="0" aria-label="Show Literacy"></button>
-      <button class="carousel-dot is-active" data-card="1" aria-label="Show Reading"></button>
+      <button class="carousel-dot is-active" data-card="0" aria-label="Show Literacy"></button>
+      <button class="carousel-dot" data-card="1" aria-label="Show Reading"></button>
       <button class="carousel-dot" data-card="2" aria-label="Show Phonics"></button>
       <button class="carousel-dot" data-card="3" aria-label="Show Games"></button>
     </div>
@@ -109,7 +109,7 @@
       const track = document.querySelector('.learning-carousel');
       const cards = [...document.querySelectorAll('.learning-card')];
       const dots = [...document.querySelectorAll('.carousel-dot')];
-      let active = 1;
+      let active = 0;
       const show = (index) => {
         active = Math.max(0, Math.min(cards.length - 1, index));
         cards.forEach((card, i) => card.classList.toggle('is-active', i === active));
@@ -130,7 +130,7 @@
           dots.forEach((dot, i) => dot.classList.toggle('is-active', i === active));
         }, 90);
       }, { passive:true });
-      addEventListener('load', () => show(1), { once:true });
+      addEventListener('load', () => show(0), { once:true });
     })();
   </script>
 </body>
