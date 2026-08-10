@@ -761,6 +761,10 @@ body.has-site-logo {
 
 /* ---------- Week 1, Page 4 number activity ---------- */
 
+.page4-activity-layout {
+  position: relative;
+}
+
 .page4-picture-stage {
   position: relative;
   width: 100%;
@@ -922,6 +926,39 @@ body.has-site-logo {
   .literacy-list-link {
     position: static;
     margin-top: 14px;
+  }
+
+  .page4-activity-card {
+    padding: 14px;
+  }
+
+  .sports-answer-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 14px;
+  }
+
+  .sports-step-controls {
+    position: static;
+    display: grid;
+    grid-template-columns: repeat(2, 52px);
+    gap: 12px;
+  }
+
+  .sports-step-controls button {
+    width: 52px;
+    height: 52px;
+    font-size: 1.1rem;
+  }
+
+  .sports-number-go {
+    position: static;
+    min-width: 86px;
+    min-height: 52px;
+    padding: 8px 18px;
+    font-size: 1.05rem;
   }
 }
 

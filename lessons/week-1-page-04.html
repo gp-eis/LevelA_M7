@@ -23,45 +23,49 @@
     </header>
 
     <main id="lesson-focus" class="card static-literacy-card page4-activity-card" aria-label="Count the sports activity">
-      <div class="page4-picture-stage">
-        <img
-          src="../assets/images/week-1/page-04-many-sports.png"
-          width="1412"
-          height="1114"
-          alt="I play many sports. How many sports does she play? Soccer plus tennis equals an empty answer box."
-        >
+      <div class="page4-activity-layout">
+        <div class="page4-picture-stage">
+          <img
+            src="../assets/images/week-1/page-04-many-sports.png"
+            width="1412"
+            height="1114"
+            alt="I play many sports. How many sports does she play? Soccer plus tennis equals an empty answer box."
+          >
 
-        <video
-          id="page4-intro-video"
-          class="page4-intro-video"
-          src="../assets/video/week-1/page-04-intro.mp4"
-          playsinline
-          preload="auto"
-          hidden
-        ></video>
-        <button id="page4-start-activity" class="page4-start-activity" type="button" hidden>▶ Start Activity</button>
+          <video
+            id="page4-intro-video"
+            class="page4-intro-video"
+            src="../assets/video/week-1/page-04-intro.mp4"
+            playsinline
+            preload="auto"
+            hidden
+          ></video>
+          <button id="page4-start-activity" class="page4-start-activity" type="button" hidden>▶ Start Activity</button>
 
-        <div id="sports-number-box" class="sports-number-box" aria-live="polite" aria-label="Selected answer: 0">
-          <span id="sports-number-value">0</span>
+          <div id="sports-number-box" class="sports-number-box" aria-live="polite" aria-label="Selected answer: 0">
+            <span id="sports-number-value">0</span>
+          </div>
+          <video
+            id="page4-good-job-video"
+            class="page4-good-job-video"
+            src="../assets/video/week-1/page-04-good-job.mp4"
+            playsinline
+            preload="auto"
+            hidden
+          ></video>
+
+          <div id="page4-complete" class="page4-complete" hidden>
+            <strong>Great job! She plays two sports.</strong>
+            <button id="restart-page4" class="pill-btn blue" type="button">↻ Try Again</button>
+          </div>
         </div>
-        <div class="sports-step-controls" aria-label="Change the number">
-          <button id="sports-number-up" type="button" aria-label="Increase number" disabled>▲</button>
-          <button id="sports-number-down" type="button" aria-label="Decrease number" disabled>▼</button>
-        </div>
-        <button id="sports-number-go" class="sports-number-go" type="button" disabled>Go!</button>
 
-        <video
-          id="page4-good-job-video"
-          class="page4-good-job-video"
-          src="../assets/video/week-1/page-04-good-job.mp4"
-          playsinline
-          preload="auto"
-          hidden
-        ></video>
-
-        <div id="page4-complete" class="page4-complete" hidden>
-          <strong>Great job! She plays two sports.</strong>
-          <button id="restart-page4" class="pill-btn blue" type="button">↻ Try Again</button>
+        <div class="sports-answer-controls">
+          <div class="sports-step-controls" aria-label="Change the number">
+            <button id="sports-number-up" type="button" aria-label="Increase number" disabled>▲</button>
+            <button id="sports-number-down" type="button" aria-label="Decrease number" disabled>▼</button>
+          </div>
+          <button id="sports-number-go" class="sports-number-go" type="button" disabled>Go!</button>
         </div>
       </div>
     </main>
