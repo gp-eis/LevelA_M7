@@ -14,6 +14,26 @@
       color: #3d5a78;
       text-align: center;
     }
+
+    /* Preserve the complete story frame instead of cropping it to the
+       shared lesson-video aspect ratio. */
+    .reading-story-video {
+      aspect-ratio: auto;
+      height: auto;
+      max-height: 72svh;
+      object-fit: contain;
+      background: #000;
+    }
+
+    .reading-story-video:fullscreen,
+    .reading-story-video:-webkit-full-screen {
+      width: 100vw;
+      height: 100vh;
+      max-height: none;
+      border-radius: 0;
+      object-fit: contain;
+      background: #000;
+    }
   </style>
 </head>
 <body>
@@ -34,7 +54,7 @@
       <h2 class="section-title">🎬 Reading Video</h2>
       <video
         id="dialogue-video"
-        class="lesson-video"
+        class="lesson-video reading-story-video"
         controls
         preload="metadata"
         src="../assets/video/week-1/Reading/Bike-Race-Day.mp4"
