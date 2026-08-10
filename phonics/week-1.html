@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Week 1 Phonics — Athlete People</title>
+  <link rel="stylesheet" href="../css/styles.css">
+  <style>
+    :root { --phonics-yellow:#f7c52d; --phonics-dark:#c98c00; }
+    body { background:linear-gradient(180deg,#9cddff 0%,#e6fff2 100%); }
+    .phonics-page { width:min(980px,94vw); }
+    .phonics-title { color:#ee9412; text-shadow:3px 3px #fff,6px 6px rgba(201,140,0,.18); }
+    .phonics-video-placeholder {
+      min-height:min(52vw,470px); display:grid; place-items:center; align-content:center; gap:14px;
+      border:7px solid #fff; border-radius:32px;
+      background:linear-gradient(145deg,#ffe577,#f7c52d 58%,#dda100);
+      box-shadow:0 9px 0 var(--phonics-dark),0 18px 25px rgba(30,58,95,.18);
+      color:#674700; text-align:center; padding:28px;
+    }
+    .phonics-video-placeholder img { width:min(230px,52vw); height:210px; object-fit:contain; filter:drop-shadow(0 9px 6px rgba(60,45,0,.2)); }
+    .phonics-video-placeholder strong { font-size:clamp(1.35rem,3vw,2rem); }
+    .phonics-video-placeholder span { font-weight:700; }
+    .phonics-activity-card { text-align:center; border-top:9px solid var(--phonics-yellow); }
+    .phonics-activity-btn {
+      width:min(420px,90%); margin:18px auto 4px;
+      background:linear-gradient(180deg,#ffd95f,#ee9412);
+      box-shadow:0 8px 0 #b97000,0 14px 24px rgba(201,140,0,.28);
+    }
+    .phonics-home-link { display:flex; width:max-content; margin:26px auto 0; }
+  </style>
+</head>
+<body>
+  <main class="page phonics-page">
+    <header class="center">
+      <h1 class="big-title phonics-title">Week 1 — Phonics</h1>
+      <p class="subtitle">Watch, listen, and then show what you learned!</p>
+    </header>
+
+    <section class="card" style="margin-top:24px;">
+      <h2 class="section-title">🎬 Phonics Video</h2>
+      <div class="phonics-video-placeholder" role="img" aria-label="Phonics lesson video placeholder">
+        <img src="../assets/images/ui/week-home/phonics-guide.png" alt="Koala GP Friend holding the letter A">
+        <strong>Your Week 1 phonics video will go here.</strong>
+        <span>The video can be added as soon as you provide it.</span>
+      </div>
+    </section>
+
+    <section class="card phonics-activity-card" style="margin-top:28px;">
+      <h2 class="section-title">⭐ Check What You Learned</h2>
+      <p>After watching the lesson, try a short phonics activity.</p>
+      <a class="big-btn phonics-activity-btn" href="../games/phonics.html">
+        <span aria-hidden="true">🔤</span><span>Start Activity</span>
+      </a>
+    </section>
+
+    <a class="pill-btn orange phonics-home-link" href="../Month%207%20Level%20A.html">⬅️ Week 1 Home</a>
+  </main>
+  <script src="../js/main.js"></script>
+</body>
+</html>

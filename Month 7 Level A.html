@@ -56,6 +56,16 @@
     .carousel-dots { display:flex; justify-content:center; gap:13px; }
     .carousel-dot { width:17px; height:17px; padding:0; border:3px solid #fff; border-radius:50%; background:#fff; box-shadow:0 2px 5px rgba(30,58,95,.22); cursor:pointer; }
     .carousel-dot.is-active { background:var(--week-color); transform:scale(1.18); }
+    .all-weeks-btn {
+      display:inline-flex; align-items:center; justify-content:center; gap:10px;
+      margin:28px auto 0; min-width:210px; min-height:62px; padding:12px 26px;
+      border:5px solid #fff; border-radius:999px; background:linear-gradient(180deg,#ffbd52,var(--week-color));
+      color:#fff; text-decoration:none; font-size:1.2rem; font-weight:900;
+      box-shadow:0 7px 0 var(--week-dark),0 12px 18px rgba(30,58,95,.18);
+      transition:transform .16s ease,filter .16s ease;
+    }
+    .all-weeks-btn:hover { transform:translateY(-3px); filter:brightness(1.04); }
+    .all-weeks-btn:active { transform:translateY(4px); box-shadow:0 3px 0 var(--week-dark); }
     @media (max-width:650px) {
       .week-home-shell { padding-top:82px; }
       .week-heading { padding:0 24px; }
@@ -70,7 +80,6 @@
   </style>
 </head>
 <body class="week-home">
-  <a class="back-link" href="index.html">⬅️ All Weeks</a>
   <main class="week-home-shell">
     <header class="week-heading">
       <h1>Week 1 — Athlete People!</h1>
@@ -81,7 +90,7 @@
       <nav class="learning-carousel" aria-label="Week 1 learning choices">
         <a class="learning-card literacy" href="lessons/page-01.html" data-card="0"><h2>Literacy</h2><img src="assets/images/ui/week-home/literacy-guide.png" alt="GP Friend reading a letter book"></a>
         <a class="learning-card reading is-active" href="reading/week-1.html" data-card="1"><h2>Reading</h2><img src="assets/images/ui/week-home/reading-guide.png" alt="GP Friend reading a sports story"></a>
-        <a class="learning-card phonics" href="games/phonics.html" data-card="2"><h2>Phonics</h2><img src="assets/images/ui/week-home/phonics-guide.png" alt="Koala GP Friend holding the letter A"></a>
+        <a class="learning-card phonics" href="phonics/week-1.html" data-card="2"><h2>Phonics</h2><img src="assets/images/ui/week-home/phonics-guide.png" alt="Koala GP Friend holding the letter A"></a>
         <a class="learning-card games" href="games/index.html?week=1" data-card="3"><h2>Games</h2><img src="assets/images/ui/week-home/games-guide.png" alt="Beaver GP Friend holding a game controller"></a>
       </nav>
       <button class="carousel-arrow next" type="button" aria-label="Next choice">›</button>
@@ -92,6 +101,7 @@
       <button class="carousel-dot" data-card="2" aria-label="Show Phonics"></button>
       <button class="carousel-dot" data-card="3" aria-label="Show Games"></button>
     </div>
+    <a class="all-weeks-btn" href="index.html">⬅️ All Weeks</a>
   </main>
   <script src="js/main.js"></script>
   <script>
