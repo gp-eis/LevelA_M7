@@ -109,7 +109,13 @@
       const track = document.querySelector('.learning-carousel');
       const cards = [...document.querySelectorAll('.learning-card')];
       const dots = [...document.querySelectorAll('.carousel-dot')];
-      let active = 0;
+      const returnCards = {
+        '#card-literacy': 0,
+        '#card-reading': 1,
+        '#card-phonics': 2,
+        '#card-games': 3
+      };
+      let active = returnCards[window.location.hash] ?? 0;
       const show = (index) => {
         active = Math.max(0, Math.min(cards.length - 1, index));
         cards.forEach((card, i) => card.classList.toggle('is-active', i === active));
@@ -130,7 +136,16 @@
           dots.forEach((dot, i) => dot.classList.toggle('is-active', i === active));
         }, 90);
       }, { passive:true });
-      addEventListener('load', () => show(0), { once:true });
+      addEventListener('load', () => {
+        show(active);
+        if (window.location.hash.startsWith('#card-')) {
+          requestAnimationFrame(() => document.getElementById('lesson-focus').scrollIntoView({
+            behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
+            block: 'center',
+            inline: 'nearest'
+          }));
+        }
+      }, { once:true });
     })();
   </script>
 </body>
