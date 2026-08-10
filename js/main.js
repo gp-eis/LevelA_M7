@@ -191,6 +191,22 @@ function setupDialogueButtons() {
   });
 }
 
+function setupVideoPlayOverlays() {
+  document.querySelectorAll('.video-play-shell').forEach((shell) => {
+    const video = shell.querySelector('video');
+    const button = shell.querySelector('.center-video-play');
+    if (!video || !button) return;
+
+    const showButton = () => { button.hidden = false; };
+    const hideButton = () => { button.hidden = true; };
+    button.addEventListener('click', () => video.play().catch(showButton));
+    video.addEventListener('play', hideButton);
+    video.addEventListener('playing', hideButton);
+    video.addEventListener('pause', showButton);
+    video.addEventListener('ended', showButton);
+  });
+}
+
 /**
  * Resolve assets/ relative to this page from the main.js script path.
  * Root pages: assets/… · one level down: ../assets/… · two levels: ../../assets/…
@@ -289,6 +305,7 @@ document.addEventListener('DOMContentLoaded', () => {
   setupSiteLogo();
   setupSiteSounds();
   setupDialogueButtons();
+  setupVideoPlayOverlays();
   setupLockedWeekCards();
   centerLinkedLessonActivity();
 });

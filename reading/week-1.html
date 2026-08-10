@@ -34,6 +34,8 @@
       object-fit: contain;
       background: #000;
     }
+    .reading-activity-only { display:flex; justify-content:center; }
+    .reading-activity-only .pill-btn { width:min(420px,90%); justify-content:center; }
   </style>
 </head>
 <body>
@@ -52,29 +54,24 @@
 
     <section class="card" style="margin-top:24px;">
       <h2 class="section-title">🎬 Reading Video</h2>
-      <video
-        id="dialogue-video"
-        class="lesson-video reading-story-video"
-        controls
-        preload="metadata"
-        src="../assets/video/week-1/Reading/Bike-Race-Day.mp4"
-        aria-label="Bike Race Day reading video"
-      ></video>
+      <div class="video-play-shell">
+        <video
+          id="dialogue-video"
+          class="lesson-video reading-story-video"
+          controls
+          playsinline
+          preload="metadata"
+          src="../assets/video/week-1/Reading/Bike-Race-Day.mp4"
+          aria-label="Bike Race Day reading video"
+        ></video>
+        <button class="center-video-play" type="button" aria-label="Play Bike Race Day">▶</button>
+      </div>
       <p class="reading-note">Watch the story, then try the medal activity!</p>
     </section>
 
     <section class="card center" style="margin-top:24px;">
       <h2 class="section-title">💬 Watch and Play!</h2>
-      <div class="dialogue-grid">
-        <button
-          class="pill-btn"
-          type="button"
-          data-dialogue
-          data-video="../assets/video/week-1/Reading/Bike-Race-Day.mp4"
-          data-line="Bike Race Day"
-        >
-          <span aria-hidden="true">🎬</span> Bike Race Day
-        </button>
+      <div class="reading-activity-only">
         <a class="pill-btn green" href="week-1-activity.html">
           <span aria-hidden="true">🏅</span> Activity
         </a>
