@@ -472,6 +472,10 @@ body.has-site-logo {
   box-shadow: 0 10px 0 rgba(179, 136, 255, .18), 0 16px 30px rgba(74, 59, 82, .10);
 }
 
+.literacy-quiz .activity-layout {
+  position: relative;
+}
+
 .literacy-quiz .activity-video-panel {
   position: relative;
   display: block;
@@ -637,29 +641,55 @@ body.has-site-logo {
 }
 
 @media (max-width: 780px) {
+  .literacy-quiz {
+    padding: 14px;
+  }
+
   .literacy-quiz .answer-panel {
-    top: 47%;
-    left: 4%;
-    width: 48%;
+    position: static;
+    width: 100%;
+    margin-top: 14px;
+  }
+
+  .answer-list {
+    gap: 10px;
   }
 
   .sentence-choice {
-    grid-template-columns: 25px 1fr 38px;
-    gap: 7px;
-    padding: 5px 6px 5px 9px;
+    grid-template-columns: 30px 1fr 46px;
+    gap: 10px;
+    min-height: 58px;
+    padding: 6px 8px 6px 12px;
     border-width: 2px;
     border-radius: 14px;
   }
 
   .choice-circle {
-    width: 23px;
-    height: 23px;
+    width: 27px;
+    height: 27px;
     border-width: 3px;
   }
 
   .choice-circle span { width: 10px; height: 10px; }
+
+  .choice-text {
+    font-size: 1rem;
+  }
+
+  .sentence-speaker {
+    width: 44px;
+    height: 44px;
+  }
+
   .answer-feedback { font-size: .8rem; margin-top: 7px; padding: 4px 8px; }
-  .restart-activity { right: 10px; bottom: 10px; padding: 7px 12px; }
+
+  .restart-activity {
+    position: static;
+    display: flex;
+    width: max-content;
+    margin: 12px auto 0;
+    padding: 9px 16px;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
