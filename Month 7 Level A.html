@@ -6,190 +6,122 @@
   <title>Week 1 — Athlete People</title>
   <link rel="stylesheet" href="css/styles.css">
   <style>
-    /* Landing-page-only styling */
-    body {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 100svh;
-      background:
-        radial-gradient(ellipse 80% 50% at 50% -10%, rgba(255, 214, 74, .55), transparent 55%),
-        linear-gradient(180deg, #7ed0ff 0%, #b8e8ff 42%, #e8fff4 100%);
+    :root { --week-color:#f28b18; --week-dark:#bd6205; }
+    body.week-home {
+      min-height:100svh; overflow-x:hidden;
+      background:linear-gradient(180deg,#9cddff 0%,#d7f6f4 62%,#e9fff3 100%);
     }
-
-    .hero {
-      width: min(920px, 94vw);
-      text-align: center;
-      padding: 104px 20px 60px;
-      position: relative;
-      z-index: 2;
+    body.week-home::after {
+      content:""; position:fixed; z-index:-1; left:-8vw; bottom:-14vw;
+      width:52vw; height:28vw; border:clamp(8px,1vw,16px) solid rgba(255,255,255,.28);
+      border-right:0; border-bottom:0; border-radius:100% 0 0 0; transform:rotate(8deg);
     }
-
-    .title-row {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: clamp(10px, 2vw, 22px);
+    .week-home-shell { width:min(1240px,100%); margin:auto; padding:90px 0 42px; text-align:center; }
+    .week-heading { padding:0 72px; }
+    .week-heading h1 {
+      margin:0; color:var(--week-color); font-size:clamp(2.35rem,6vw,4.5rem); line-height:1.05;
+      text-shadow:3px 3px #fff,7px 7px rgba(189,98,5,.18);
     }
-
-    .title-row .title-mark {
-      width: clamp(60px, 8vw, 86px);
-      height: clamp(60px, 8vw, 86px);
-      object-fit: contain;
-      filter: drop-shadow(0 6px 5px rgba(30, 58, 95, .18));
-      animation: medal-bounce 2.6s ease-in-out infinite;
+    .week-heading p { margin:14px 0 28px; color:#18579f; font-size:clamp(1.1rem,2.6vw,1.55rem); font-weight:800; }
+    .carousel-wrap { position:relative; padding:16px 60px 24px; }
+    .learning-carousel {
+      display:flex; gap:26px; overflow-x:auto; padding:22px max(10px,calc(50% - 205px)) 34px;
+      scroll-snap-type:x mandatory; scroll-behavior:smooth; scrollbar-width:none;
     }
-
-    .title-row .title-mark:last-child { animation-delay: .35s; }
-
-    @keyframes medal-bounce {
-      0%, 100% { transform: translateY(0) rotate(-4deg); }
-      50% { transform: translateY(-6px) rotate(4deg); }
+    .learning-carousel::-webkit-scrollbar { display:none; }
+    .learning-card {
+      --card:#7750d6; --card-light:#a986f2; --card-dark:#5231a5;
+      position:relative; flex:0 0 min(360px,78vw); min-height:430px; overflow:hidden;
+      display:flex; flex-direction:column; align-items:center; justify-content:space-between; gap:10px;
+      padding:28px 24px 24px; border:8px solid #fff; border-radius:42px;
+      color:#fff; text-decoration:none; scroll-snap-align:center;
+      background:linear-gradient(145deg,var(--card-light),var(--card) 45%,var(--card-dark));
+      box-shadow:0 12px 0 color-mix(in srgb,var(--card-dark) 88%,#222),0 22px 30px rgba(30,58,95,.22);
+      transform:scale(.9); opacity:.78; transition:transform .28s ease,opacity .28s ease,filter .2s ease;
     }
-
-    .hero .big-title {
-      font-size: clamp(2.45rem, 6.2vw, 4rem);
-      line-height: 1.05;
-      color: #1e6fd9;
-      text-shadow: 3px 3px 0 var(--white), 7px 7px 0 rgba(30, 111, 217, .18);
+    .learning-card::before { content:""; position:absolute; inset:7px 8px 54% 8px; border-radius:28px 28px 50% 50%; background:linear-gradient(rgba(255,255,255,.32),transparent); pointer-events:none; }
+    .learning-card.is-active { transform:scale(1); opacity:1; }
+    .learning-card:hover { filter:brightness(1.05); }
+    .learning-card.reading { --card:#f14f50; --card-light:#ff8882; --card-dark:#bd3038; }
+    .learning-card.phonics { --card:#f7c52d; --card-light:#ffe269; --card-dark:#d59400; }
+    .learning-card.games { --card:#65c943; --card-light:#9be879; --card-dark:#378f27; }
+    .learning-card h2 { position:relative; z-index:1; margin:0; font-size:clamp(2rem,4vw,2.65rem); color:#fff; text-shadow:0 4px 0 rgba(59,42,82,.28); }
+    .learning-card img { position:relative; z-index:1; width:min(260px,64vw); height:270px; object-fit:contain; filter:drop-shadow(0 12px 8px rgba(38,36,55,.24)); }
+    .learning-card.phonics .phonics-art { position:relative; z-index:1; display:grid; place-items:center; width:100%; height:270px; }
+    .learning-card.phonics .phonics-art img { grid-area:1/1; }
+    .phonics-letter { grid-area:1/1; z-index:2; margin:80px 0 0 142px; font-size:7rem; line-height:1; color:#ef4c3d; text-shadow:0 6px 0 #a92e25,3px 0 #fff,-3px 0 #fff; }
+    .carousel-arrow { position:absolute; z-index:4; top:50%; width:58px; height:58px; border:5px solid #fff; border-radius:50%; background:#fff; color:#176ac2; box-shadow:0 6px 0 #b6d6e8,0 9px 16px rgba(30,58,95,.2); font-size:2rem; font-weight:900; cursor:pointer; transform:translateY(-50%); }
+    .carousel-arrow:hover { transform:translateY(calc(-50% - 3px)); }
+    .carousel-arrow.prev { left:8px; } .carousel-arrow.next { right:8px; }
+    .carousel-dots { display:flex; justify-content:center; gap:13px; }
+    .carousel-dot { width:17px; height:17px; padding:0; border:3px solid #fff; border-radius:50%; background:#fff; box-shadow:0 2px 5px rgba(30,58,95,.22); cursor:pointer; }
+    .carousel-dot.is-active { background:var(--week-color); transform:scale(1.18); }
+    @media (max-width:650px) {
+      .week-home-shell { padding-top:82px; }
+      .week-heading { padding:0 24px; }
+      .carousel-wrap { padding-inline:32px; }
+      .learning-carousel { gap:18px; padding-inline:max(5px,calc(50% - min(170px,39vw))); }
+      .learning-card { flex-basis:min(340px,78vw); min-height:390px; }
+      .learning-card img,.learning-card.phonics .phonics-art { height:235px; }
+      .carousel-arrow { width:48px; height:48px; font-size:1.6rem; }
+      .carousel-arrow.prev { left:2px; } .carousel-arrow.next { right:2px; }
     }
-
-    .hero .subtitle {
-      margin-top: 28px;
-      font-size: clamp(1.05rem, 2.4vw, 1.35rem);
-      color: #0f8a62;
-    }
-
-    .athletes-row {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: clamp(8px, 1.7vw, 22px);
-      margin: 22px auto 0;
-      max-width: 900px;
-    }
-
-    .athlete-icon {
-      width: min(17.5%, 120px);
-      height: 120px;
-      object-fit: contain;
-      filter: drop-shadow(0 8px 6px rgba(30, 58, 95, .14));
-      animation: athlete-bob 2.8s ease-in-out infinite;
-    }
-
-    .athlete-icon:nth-child(2) { animation-delay: .25s; }
-    .athlete-icon:nth-child(3) { animation-delay: .5s; }
-    .athlete-icon:nth-child(4) { animation-delay: .75s; }
-    .athlete-icon:nth-child(5) { animation-delay: 1s; }
-
-    @keyframes athlete-bob {
-      0%, 100% { transform: translateY(0) rotate(-1deg); }
-      50% { transform: translateY(-8px) rotate(1deg); }
-    }
-
-    .menu-buttons {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 28px;
-      margin-top: 28px;
-    }
-
-    .menu-buttons .big-btn {
-      width: min(274px, 40vw);
-      min-height: 128px;
-      padding: 18px 24px 18px 18px;
-      font-size: clamp(1.55rem, 3vw, 2rem);
-    }
-
-    .menu-buttons .button-icon-3d {
-      width: 88px;
-      height: 88px;
-    }
-
-    .sun {
-      position: fixed;
-      top: 36px;
-      right: 10%;
-      width: 86px;
-      height: 86px;
-      border-radius: 50%;
-      background: radial-gradient(circle at 35% 35%, #fff7b0, #ffd93d 55%, #ffb703);
-      box-shadow: 0 0 0 10px rgba(255, 217, 61, .28);
-      z-index: 1;
-    }
-
-    .cloud {
-      position: fixed;
-      background: var(--white);
-      border-radius: 999px;
-      opacity: .85;
-      z-index: 1;
-    }
-
-    .cloud::before, .cloud::after {
-      content: '';
-      position: absolute;
-      background: var(--white);
-      border-radius: 50%;
-    }
-
-    .cloud.c1 {
-      top: 48px;
-      left: 28%;
-      width: 140px;
-      height: 46px;
-      transform: translateX(-50%);
-    }
-
-    .cloud.c1::before { width: 64px; height: 64px; top: -30px; left: 20px; }
-    .cloud.c1::after  { width: 50px; height: 50px; top: -20px; left: 74px; }
-    .cloud.c2 { display: none; }
-
-    @media (max-width: 650px) {
-      .hero { padding-top: 90px; }
-      .title-row .title-mark { display: none; }
-      .athletes-row { gap: 2px; }
-      .athlete-icon { width: 19.5%; height: 88px; }
-      .menu-buttons { gap: 20px; margin-top: 34px; }
-      .menu-buttons .big-btn {
-        width: min(330px, 86vw);
-        min-height: 78px;
-      }
-      .cloud.c1 { left: 50%; transform: translateX(-50%) scale(.8); }
-      .sun { right: 6%; width: 64px; height: 64px; }
-    }
+    @media (prefers-reduced-motion:reduce) { .learning-carousel { scroll-behavior:auto; } .learning-card { transition:none; } }
   </style>
 </head>
-<body>
+<body class="week-home">
   <a class="back-link" href="index.html">⬅️ All Weeks</a>
-  <div class="sun" aria-hidden="true"></div>
-  <div class="cloud c1"></div>
-  <div class="cloud c2"></div>
-
-  <main class="hero">
-    <div class="title-row">
-      <img class="title-mark" src="assets/images/ui/sport-medal-3d.webp" alt="">
-      <h1 class="big-title">Week 1 — Athlete People!</h1>
-      <img class="title-mark" src="assets/images/ui/sport-trophy-3d.webp" alt="">
+  <main class="week-home-shell">
+    <header class="week-heading">
+      <h1>Week 1 — Athlete People!</h1>
+      <p>What sport do you play?</p>
+    </header>
+    <div class="carousel-wrap">
+      <button class="carousel-arrow prev" type="button" aria-label="Previous choice">‹</button>
+      <nav class="learning-carousel" aria-label="Week 1 learning choices">
+        <a class="learning-card literacy" href="lessons/page-01.html" data-card="0"><h2>Literacy</h2><img src="assets/images/ui/literacy-3d.webp" alt="Open literacy book"></a>
+        <a class="learning-card reading is-active" href="reading/week-1.html" data-card="1"><h2>Reading</h2><img src="assets/images/ui/reading-3d.webp" alt="Magical reading book"></a>
+        <a class="learning-card phonics" href="games/phonics.html" data-card="2"><h2>Phonics</h2><span class="phonics-art"><img src="assets/images/ui/gp-runner-3d.webp" alt="GP Friend with the letter A"><strong class="phonics-letter" aria-hidden="true">A</strong></span></a>
+        <a class="learning-card games" href="games/index.html?week=1" data-card="3"><h2>Games</h2><img src="assets/images/ui/games-3d.webp" alt="Colorful game controller"></a>
+      </nav>
+      <button class="carousel-arrow next" type="button" aria-label="Next choice">›</button>
     </div>
-    <p class="subtitle">What sport do you play?</p>
-
-    <div class="athletes-row" aria-hidden="true">
-      <img class="athlete-icon" src="assets/images/ui/gp-runner-3d.webp" alt="">
-      <img class="athlete-icon" src="assets/images/week-1/memory/soccer.webp" alt="">
-      <img class="athlete-icon" src="assets/images/ui/sport-basketball-3d.webp" alt="">
-      <img class="athlete-icon" src="assets/images/week-1/memory/tennis.webp" alt="">
-      <img class="athlete-icon" src="assets/images/ui/gp-swimmer-3d.webp" alt="">
+    <div class="carousel-dots" aria-label="Carousel position">
+      <button class="carousel-dot" data-card="0" aria-label="Show Literacy"></button>
+      <button class="carousel-dot is-active" data-card="1" aria-label="Show Reading"></button>
+      <button class="carousel-dot" data-card="2" aria-label="Show Phonics"></button>
+      <button class="carousel-dot" data-card="3" aria-label="Show Games"></button>
     </div>
-
-    <nav class="menu-buttons" aria-label="Main menu">
-      <a class="big-btn btn-pink" href="lessons/page-01.html"><img class="button-icon-3d" src="assets/images/ui/literacy-3d.webp" alt=""> <span>Literacy</span></a>
-      <a class="big-btn btn-blue" href="reading/week-1.html"><img class="button-icon-3d" src="assets/images/ui/reading-3d.webp" alt=""> <span>Reading</span></a>
-      <a class="big-btn btn-green" href="games/index.html?week=1"><img class="button-icon-3d" src="assets/images/ui/games-3d.webp" alt=""> <span>Games</span></a>
-    </nav>
   </main>
-
   <script src="js/main.js"></script>
+  <script>
+    (() => {
+      const track = document.querySelector('.learning-carousel');
+      const cards = [...document.querySelectorAll('.learning-card')];
+      const dots = [...document.querySelectorAll('.carousel-dot')];
+      let active = 1;
+      const show = (index) => {
+        active = Math.max(0, Math.min(cards.length - 1, index));
+        cards.forEach((card, i) => card.classList.toggle('is-active', i === active));
+        dots.forEach((dot, i) => dot.classList.toggle('is-active', i === active));
+        cards[active].scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'nearest', inline: 'center' });
+      };
+      document.querySelector('.carousel-arrow.prev').addEventListener('click', () => show(active - 1));
+      document.querySelector('.carousel-arrow.next').addEventListener('click', () => show(active + 1));
+      dots.forEach((dot, i) => dot.addEventListener('click', () => show(i)));
+      let timer;
+      track.addEventListener('scroll', () => {
+        clearTimeout(timer);
+        timer = setTimeout(() => {
+          const middle = track.getBoundingClientRect().left + track.clientWidth / 2;
+          const closest = cards.reduce((best, card, i) => Math.abs(card.getBoundingClientRect().left + card.offsetWidth / 2 - middle) < best.distance ? { i, distance:Math.abs(card.getBoundingClientRect().left + card.offsetWidth / 2 - middle) } : best, { i:active, distance:Infinity });
+          active = closest.i;
+          cards.forEach((card, i) => card.classList.toggle('is-active', i === active));
+          dots.forEach((dot, i) => dot.classList.toggle('is-active', i === active));
+        }, 90);
+      }, { passive:true });
+      addEventListener('load', () => show(1), { once:true });
+    })();
+  </script>
 </body>
 </html>
