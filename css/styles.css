@@ -730,10 +730,32 @@ body.has-site-logo {
 }
 
 .top-page-nav {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: flex-start;
   gap: 14px;
+  min-height: 48px;
+}
+
+.page-indicator {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 142px;
+  padding: 9px 18px;
+  border: 4px solid #fff;
+  border-radius: 999px;
+  color: #8b4300;
+  background: linear-gradient(180deg, #fff4a8, #ffc65a);
+  box-shadow: 0 5px 0 #df8b24, 0 9px 18px rgba(30, 58, 95, .14);
+  font-size: clamp(.92rem, 1.8vw, 1.08rem);
+  font-weight: 900;
+  line-height: 1;
+  white-space: nowrap;
 }
 
 .next-page-link {
@@ -746,6 +768,12 @@ body.has-site-logo {
 }
 
 .next-page-link:hover { transform: translateX(4px); }
+
+@media (max-width: 640px) {
+  .top-page-nav { flex-wrap: wrap; gap: 7px; }
+  .top-page-nav .back-link { padding: 8px 11px; font-size: .82rem; }
+  .page-indicator { position: static; order: -1; flex: 0 0 100%; min-width: 0; padding: 8px 10px; transform: none; border-width: 3px; font-size: .78rem; }
+}
 
 .literacy-list-link {
   position: absolute;
