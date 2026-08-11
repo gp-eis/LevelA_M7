@@ -70,7 +70,8 @@
     const answerButton = document.getElementById('speak-race-answer');
     const videoOverlay = document.getElementById('race-good-job-overlay');
     const goodJobVideo = document.getElementById('race-good-job-video');
-    const videoPlayButton = document.getElementById('race-video-play');
+    const videoCloseButton = document.getElementById('race-video-close');
+    const tryAgainButton = document.getElementById('race-try-again');
 
     let ready = false;
     let busy = false;
@@ -97,6 +98,9 @@
       resetRunnerStyles();
       questionButton.disabled = true;
       answerButton.hidden = true;
+      goodJobVideo.pause();
+      goodJobVideo.currentTime = 0;
+      videoOverlay.hidden = true;
       feedbackText.textContent = 'Listen, then choose athlete A, B, or C.';
 
       await speak(INTRO);
@@ -113,11 +117,15 @@
       const source = goodJobVideo.dataset.src;
       if (!goodJobVideo.src && source) goodJobVideo.src = source;
       videoOverlay.hidden = false;
-      videoPlayButton.hidden = true;
       goodJobVideo.currentTime = 0;
-      goodJobVideo.play().catch(() => {
-        videoPlayButton.hidden = false;
-      });
+      goodJobVideo.play().catch(() => {});
+    }
+
+    function closeGoodJobVideo() {
+      goodJobVideo.pause();
+      goodJobVideo.currentTime = 0;
+      videoOverlay.hidden = true;
+      feedbackText.textContent = 'Great job! C won the race.';
     }
 
     async function chooseRunner(runner) {
@@ -158,12 +166,9 @@
     questionButton.addEventListener('click', () => speak(QUESTION));
     answerButton.addEventListener('click', () => speak(selectedSentence));
     runners.forEach((runner) => runner.addEventListener('click', () => chooseRunner(runner)));
-    videoPlayButton.addEventListener('click', () => {
-      videoPlayButton.hidden = true;
-      goodJobVideo.play().catch(() => { videoPlayButton.hidden = false; });
-    });
+    videoCloseButton.addEventListener('click', closeGoodJobVideo);
+    tryAgainButton.addEventListener('click', startActivity);
     goodJobVideo.addEventListener('ended', () => {
-      videoOverlay.hidden = true;
       feedbackText.textContent = 'Great job! C won the race.';
     });
     startActivity();
