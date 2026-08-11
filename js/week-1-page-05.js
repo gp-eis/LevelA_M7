@@ -1,6 +1,6 @@
 (() => {
   const QUESTION = 'Who won the race?';
-  const INTRO = 'Did you do well? Yes, I won!';
+  const INTRO = 'Did you do well? Yes, I won the race.';
   const RUNNER_SENTENCES = {
     A: 'I am last.',
     B: 'I am second.',
@@ -58,10 +58,12 @@
     });
   }
 
+  function delay(milliseconds) {
+    return new Promise((resolve) => window.setTimeout(resolve, milliseconds));
+  }
+
   document.addEventListener('DOMContentLoaded', () => {
-    const startButton = document.getElementById('start-race-activity');
     const questionButton = document.getElementById('speak-race-question');
-    const questionText = document.getElementById('race-question');
     const runners = [...document.querySelectorAll('.race-runner')];
     const feedback = document.getElementById('race-feedback');
     const feedbackText = document.getElementById('race-feedback-text');
@@ -75,7 +77,10 @@
     let selectedSentence = '';
 
     function setRunnersEnabled(enabled) {
-      runners.forEach((runner) => { runner.disabled = !enabled; });
+      runners.forEach((runner) => {
+        runner.disabled = !enabled;
+        runner.classList.toggle('is-ready', enabled);
+      });
     }
 
     function resetRunnerStyles() {
@@ -90,19 +95,17 @@
       stopSpeech();
       setRunnersEnabled(false);
       resetRunnerStyles();
-      startButton.hidden = true;
-      questionButton.hidden = true;
+      questionButton.disabled = true;
       answerButton.hidden = true;
-      questionText.textContent = 'Listen to the athletes.';
       feedbackText.textContent = 'Listen, then choose athlete A, B, or C.';
 
       await speak(INTRO);
-      questionText.textContent = QUESTION;
-      questionButton.hidden = false;
+      await delay(1000);
       await speak(QUESTION);
 
       busy = false;
       ready = true;
+      questionButton.disabled = false;
       setRunnersEnabled(true);
     }
 
@@ -152,7 +155,6 @@
       window.speechSynthesis.addEventListener('voiceschanged', chooseUsVoice);
     }
 
-    startButton.addEventListener('click', startActivity);
     questionButton.addEventListener('click', () => speak(QUESTION));
     answerButton.addEventListener('click', () => speak(selectedSentence));
     runners.forEach((runner) => runner.addEventListener('click', () => chooseRunner(runner)));
@@ -164,5 +166,6 @@
       videoOverlay.hidden = true;
       feedbackText.textContent = 'Great job! C won the race.';
     });
+    startActivity();
   });
 })();
