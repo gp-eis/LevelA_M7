@@ -20,13 +20,21 @@
       box-shadow: 0 10px 0 rgba(179,136,255,.18), 0 16px 30px rgba(74,59,82,.1);
     }
     .question-box {
-      display: flex;
-      align-items: flex-start;
+      display: grid;
+      grid-template-columns: 150px 1fr 52px;
+      align-items: center;
       gap: 14px;
       padding: 22px 20px;
       border: 6px solid var(--purple);
       border-radius: 26px;
       background: linear-gradient(180deg, #faf5ff, #fff);
+    }
+    .question-visual {
+      width: 150px;
+      height: 130px;
+      object-fit: contain;
+      border-radius: 18px;
+      filter: drop-shadow(0 7px 6px rgba(74,59,82,.18));
     }
     .question-text {
       flex: 1;
@@ -86,6 +94,13 @@
       font-size: clamp(1rem, 3.2vw, 1.25rem);
       font-weight: 600;
       line-height: 1.3;
+    }
+    .answer-visual {
+      width: 100%;
+      height: 170px;
+      object-fit: contain;
+      border-radius: 18px;
+      filter: drop-shadow(0 7px 6px rgba(74,59,82,.16));
     }
     .answer-btn .listen-btn { margin: 0 auto; }
     .answer-btn.wrong {
@@ -151,6 +166,9 @@
     @media (max-width: 560px) {
       .answers-row { grid-template-columns: 1fr; }
       .pick-board { padding: 18px 12px 24px; }
+      .question-box { grid-template-columns: 1fr 52px; }
+      .question-visual { grid-column:1/-1; width:100%; height:150px; }
+      .answer-visual { height:150px; }
     }
   </style>
 </head>
@@ -175,6 +193,7 @@
 
     <section class="pick-board">
       <div class="question-box">
+        <img class="question-visual" id="question-visual" src="" alt="">
         <p class="question-text" id="question-text"></p>
         <button class="listen-btn" id="question-listen" type="button" aria-label="Listen to the question">🔊</button>
       </div>
@@ -216,23 +235,47 @@
     const QUESTION_BANK = [
       {
         question: 'Do you play sports?',
-        correct: 'Yes, I do. I am an athlete.'
+        correct: 'Yes, I do. I am an athlete.',
+        visual: '../assets/images/week-1/memory/athlete.webp',
+        visualAlt: 'A smiling athlete ready to play sports'
       },
       {
         question: 'What sports do you play?',
-        correctOptions: SPORT_ANSWERS
+        correctOptions: SPORT_ANSWERS,
+        visual: '../assets/images/week-1/flashcards/many-sports-flashcard.webp',
+        visualAlt: 'A collection of many different sports'
       },
       {
         question: 'Did you do well?',
-        correctOptions: RESULT_ANSWERS
+        correctOptions: RESULT_ANSWERS,
+        visual: '../assets/images/week-1/page-05-race-winner.webp',
+        visualAlt: 'Athletes completing a race'
       },
       {
         question: 'Are you an athlete?',
-        correct: 'Yes, I am.'
+        correct: 'Yes, I am.',
+        visual: '../assets/images/week-1/memory/athlete.webp',
+        visualAlt: 'A smiling athlete'
       }
     ];
 
+    const ANSWER_VISUALS = {
+      'Yes, I do. I am an athlete.': ['../assets/images/week-1/memory/athlete.webp', 'An athlete'],
+      'I play many sports.': ['../assets/images/week-1/flashcards/many-sports-flashcard.webp', 'Many sports'],
+      'I play soccer.': ['../assets/images/week-1/memory/soccer.webp', 'A soccer ball'],
+      'I play tennis.': ['../assets/images/week-1/memory/tennis.webp', 'A tennis racket and ball'],
+      'I play golf.': ['../assets/images/week-1/memory/golf.webp', 'Golf equipment'],
+      'I play baseball.': ['../assets/images/week-1/memory/baseball.webp', 'Baseball equipment'],
+      'Yes, I won.': ['../assets/images/week-1/page-05-race-winner.webp', 'The winner of a race'],
+      'Yes, I am first.': ['../assets/images/week-1/cyclists/cyclist-first.webp', 'The cyclist in first place'],
+      'Yes, I am second.': ['../assets/images/week-1/cyclists/cyclist-second.webp', 'The cyclist in second place'],
+      'Yes, I am third.': ['../assets/images/week-1/cyclists/cyclist-third.webp', 'The cyclist in third place'],
+      'Yes, I am last.': ['../assets/images/week-1/cyclists/cyclist-last.webp', 'The cyclist in last place'],
+      'Yes, I am.': ['../assets/images/week-1/memory/athlete.webp', 'An athlete']
+    };
+
     const questionText = document.getElementById('question-text');
+    const questionVisual = document.getElementById('question-visual');
     const questionListen = document.getElementById('question-listen');
     const answersRow = document.getElementById('answers-row');
     const successModal = document.getElementById('success-modal');
@@ -347,7 +390,13 @@
           lastQuestionKey = key;
           const wrongOptions = getWrongOptionsForItem(item, correct);
           const wrong = wrongOptions[Math.floor(Math.random() * wrongOptions.length)];
-          return { question: item.question, correct, wrong };
+          return {
+            question: item.question,
+            correct,
+            wrong,
+            visual: item.visual,
+            visualAlt: item.visualAlt
+          };
         }
       } while (true);
     }
@@ -371,6 +420,8 @@
       successModal.hidden = true;
       currentRound = buildRound();
       questionText.textContent = currentRound.question;
+      questionVisual.src = currentRound.visual;
+      questionVisual.alt = currentRound.visualAlt;
       answersRow.innerHTML = '';
 
       questionListen.onclick = () => {
@@ -384,10 +435,17 @@
         btn.className = 'answer-btn';
         btn.dataset.answer = answer;
 
+        const visualData = ANSWER_VISUALS[answer];
+        const visual = document.createElement('img');
+        visual.className = 'answer-visual';
+        visual.src = visualData[0];
+        visual.alt = visualData[1];
+
         const text = document.createElement('span');
         text.className = 'answer-text';
         text.textContent = answer;
 
+        btn.appendChild(visual);
         btn.appendChild(text);
         btn.appendChild(makeListenButton(`Listen to answer: ${answer}`, answer));
 
