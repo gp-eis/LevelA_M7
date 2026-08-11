@@ -46,9 +46,9 @@
   function chooseVoice() {
     if (!('speechSynthesis' in window)) return;
     const voices = window.speechSynthesis.getVoices();
-    preferredVoice = voices.find((voice) => voice.lang === 'en-US' && /jenny|aria|zira|samantha|google|english/i.test(voice.name))
-      || voices.find((voice) => voice.lang.startsWith('en-US'))
-      || voices.find((voice) => voice.lang.startsWith('en'))
+    const isUsEnglish = (voice) => /^en[-_]US$/i.test(voice.lang || '');
+    preferredVoice = voices.find((voice) => isUsEnglish(voice) && /jenny|aria|zira|samantha|google|english/i.test(voice.name))
+      || voices.find(isUsEnglish)
       || null;
   }
 

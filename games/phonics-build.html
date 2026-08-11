@@ -383,9 +383,8 @@
 
     function pickVoice() {
       const voices = speechSynthesis.getVoices();
-      usVoice = voices.find(v => v.lang === 'en-US' && /google|samantha|zira|jenny|aria|english/i.test(v.name))
-        || voices.find(v => v.lang.startsWith('en-US'))
-        || voices.find(v => v.lang.startsWith('en'))
+      usVoice = voices.find(v => /^en[-_]US$/i.test(v.lang || '') && /google|samantha|zira|jenny|aria|english/i.test(v.name))
+        || voices.find(v => /^en[-_]US$/i.test(v.lang || ''))
         || null;
     }
 

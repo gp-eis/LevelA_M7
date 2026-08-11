@@ -56,9 +56,8 @@ function pickPhonemeVoice() {
   if (!('speechSynthesis' in window)) return;
   const voices = speechSynthesis.getVoices();
   window._phonemeVoice =
-    voices.find(v => v.lang === 'en-US' && /google|samantha|zira|jenny|aria|english/i.test(v.name))
-    || voices.find(v => v.lang.startsWith('en-US'))
-    || voices.find(v => v.lang.startsWith('en'))
+    voices.find(v => /^en[-_]US$/i.test(v.lang || '') && /google|samantha|zira|jenny|aria|english/i.test(v.name))
+        || voices.find(v => /^en[-_]US$/i.test(v.lang || ''))
     || null;
 }
 

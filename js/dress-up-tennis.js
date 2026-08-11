@@ -116,16 +116,11 @@
 
     const preferred = voices.find((v) =>
       /Samantha|Victoria|Karen|Moira|Tessa|Fiona|Google US English|Microsoft Zira|Female|woman/i.test(v.name)
-      && /en/i.test(v.lang)
+      && /^en[-_]US$/i.test(v.lang || '')
     );
     if (preferred) return preferred;
 
-    return (
-      voices.find((v) => /en/i.test(v.lang) && /female/i.test(v.name)) ||
-      voices.find((v) => /en[-_]US/i.test(v.lang)) ||
-      voices.find((v) => /en/i.test(v.lang)) ||
-      null
-    );
+    return voices.find((v) => /^en[-_]US$/i.test(v.lang || '')) || null;
   }
 
   function stopVoice() {
@@ -139,6 +134,7 @@
     if (!femaleVoice) femaleVoice = pickFemaleVoice();
 
     const utter = new SpeechSynthesisUtterance(text);
+    utter.lang = 'en-US';
     utter.rate = 0.92;
     utter.pitch = 1.12;
     utter.volume = 1;
@@ -162,6 +158,7 @@
 
     window.setTimeout(() => {
       const utter = new SpeechSynthesisUtterance(SUCCESS_LINE);
+      utter.lang = 'en-US';
       utter.rate = 0.92;
       utter.pitch = 1.12;
       utter.volume = 1;
