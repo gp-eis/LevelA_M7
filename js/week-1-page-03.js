@@ -6,6 +6,12 @@
     { answer: 'third', text: 'Who is third (3rd)?', audio: '../assets/audio/week-1/who-is-third.mp3' },
     { answer: 'last', text: 'Who is last?', audio: '../assets/audio/week-1/who-is-last.mp3' }
   ];
+  const CYCLIST_SENTENCES = {
+    first: 'I am first.',
+    second: 'I am second.',
+    third: 'I am third.',
+    last: 'I am last.'
+  };
 
   let questionAudio;
   let introAudio;
@@ -101,7 +107,9 @@
     function chooseCyclist(hotspot) {
       if (!acceptingAnswer) return;
       stopQuestionAudio();
-      const correct = hotspot.dataset.position === currentQuestion().answer;
+      const selectedPosition = hotspot.dataset.position;
+      const selectedSentence = CYCLIST_SENTENCES[selectedPosition];
+      const correct = selectedPosition === currentQuestion().answer;
 
       hotspot.classList.remove('is-correct', 'is-wrong');
       void hotspot.offsetWidth;
@@ -113,6 +121,7 @@
           playTone(210, 0.18, 0.1, 'sawtooth');
           playTone(145, 0.25, 0.08, 'sawtooth', 0.16);
         }
+        window.setTimeout(() => speak(selectedSentence), 320);
         window.setTimeout(() => hotspot.classList.remove('is-wrong'), 650);
         return;
       }
@@ -122,13 +131,14 @@
         playTone(620, 0.14, 0.08, 'triangle');
         playTone(880, 0.18, 0.08, 'triangle', 0.12);
       }
+      window.setTimeout(() => speak(selectedSentence), 240);
 
       window.setTimeout(() => {
         hotspot.classList.remove('is-correct');
         questionIndex += 1;
         if (questionIndex >= questions.length) finishActivity();
         else showQuestion(true);
-      }, 750);
+      }, 1600);
     }
 
     function startActivity() {
