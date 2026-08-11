@@ -255,6 +255,7 @@
   const blankEl = document.getElementById('sentence-blank');
   const resetBtn = document.getElementById('sentence-reset');
   let dragState = null;
+  let placedCardEl = null;
 
   const SCATTER_LAYOUTS = [
     { left: 8, top: 12, rot: -8 },
@@ -266,6 +267,7 @@
 
   function resetSentence() {
     scatterEl.innerHTML = '';
+    placedCardEl = null;
     blankEl.textContent = '______';
     blankEl.classList.remove('is-filled', 'is-over');
     blankEl.dataset.filled = '';
@@ -282,24 +284,44 @@
       el.style.left = layout.left + '%';
       el.style.top = layout.top + '%';
       el.style.transform = 'rotate(' + layout.rot + 'deg)';
+      el.dataset.homeLeft = el.style.left;
+      el.dataset.homeTop = el.style.top;
+      el.dataset.homeTransform = el.style.transform;
       el.innerHTML = '<img src="' + card.src + '" alt="' + card.label + '">';
       scatterEl.appendChild(el);
       enableDrag(el);
     });
   }
 
+  function returnCardHome(cardEl) {
+    if (!cardEl) return;
+    cardEl.classList.remove('is-placed', 'is-dragging');
+    cardEl.style.display = '';
+    cardEl.style.position = 'absolute';
+    cardEl.style.left = cardEl.dataset.homeLeft;
+    cardEl.style.top = cardEl.dataset.homeTop;
+    cardEl.style.width = '';
+    cardEl.style.margin = '';
+    cardEl.style.transform = cardEl.dataset.homeTransform;
+  }
+
   function placeInBlank(phrase, cardEl) {
+    if (placedCardEl && placedCardEl !== cardEl) returnCardHome(placedCardEl);
+    placedCardEl = cardEl;
     blankEl.textContent = phrase;
     blankEl.classList.add('is-filled');
     blankEl.classList.remove('is-over');
     blankEl.dataset.filled = phrase;
-    if (cardEl) cardEl.classList.add('is-placed');
+    if (cardEl) {
+      cardEl.classList.add('is-placed');
+      cardEl.style.display = 'none';
+    }
     speakText('I play ' + phrase + '.');
   }
 
   function enableDrag(el) {
     el.addEventListener('pointerdown', (e) => {
-      if (blankEl.dataset.filled || el.classList.contains('is-placed')) return;
+      if (el.classList.contains('is-placed')) return;
       e.preventDefault();
       const rect = el.getBoundingClientRect();
       dragState = {
@@ -348,9 +370,8 @@
       el.classList.remove('is-dragging');
       blankEl.classList.remove('is-over');
 
-      if (over && !blankEl.dataset.filled) {
+      if (over) {
         placeInBlank(el.dataset.phrase, el);
-        el.style.display = 'none';
       } else {
         el.style.position = 'absolute';
         el.style.left = dragState.startLeft;
