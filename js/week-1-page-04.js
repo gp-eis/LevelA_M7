@@ -18,6 +18,7 @@
   document.addEventListener('DOMContentLoaded', () => {
     const valueElement = document.getElementById('sports-number-value');
     const numberBox = document.getElementById('sports-number-box');
+    const questionSpeaker = document.getElementById('page4-question-speaker');
     const upButton = document.getElementById('sports-number-up');
     const downButton = document.getElementById('sports-number-down');
     const goButton = document.getElementById('sports-number-go');
@@ -78,6 +79,7 @@
       upButton.disabled = true;
       downButton.disabled = true;
       goButton.disabled = true;
+      questionSpeaker.disabled = true;
       completionOverlay.hidden = false;
       goodJobVideo.currentTime = 0;
       goodJobVideo.play().catch(() => {
@@ -86,15 +88,24 @@
     }
 
     function enableActivity() {
+      if (completed) return;
       activityReady = true;
+      questionSpeaker.hidden = false;
+      questionSpeaker.disabled = false;
       updateNumber(selectedNumber);
     }
 
     function playQuestionAudio() {
+      if (completed) return;
       if (typeof soundEnabled !== 'undefined' && !soundEnabled) {
         enableActivity();
         return;
       }
+      if (questionAudio) {
+        questionAudio.pause();
+        questionAudio.currentTime = 0;
+      }
+      questionSpeaker.disabled = true;
       questionAudio = new Audio(QUESTION_AUDIO);
       questionAudio.addEventListener('ended', enableActivity, { once: true });
       questionAudio.play().catch(enableActivity);
@@ -103,6 +114,8 @@
     function startIntroSequence() {
       completed = false;
       activityReady = false;
+      questionSpeaker.hidden = true;
+      questionSpeaker.disabled = true;
       completionOverlay.hidden = true;
       goodJobVideo.pause();
       goodJobVideo.currentTime = 0;
@@ -127,6 +140,7 @@
     upButton.addEventListener('click', () => updateNumber(selectedNumber + 1));
     downButton.addEventListener('click', () => updateNumber(selectedNumber - 1));
     goButton.addEventListener('click', submitAnswer);
+    questionSpeaker.addEventListener('click', playQuestionAudio);
     restartButton.addEventListener('click', restartActivity);
     videoCloseButton.addEventListener('click', () => {
       goodJobVideo.pause();
