@@ -24,7 +24,8 @@
     const introVideo = document.getElementById('page4-intro-video');
     const startButton = document.getElementById('page4-start-activity');
     const goodJobVideo = document.getElementById('page4-good-job-video');
-    const completePanel = document.getElementById('page4-complete');
+    const completionOverlay = document.getElementById('page4-good-job-overlay');
+    const videoCloseButton = document.getElementById('page4-video-close');
     const restartButton = document.getElementById('restart-page4');
     let selectedNumber = 0;
     let completed = false;
@@ -73,16 +74,13 @@
       completed = true;
       activityReady = false;
       playCorrectSound();
-      introVideo.hidden = true;
+      showStaticCharacter();
       upButton.disabled = true;
       downButton.disabled = true;
       goButton.disabled = true;
-      goodJobVideo.hidden = false;
+      completionOverlay.hidden = false;
       goodJobVideo.currentTime = 0;
       goodJobVideo.play().catch(() => {
-        goodJobVideo.hidden = true;
-        showStaticCharacter();
-        completePanel.hidden = false;
         speakCompletion();
       });
     }
@@ -105,9 +103,9 @@
     function startIntroSequence() {
       completed = false;
       activityReady = false;
-      completePanel.hidden = true;
+      completionOverlay.hidden = true;
       goodJobVideo.pause();
-      goodJobVideo.hidden = true;
+      goodJobVideo.currentTime = 0;
       if (questionAudio) {
         questionAudio.pause();
         questionAudio.currentTime = 0;
@@ -130,6 +128,12 @@
     downButton.addEventListener('click', () => updateNumber(selectedNumber - 1));
     goButton.addEventListener('click', submitAnswer);
     restartButton.addEventListener('click', restartActivity);
+    videoCloseButton.addEventListener('click', () => {
+      goodJobVideo.pause();
+      goodJobVideo.currentTime = 0;
+      completionOverlay.hidden = true;
+      showStaticCharacter();
+    });
     startButton.addEventListener('click', () => {
       startButton.hidden = true;
       introVideo.muted = false;
@@ -142,9 +146,7 @@
       playQuestionAudio();
     });
     goodJobVideo.addEventListener('ended', () => {
-      goodJobVideo.hidden = true;
       showStaticCharacter();
-      completePanel.hidden = false;
       speakCompletion();
     });
 

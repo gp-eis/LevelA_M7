@@ -66,19 +66,21 @@
           <img src="../assets/images/week-1/cyclists/cyclist-first.webp" alt=""><span>First cyclist</span>
         </button>
 
-        <div id="cyclist-complete" class="cyclist-complete" hidden>
-          <strong>Great job!</strong>
-          <span>You found all four cyclists!</span>
-          <button id="restart-cyclists" class="pill-btn blue" type="button">↻ Try Again</button>
+        <div id="cyclist-good-job-overlay" class="activity-completion-overlay" hidden>
+          <div class="activity-completion-frame">
+            <button id="cyclist-video-close" class="activity-completion-close" type="button" aria-label="Close the congratulatory clip">×</button>
+            <video
+              id="cyclist-good-job-video"
+              class="activity-completion-video has-chroma-key"
+              data-src="../assets/video/week-1/page-03-good-job.mp4"
+              playsinline
+              preload="none"
+            ></video>
+            <div class="activity-completion-actions">
+              <button id="restart-cyclists" class="pill-btn blue" type="button">↻ Try Again</button>
+            </div>
+          </div>
         </div>
-        <video
-          id="cyclist-good-job-video"
-          class="cyclist-good-job-video"
-          data-src="../assets/video/week-1/page-03-good-job.mp4"
-          playsinline
-          preload="none"
-          hidden
-        ></video>
       </div>
 
       <section class="cyclist-question-panel">
