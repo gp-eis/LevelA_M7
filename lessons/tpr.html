@@ -80,8 +80,11 @@
     };
     const back = document.getElementById('back-week');
     const label = document.getElementById('week-label');
-    back.href = 'page-0' + week + '.html';
-    back.textContent = '⬅️ Week ' + week;
+    const returnLink = typeof resolveLiteracyToolReturn === 'function'
+      ? resolveLiteracyToolReturn('page-0' + week + '.html', '⬅️ Week ' + week)
+      : { href: 'page-0' + week + '.html', text: '⬅️ Week ' + week };
+    back.href = returnLink.href;
+    back.textContent = returnLink.text;
     label.textContent = titles[week] || ('Week ' + week);
     document.title = 'TPR — Week ' + week + ' — Athlete People';
 

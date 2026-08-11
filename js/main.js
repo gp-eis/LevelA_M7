@@ -135,6 +135,57 @@ function centerLinkedLessonActivity() {
   });
 }
 
+/* ---------- Return from TPR / Flashcards to the originating Literacy page ---------- */
+
+function setupLiteracyToolReturnLinks() {
+  const currentFile = window.location.pathname.split('/').pop();
+  if (!currentFile || /^(?:tpr|flashcards)\.html$/i.test(currentFile)) return;
+
+  const returnTarget = currentFile + '#lesson-focus';
+  const pageText = document.querySelector('.page-indicator')?.textContent || '';
+  const pageMatch = pageText.match(/Page\s+(\d+)/i);
+  const pageNumber = pageMatch ? pageMatch[1] : '';
+
+  document.querySelectorAll('a[href*="tpr.html"], a[href*="flashcards.html"]').forEach((link) => {
+    const toolUrl = new URL(link.getAttribute('href'), window.location.href);
+    toolUrl.searchParams.set('return', returnTarget);
+    if (pageNumber) toolUrl.searchParams.set('from', pageNumber);
+    link.href = toolUrl.href;
+
+    link.addEventListener('click', () => {
+      try {
+        sessionStorage.setItem('literacyToolReturn', returnTarget);
+        sessionStorage.setItem('literacyToolReturnPage', pageNumber);
+      } catch (_error) {
+        // Query parameters still preserve the return page when storage is unavailable.
+      }
+    });
+  });
+}
+
+function resolveLiteracyToolReturn(fallbackHref, fallbackText) {
+  const params = new URLSearchParams(window.location.search);
+  let target = params.get('return') || '';
+  let pageNumber = params.get('from') || '';
+
+  if (!target) {
+    try {
+      target = sessionStorage.getItem('literacyToolReturn') || '';
+      pageNumber = pageNumber || sessionStorage.getItem('literacyToolReturnPage') || '';
+    } catch (_error) {
+      target = '';
+    }
+  }
+
+  const safeTarget = /^(?:page-0[1-4]|week-[1-4]-page-0[1-9])\.html(?:#[A-Za-z0-9_-]+)?$/i.test(target);
+  if (!safeTarget) return { href: fallbackHref, text: fallbackText };
+
+  return {
+    href: target,
+    text: /^\d+$/.test(pageNumber) ? `⬅️ Back to Page ${pageNumber}` : '⬅️ Back to Lesson'
+  };
+}
+
 /**
  * Show a friendly popup message at the bottom of the screen.
  */
@@ -307,5 +358,6 @@ document.addEventListener('DOMContentLoaded', () => {
   setupDialogueButtons();
   setupVideoPlayOverlays();
   setupLockedWeekCards();
+  setupLiteracyToolReturnLinks();
   centerLinkedLessonActivity();
 });
