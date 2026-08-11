@@ -1,7 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-US" translate="no">
 <head>
   <meta charset="UTF-8">
+  <meta http-equiv="Content-Language" content="en-US">
+  <meta name="google" content="notranslate">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pick the Right One ✅ — Athlete People</title>
   <link rel="stylesheet" href="../css/styles.css">
@@ -334,9 +336,9 @@
 
     function pickVoice() {
       const voices = speechSynthesis.getVoices();
-      usVoice = voices.find(v => v.lang === 'en-US' && /google|samantha|zira|jenny|aria|english/i.test(v.name))
-        || voices.find(v => v.lang.startsWith('en-US'))
-        || voices.find(v => v.lang.startsWith('en'))
+      const isUsEnglish = voice => /^en[-_]US$/i.test(voice.lang || '');
+      usVoice = voices.find(v => isUsEnglish(v) && /google|samantha|zira|jenny|aria|english/i.test(v.name))
+        || voices.find(isUsEnglish)
         || null;
     }
 
