@@ -21,12 +21,12 @@
     1: {
       base: '../assets/images/week-1/flashcards/',
       cards: [
-        { id: 'sports', file: 'many-sports-flashcard.webp', label: 'Many sports', phrase: 'many sports' },
-        { id: 'baseball', file: 'baseball-flashcard.webp', label: 'Baseball', phrase: 'baseball' },
-        { id: 'tennis', file: 'tennis-flashcard.webp', label: 'Tennis', phrase: 'tennis' },
-        { id: 'soccer', file: 'soccer-flashcard.webp', label: 'Soccer', phrase: 'soccer' },
-        { id: 'golf', file: 'golf-flashcard.webp', label: 'Golf', phrase: 'golf' },
-        { id: 'athlete', file: 'athlete-flashcard.webp', label: 'Athlete', phrase: null }
+        { id:'sports',file:'many-sports-flashcard.webp',label:'Many sports',phrase:'many sports',sentence:'I play many sports.' },
+        { id:'baseball',file:'baseball-flashcard.webp',label:'Baseball',phrase:'baseball',sentence:'I play baseball.' },
+        { id:'tennis',file:'tennis-flashcard.webp',label:'Tennis',phrase:'tennis',sentence:'I play tennis.' },
+        { id:'soccer',file:'soccer-flashcard.webp',label:'Soccer',phrase:'soccer',sentence:'I play soccer.' },
+        { id:'golf',file:'golf-flashcard.webp',label:'Golf',phrase:'golf',sentence:'I play golf.' },
+        { id:'athlete',file:'athlete-flashcard.webp',label:'Athlete',phrase:null,sentence:'I am an athlete.' }
       ]
     }
   };
@@ -34,6 +34,9 @@
   const lockedEl = document.getElementById('fc-locked');
   const appEl = document.getElementById('fc-app');
   const data = WEEK_DATA[week];
+  const sentenceLead = data && data.sentenceLead ? data.sentenceLead : 'I play ';
+  const sentenceLeadEl = document.getElementById('sentence-lead');
+  if (sentenceLeadEl) sentenceLeadEl.textContent = sentenceLead;
 
   if (!data || (typeof isWeekOpen === 'function' && !isWeekOpen(week))) {
     lockedEl.style.display = '';
@@ -72,15 +75,17 @@
   /* ========== Lesson Flashcards ========== */
   const lessonImg = document.getElementById('lesson-img');
   const lessonList = document.getElementById('lesson-list');
+  const lessonSpeak = document.getElementById('lesson-speak');
   let lessonSelectedId = null;
 
-  function selectLessonCard(card) {
+  function selectLessonCard(card, announce = true) {
     lessonSelectedId = card.id;
     lessonImg.src = card.src;
     lessonImg.alt = card.label;
     Array.from(lessonList.querySelectorAll('.fc-lesson-item')).forEach((btn) => {
       btn.classList.toggle('is-selected', btn.dataset.id === card.id);
     });
+    if (announce) speakFlashcard(card);
   }
 
   function buildLessonList() {
@@ -94,9 +99,26 @@
       btn.innerHTML = '<img src="' + card.src + '" alt="' + card.label + '">';
       btn.addEventListener('click', () => selectLessonCard(card));
       lessonList.appendChild(btn);
-      if (i === 0) selectLessonCard(card);
+      if (i === 0) selectLessonCard(card, false);
     });
   }
+
+  lessonImg.addEventListener('click', () => {
+    const card = gameCards.find((item) => item.id === lessonSelectedId);
+    if (card) speakFlashcard(card);
+  });
+  lessonSpeak.addEventListener('click', () => {
+    const card = gameCards.find((item) => item.id === lessonSelectedId);
+    if (card) speakFlashcard(card);
+  });
+  lessonImg.setAttribute('role', 'button');
+  lessonImg.setAttribute('tabindex', '0');
+  lessonImg.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      lessonImg.click();
+    }
+  });
 
   /* ---------- Helpers ---------- */
   function shuffle(arr) {
@@ -115,6 +137,34 @@
   }
 
   let fcVoice = null;
+  let recordedAudio = null;
+
+  function stopRecordedAudio() {
+    if (!recordedAudio) return;
+    recordedAudio.pause();
+    recordedAudio.currentTime = 0;
+    recordedAudio = null;
+  }
+
+  function playRecordedWord(card, onComplete) {
+    if (!card || !card.wordAudio) return false;
+    stopRecordedAudio();
+    if (window.speechSynthesis) window.speechSynthesis.cancel();
+    const audio = new Audio(card.wordAudio);
+    recordedAudio = audio;
+    let settled = false;
+    const finish = (failed) => {
+      if (settled) return;
+      settled = true;
+      if (recordedAudio === audio) recordedAudio = null;
+      if (failed && !data.recordedOnly) speakText(card.label);
+      if (onComplete) window.setTimeout(onComplete, failed ? 850 : 350);
+    };
+    audio.addEventListener('ended', () => finish(false), { once: true });
+    audio.addEventListener('error', () => finish(true), { once: true });
+    audio.play().catch(() => finish(true));
+    return true;
+  }
 
   function pickFcVoice() {
     if (!window.speechSynthesis) return null;
@@ -129,6 +179,7 @@
   }
 
   function speakText(text) {
+    stopRecordedAudio();
     if (!window.speechSynthesis || !text) return;
     window.speechSynthesis.cancel();
     if (!fcVoice) fcVoice = pickFcVoice();
@@ -139,6 +190,34 @@
     utter.volume = 1;
     if (fcVoice) utter.voice = fcVoice;
     window.speechSynthesis.speak(utter);
+  }
+
+  function speakFlashcard(card) {
+    if (!card) return;
+    const sentencePlayback = data.recordedOnly
+      ? null
+      : () => speakText(card.sentence || (sentenceLead + card.phrase + '.'));
+    if (playRecordedWord(card, sentencePlayback)) return;
+    if (data.recordedOnly) return;
+    if (!window.speechSynthesis) return;
+    window.speechSynthesis.cancel();
+    if (!fcVoice) fcVoice = pickFcVoice();
+    const word = new SpeechSynthesisUtterance(card.label);
+    const sentence = new SpeechSynthesisUtterance(card.sentence || (sentenceLead + card.phrase + '.'));
+    [word, sentence].forEach((utterance) => {
+      utterance.lang = 'en-US';
+      utterance.rate = 0.9;
+      utterance.pitch = 1.1;
+      utterance.volume = 1;
+      if (fcVoice) utterance.voice = fcVoice;
+    });
+    word.onend = () => window.setTimeout(() => window.speechSynthesis.speak(sentence), 350);
+    window.speechSynthesis.speak(word);
+  }
+
+  function speakCardWord(card) {
+    if (!card) return;
+    if (!playRecordedWord(card) && !data.recordedOnly) speakText(card.label);
   }
 
   if (window.speechSynthesis) {
@@ -187,7 +266,7 @@
     clearFastTimer();
     fastRevealed = true;
     fastCover.classList.add('is-hidden');
-    speakText(fastCard.label);
+    speakCardWord(fastCard);
   }
 
   function resetFast(newCard) {
@@ -249,7 +328,7 @@
     if (!spotCard) return;
     spotRevealed = true;
     spotArea.classList.add('is-revealed');
-    speakText(spotCard.label);
+    speakCardWord(spotCard);
   });
   spotNextBtn.addEventListener('click', resetSpot);
 
@@ -319,7 +398,12 @@
       cardEl.classList.add('is-placed');
       cardEl.style.display = 'none';
     }
-    speakText('I play ' + phrase + '.');
+    if (data.recordedOnly) {
+      const card = sentenceCards.find((item) => item.phrase === phrase);
+      if (card) speakCardWord(card);
+    } else {
+      speakText(sentenceLead + phrase + '.');
+    }
   }
 
   function enableDrag(el) {

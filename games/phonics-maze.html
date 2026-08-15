@@ -62,7 +62,7 @@
 
     .prompt-hint {
       color: var(--purple-d);
-      font-family: 'Fredoka', sans-serif;
+      font-family: var(--font-friendly);
       font-size: 1.1rem;
       font-weight: 600;
       text-align: center;
@@ -138,7 +138,7 @@
       background: linear-gradient(180deg, var(--pink), var(--pink-d));
       box-shadow: 0 5px 0 #b83232;
       color: var(--white);
-      font-family: inherit;
+      font-family: var(--font-literacy);
       font-size: 2rem;
       font-weight: 800;
       cursor: grab;
@@ -179,6 +179,7 @@
       border-radius: 16px;
       background: rgba(255,255,255,.85);
       color: var(--blue-d);
+      font-family: var(--font-literacy);
       font-size: 2rem;
       font-weight: 800;
       transition: border-color .2s ease, background .2s ease, box-shadow .2s ease;
@@ -200,6 +201,7 @@
 
     .suffix-letters {
       color: var(--text);
+      font-family: var(--font-literacy);
       font-size: clamp(1.8rem, 5vw, 2.4rem);
       font-weight: 800;
       letter-spacing: .04em;
@@ -244,6 +246,7 @@
     .success-word {
       margin-bottom: 18px;
       color: var(--blue-d);
+      font-family: var(--font-literacy);
       font-size: clamp(1.8rem, 6vw, 2.6rem);
       font-weight: 800;
       letter-spacing: .08em;
@@ -314,7 +317,7 @@
     <div class="success-card">
       <div class="success-emoji" aria-hidden="true">🎉</div>
       <h2 class="success-title" id="success-title">You made the word!</h2>
-      <p class="success-word" id="success-word">MILK</p>
+      <p class="success-word" id="success-word">Milk</p>
       <button class="pill-btn green" id="continue-btn" type="button">➡️ Next Word</button>
     </div>
   </div>
@@ -527,6 +530,10 @@
       });
     }
 
+    function displayWord(word) {
+      return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+    }
+
     function pathToD(points) {
       return points.map((point, index) => `${index === 0 ? 'M' : 'L'} ${point.x} ${point.y}`).join(' ');
     }
@@ -686,8 +693,8 @@
       blankSlot.classList.add('filled');
       blankSlot.classList.remove('ready');
       sounds.correct();
-      statusText.textContent = `You built ${current.word}!`;
-      successWord.textContent = current.word;
+      statusText.textContent = `You built ${displayWord(current.word)}!`;
+      successWord.textContent = displayWord(current.word);
       successModal.hidden = false;
       continueBtn.focus();
       speak(current.word.toLowerCase());

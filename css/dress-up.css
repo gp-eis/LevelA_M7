@@ -178,7 +178,7 @@
 }
 
 .dressup-step {
-  font-family: 'Fredoka', sans-serif;
+  font-family: var(--font-friendly);
   font-size: .92rem;
   color: #3d5a78;
 }

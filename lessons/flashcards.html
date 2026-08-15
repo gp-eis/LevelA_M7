@@ -17,7 +17,7 @@
   </div>
 
   <div class="page fc-page">
-    <a class="back-link" id="back-week" href="../Month%207%20Level%20A.html#card-literacy">⬅️ Week 1 Home</a>
+    <a class="back-link" id="back-week" href="../week-1.html#card-literacy">⬅️ Week 1 Home</a>
 
     <header class="center" style="margin-top:16px;">
       <h1 class="big-title page-title-with-icon" style="font-size:2.4rem;"><img class="page-title-icon" src="../assets/images/ui/reading-3d.webp" alt="">Flashcards</h1>
@@ -45,6 +45,7 @@
           <div class="fc-stage">
             <div class="fc-card-frame" id="lesson-frame">
               <img id="lesson-img" class="fc-card-img" alt="Select a flashcard" draggable="false">
+              <button id="lesson-speak" class="fc-speak-btn" type="button" aria-label="Hear the word and sentence">🔊</button>
             </div>
           </div>
           <div class="fc-lesson-list" id="lesson-list" aria-label="Flashcard list"></div>
@@ -90,7 +91,7 @@
           <div class="fc-scatter" id="sentence-scatter" aria-label="Flashcards to drag"></div>
           <div class="fc-sentence-wrap">
             <p class="fc-sentence" id="sentence-line" aria-live="polite">
-              <span>I play </span>
+              <span id="sentence-lead">I play </span>
               <span class="fc-blank" id="sentence-blank" data-dropzone="true">______</span>
               <span>.</span>
             </p>

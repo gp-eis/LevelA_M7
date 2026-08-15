@@ -96,6 +96,31 @@ function playClickSound() {
   });
 }
 
+/* ---------- American-English speech ---------- */
+
+/**
+ * Speak generated text using an American-English voice whenever the browser
+ * exposes one. Lesson scripts should use this helper instead of the device's
+ * default speech language.
+ */
+function speakAmericanEnglish(text, options = {}) {
+  if (!text || !('speechSynthesis' in window)) return false;
+  if (typeof soundEnabled !== 'undefined' && !soundEnabled) return false;
+
+  const voices = window.speechSynthesis.getVoices();
+  const americanVoices = voices.filter((voice) => /^en-US$/i.test(voice.lang));
+  const preferredVoice = americanVoices.find((voice) => /(?:samantha|ava|allison|jenny|aria|guy|david|zira|google us english)/i.test(voice.name))
+    || americanVoices[0];
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.lang = 'en-US';
+  utterance.rate = options.rate ?? 0.82;
+  utterance.pitch = options.pitch ?? 1.05;
+  if (preferredVoice) utterance.voice = preferredVoice;
+  window.speechSynthesis.cancel();
+  window.speechSynthesis.speak(utterance);
+  return true;
+}
+
 function setupSiteSounds() {
   const findControl = (target) => target instanceof Element
     ? target.closest('button, a, [role="button"]')
@@ -292,9 +317,14 @@ function setupSiteLogo() {
 
 /* ---------- Week unlocks (add week numbers here when materials are ready) ---------- */
 const OPEN_WEEKS = [1];
+const OPEN_GAME_WEEKS = [1];
 
 function isWeekOpen(week) {
   return OPEN_WEEKS.includes(Number(week));
+}
+
+function isGamesWeekOpen(week) {
+  return OPEN_GAME_WEEKS.includes(Number(week));
 }
 
 /** Block direct links to closed literacy / games / reading weeks. */
@@ -308,13 +338,19 @@ function guardClosedWeeks() {
   }
 
   const gamesMatch = path.match(/\/games\/week-([2-4])\//i);
-  if (gamesMatch && !isWeekOpen(gamesMatch[1])) {
+  if (gamesMatch && !isGamesWeekOpen(gamesMatch[1])) {
     window.location.replace('../../index.html');
     return true;
   }
 
   const readingMatch = path.match(/\/reading\/week-([2-4])\.html$/i);
   if (readingMatch && !isWeekOpen(readingMatch[1])) {
+    window.location.replace('../index.html');
+    return true;
+  }
+
+  const phonicsMatch = path.match(/\/phonics\/week-([2-4])\.html$/i);
+  if (phonicsMatch && !isWeekOpen(phonicsMatch[1])) {
     window.location.replace('../index.html');
     return true;
   }
@@ -326,7 +362,10 @@ function guardClosedWeeks() {
 function setupLockedWeekCards() {
   document.querySelectorAll('.week-card[data-week], .week-pick-btn[data-week]').forEach((el) => {
     const week = Number(el.dataset.week);
-    if (!week || isWeekOpen(week)) return;
+    const isOpen = el.classList.contains('week-pick-btn')
+      ? isGamesWeekOpen(week)
+      : isWeekOpen(week);
+    if (!week || isOpen) return;
 
     el.classList.add('is-locked');
     el.setAttribute('aria-disabled', 'true');
@@ -351,6 +390,83 @@ function setupLockedWeekCards() {
   });
 }
 
+/* ---------- Phonics game return navigation (Weeks 1–4) ---------- */
+function setupPhonicsEntryLinks() {
+  const path = window.location.pathname.replace(/\\/g, '/');
+
+  if (/\/phonics\/week-[1-4]\.html$/i.test(path)) {
+    document.querySelectorAll('a[href*="/games/"][href*="phonics.html"], a[href^="../games/"][href*="phonics.html"]').forEach((link) => {
+      const url = new URL(link.href, window.location.href);
+      url.searchParams.set('from', 'phonics');
+      link.href = url.href;
+    });
+  }
+
+  if (/\/games\/(?:index\.html)?$/i.test(path)) {
+    document.querySelectorAll('a.nav-card[href$="phonics.html"], a.nav-card[href*="phonics.html?"]').forEach((link) => {
+      const url = new URL(link.href, window.location.href);
+      url.searchParams.set('from', 'games');
+      link.href = url.href;
+    });
+  }
+}
+
+function setupPhonicsGameReturn() {
+  const path = window.location.pathname.replace(/\\/g, '/');
+  const hubMatch = path.match(/\/games\/(?:week-(\d+)\/)?phonics\.html$/i);
+  const activityMatch = path.match(/\/games\/(?:week-(\d+)\/)?phonics-(?:find-letter|build|maze|picture-match)\.html$/i);
+  if (!hubMatch && !activityMatch) return;
+
+  const match = hubMatch || activityMatch;
+  const week = Number(match[1] || 1);
+  const params = new URLSearchParams(window.location.search);
+  const storageKey = `phonics-game-origin-week-${week}`;
+  let origin = params.get('from');
+
+  if (origin !== 'phonics' && origin !== 'games') {
+    const referrer = document.referrer.replace(/\\/g, '/');
+    if (/\/phonics\/week-\d+\.html/i.test(referrer)) origin = 'phonics';
+    else if (/\/games\/(?:index\.html)?(?:[?#]|$)/i.test(referrer)) origin = 'games';
+    else origin = sessionStorage.getItem(storageKey) || 'games';
+  }
+
+  sessionStorage.setItem(storageKey, origin);
+
+  const withOrigin = (href) => {
+    const url = new URL(href, window.location.href);
+    url.searchParams.set('from', origin);
+    return `${url.pathname.split('/').pop()}${url.search}${url.hash}`;
+  };
+
+  if (hubMatch) {
+    const backLink = document.querySelector('.page > .back-link, main.page > .back-link');
+    if (backLink) {
+      if (origin === 'phonics') {
+        backLink.href = week === 1
+          ? '../phonics/week-1.html#lesson-focus'
+          : `../../phonics/week-${week}.html#lesson-focus`;
+        backLink.textContent = '⬅️ Phonics Lesson';
+      } else {
+        backLink.href = week === 1
+          ? 'index.html?week=1'
+          : `../index.html?week=${week}`;
+        backLink.textContent = '⬅️ All Games';
+      }
+    }
+
+    document.querySelectorAll('a.nav-card[href^="phonics-"]').forEach((link) => {
+      link.href = withOrigin(link.getAttribute('href'));
+    });
+    return;
+  }
+
+  const backLink = document.querySelector('.page > .back-link, main.page > .back-link');
+  if (backLink) {
+    backLink.href = withOrigin('phonics.html');
+    backLink.textContent = '⬅️ Phonics Games';
+  }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   if (guardClosedWeeks()) return;
   setupSiteLogo();
@@ -358,6 +474,8 @@ document.addEventListener('DOMContentLoaded', () => {
   setupDialogueButtons();
   setupVideoPlayOverlays();
   setupLockedWeekCards();
+  setupPhonicsEntryLinks();
+  setupPhonicsGameReturn();
   setupLiteracyToolReturnLinks();
   centerLinkedLessonActivity();
 });

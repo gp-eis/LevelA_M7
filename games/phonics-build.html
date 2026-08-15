@@ -38,6 +38,7 @@
 
     .word-spelling {
       color: var(--blue-d);
+      font-family: var(--font-literacy);
       font-size: clamp(1.8rem, 6vw, 2.6rem);
       font-weight: 800;
       letter-spacing: .18em;
@@ -63,9 +64,15 @@
       width: 100%;
       height: 100%;
     }
+    .word-picture img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
 
     .word-hint {
-      font-family: 'Fredoka', sans-serif;
+      font-family: var(--font-friendly);
       font-size: clamp(1.1rem, 3.2vw, 1.4rem);
       font-weight: 600;
       color: var(--purple-d);
@@ -97,6 +104,7 @@
       border-radius: 18px;
       background: #f4fbff;
       color: var(--blue-d);
+      font-family: var(--font-literacy);
       font-size: clamp(1.8rem, 6vw, 2.6rem);
       font-weight: 800;
       transition: border-color .15s ease, background .15s ease, transform .15s ease;
@@ -152,7 +160,7 @@
       background: linear-gradient(180deg, var(--yellow), var(--yellow-d));
       box-shadow: 0 5px 0 #c9a000;
       color: var(--text);
-      font-family: inherit;
+      font-family: var(--font-literacy);
       font-size: clamp(1.8rem, 6vw, 2.6rem);
       font-weight: 800;
       cursor: grab;
@@ -232,6 +240,7 @@
     .success-word {
       margin-bottom: 18px;
       color: var(--blue-d);
+      font-family: var(--font-literacy);
       font-size: clamp(1.8rem, 6vw, 2.6rem);
       font-weight: 800;
       letter-spacing: .08em;
@@ -277,7 +286,7 @@
 
     <section class="phonics-board" aria-label="Build the word game">
       <div class="word-prompt">
-        <p class="word-spelling" id="word-spelling" aria-live="polite">MANGO</p>
+        <p class="word-spelling" id="word-spelling" aria-live="polite">Mango</p>
         <div class="word-picture" id="word-picture" aria-hidden="true"></div>
         <p class="word-hint" id="word-hint">Build this word</p>
         <div class="prompt-actions">
@@ -299,7 +308,7 @@
     <div class="success-card">
       <div class="success-emoji" aria-hidden="true">🎉</div>
       <h2 class="success-title" id="success-title">Great job!</h2>
-      <p class="success-word" id="success-word">MANGO</p>
+      <p class="success-word" id="success-word">Mango</p>
       <button class="pill-btn green" id="continue-btn" type="button">➡️ Next Word</button>
     </div>
   </div>
@@ -308,9 +317,9 @@
   <script src="../js/letter-phonemes.js"></script>
   <script>
     const WORDS = [
-      { word: 'MANGO', picture: '<span class="word-emoji">🥭</span>', hint: 'Build the word for this picture' },
-      { word: 'MEAT',  picture: '<span class="word-emoji">🥩</span>', hint: 'Build the word for this picture' },
-      { word: 'MILK',  picture: '<span class="word-emoji">🥛</span>', hint: 'Build the word for this picture' }
+      { word: 'MANGO', picture: '<img src="../assets/images/week-1/memory/mango.webp" alt="Mango">', hint: 'Build the word for this picture' },
+      { word: 'MEAT',  picture: '<img src="../assets/images/week-1/memory/meat.webp" alt="Meat">', hint: 'Build the word for this picture' },
+      { word: 'MILK',  picture: '<img src="../assets/images/week-1/memory/milk.webp" alt="Milk">', hint: 'Build the word for this picture' }
     ];
 
     const wordSpelling = document.getElementById('word-spelling');
@@ -379,6 +388,14 @@
         [copy[i], copy[j]] = [copy[j], copy[i]];
       }
       return copy;
+    }
+
+    function displayWord(word) {
+      return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+    }
+
+    function displayLetter(letter) {
+      return letter === 'M' ? 'M' : letter.toLowerCase();
     }
 
     function pickVoice() {
@@ -457,12 +474,12 @@
         const tile = document.createElement('button');
         tile.type = 'button';
         tile.className = 'letter-tile';
-        tile.textContent = item.letter;
+        tile.textContent = displayLetter(item.letter);
         tile.dataset.id = item.id;
         tile.dataset.letter = item.letter;
         tile.setAttribute('data-no-click-sound', '');
         tile.draggable = true;
-        tile.setAttribute('aria-label', `Letter ${item.letter}`);
+        tile.setAttribute('aria-label', `Letter ${displayLetter(item.letter)}`);
         tile.addEventListener('click', () => placeLetter(tile));
         tile.addEventListener('dragstart', event => {
           if (locked || tile.classList.contains('used')) {
@@ -493,10 +510,10 @@
       if (!slot) return;
 
       if (entry) {
-        slot.textContent = entry.letter;
+        slot.textContent = displayLetter(entry.letter);
         slot.classList.add('filled');
         slot.classList.remove('correct');
-        slot.setAttribute('aria-label', `Remove letter ${entry.letter}`);
+        slot.setAttribute('aria-label', `Remove letter ${displayLetter(entry.letter)}`);
       } else {
         slot.textContent = '';
         slot.classList.remove('filled', 'correct');
@@ -569,10 +586,10 @@
 
       if (built === current.word) {
         [...slotsRow.children].forEach(slot => slot.classList.add('correct'));
-        statusText.textContent = `You built ${current.word}!`;
+        statusText.textContent = `You built ${displayWord(current.word)}!`;
         await speak(current.word.toLowerCase());
         sounds.correct();
-        successWord.textContent = current.word;
+        successWord.textContent = displayWord(current.word);
         successModal.hidden = false;
         continueBtn.focus();
         return;
@@ -593,7 +610,7 @@
       successModal.hidden = true;
       statusText.textContent = '';
       pickWord();
-      wordSpelling.textContent = current.word.split('').join(' ');
+      wordSpelling.textContent = displayWord(current.word);
       wordPicture.innerHTML = current.picture;
       wordHint.textContent = current.hint;
       renderSlots();

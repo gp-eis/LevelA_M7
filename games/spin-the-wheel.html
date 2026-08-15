@@ -63,16 +63,19 @@
       position: absolute;
       top: var(--label-y);
       left: var(--label-x);
-      width: 30%;
-      color: #3f3049;
-      font-size: clamp(.55rem, 3.4cqw, .95rem);
-      font-weight: 800;
-      line-height: 1;
-      text-align: center;
-      text-shadow: 0 1px 1px rgba(255,255,255,.7);
-      white-space: nowrap;
+      width: 24%;
+      aspect-ratio: 1;
+      display: grid;
+      place-items: center;
       transform: translate(-50%, -50%);
       pointer-events: none;
+    }
+    .wheel-label img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      filter: drop-shadow(0 5px 3px rgba(30,58,95,.3));
     }
 
     #result {
@@ -120,7 +123,7 @@
       border-radius: 999px;
       background: var(--white);
       color: var(--purple-d);
-      font-family: 'Fredoka', sans-serif;
+      font-family: var(--font-friendly);
       font-weight: 600;
       box-shadow: 0 4px 0 rgba(74,59,82,.14);
     }
@@ -195,7 +198,7 @@
     }
     .card-sentence {
       color: var(--text);
-      font-family: 'Fredoka', sans-serif;
+      font-family: var(--font-friendly);
       font-size: 1.25rem;
       font-weight: 600;
       line-height: 1.25;
@@ -273,9 +276,6 @@
   <script src="../js/main.js"></script>
   <script>
     const SEGMENTS = [
-      { word: 'mango',    color: '#ff6fa5', sentence: 'The mango is here.', emoji: '🥭', image: '../assets/images/week-1/memory/mango.webp' },
-      { word: 'meat',     color: '#ffd93d', sentence: 'The meat is here.',  emoji: '🥩', image: '../assets/images/week-1/memory/meat.webp' },
-      { word: 'milk',     color: '#4fc3f7', sentence: 'The milk is here.',  emoji: '🥛', image: '../assets/images/week-1/memory/milk.webp' },
       { word: 'soccer',   color: '#7ed957', sentence: 'I play soccer.',     emoji: '⚽', image: '../assets/images/week-1/memory/soccer.webp' },
       { word: 'baseball', color: '#b388ff', sentence: 'I play baseball.',   emoji: '⚾', image: '../assets/images/week-1/memory/baseball.webp' },
       { word: 'tennis',   color: '#ffa62b', sentence: 'I play tennis.',     emoji: '🎾', image: '../assets/images/week-1/memory/tennis.webp' },
@@ -327,6 +327,7 @@
       if (usVoice) utterance.voice = usVoice;
       speechSynthesis.speak(utterance);
     }
+    function narrateResult(segment){if(!('speechSynthesis' in window))return;speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(segment.word);u.lang='en-US';u.rate=.9;if(usVoice)u.voice=usVoice;u.onend=()=>setTimeout(()=>{wordCard.classList.add('flipped');wordCard.setAttribute('aria-pressed','true');speak(segment.sentence)},350);speechSynthesis.speak(u)}
 
     wheel.style.background = `conic-gradient(${SEGMENTS.map((segment, index) => {
       const start = index * SEGMENT_ANGLE;
@@ -338,9 +339,13 @@
       const label = document.createElement('span');
       const angle = (index * SEGMENT_ANGLE + SEGMENT_ANGLE / 2) * Math.PI / 180;
       label.className = 'wheel-label';
-      label.textContent = segment.word;
-      label.style.setProperty('--label-x', `${50 + Math.sin(angle) * 31}%`);
-      label.style.setProperty('--label-y', `${50 - Math.cos(angle) * 31}%`);
+      const image = document.createElement('img');
+      image.src = segment.image;
+      image.alt = '';
+      image.setAttribute('aria-hidden', 'true');
+      label.appendChild(image);
+      label.style.setProperty('--label-x', `${50 + Math.sin(angle) * 30}%`);
+      label.style.setProperty('--label-y', `${50 - Math.cos(angle) * 30}%`);
       wheel.appendChild(label);
     });
 
@@ -382,7 +387,7 @@
       selectedArea.hidden = false;
       wordCard.focus();
       showToast(`🎉 ${segment.word}!`);
-      speak(segment.word);
+      narrateResult(segment);
     }
 
     function finishSpin() {

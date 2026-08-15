@@ -3,7 +3,7 @@
    Bright, energetic, kindergarten-friendly styling for all pages
    ============================================================ */
 
-@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Fredoka:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@600;700&family=Quicksand:wght@500;600;700&display=swap');
 
 :root {
   --pink:   #ff6b6b;
@@ -21,16 +21,26 @@
   --cream:  #f3fff8;
   --text:   #1e3a5f;
   --white:  #ffffff;
+  --font-display: 'Comfortaa', 'Century Gothic', 'Avenir Next Rounded', sans-serif;
+  --font-friendly: 'Quicksand', 'Century Gothic', 'Avenir Next', sans-serif;
+  --font-literacy: 'Quicksand', 'Century Gothic', 'Avenir Next', sans-serif;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
-  font-family: 'Baloo 2', 'Comic Sans MS', cursive, sans-serif;
+  font-family: var(--font-display);
   color: var(--text);
   background: linear-gradient(180deg, #7ed0ff 0%, #c4efff 40%, #e8fff4 100%);
   min-height: 100vh;
   overflow-x: hidden;
+}
+
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
 }
 
 /* ---------- Layout helpers ---------- */
@@ -59,7 +69,7 @@ body {
 }
 
 .subtitle {
-  font-family: 'Fredoka', sans-serif;
+  font-family: var(--font-friendly);
   font-size: clamp(1rem, 2.5vw, 1.4rem);
   color: var(--purple-d);
   margin-top: 8px;
@@ -244,7 +254,7 @@ body {
   50% { transform: translateY(-7px) rotate(3deg); }
 }
 .nav-card .label { font-size: 1.25rem; font-weight: 800; }
-.nav-card .hint  { font-family: 'Fredoka', sans-serif; font-size: .95rem; color: #8b7a99; text-align: center; }
+.nav-card .hint  { font-family: var(--font-friendly); font-size: .95rem; color: #8b7a99; text-align: center; }
 
 /* Colored top borders per card, cycled automatically */
 .card-grid .nav-card:nth-child(4n+1) { border-top: 8px solid var(--pink); }
@@ -271,7 +281,7 @@ body {
   padding: 20px;
 }
 .placeholder .emoji { font-size: 3rem; }
-.placeholder small { font-family: 'Fredoka', sans-serif; font-weight: 400; color: #9a86b8; }
+.placeholder small { font-family: var(--font-friendly); font-weight: 400; color: #9a86b8; }
 
 /* ---------- Static lesson pages ---------- */
 
@@ -630,7 +640,7 @@ body.has-site-logo {
   padding: 6px 12px;
   border-radius: 999px;
   background: rgba(255, 255, 255, .94);
-  font-family: 'Fredoka', sans-serif;
+  font-family: var(--font-friendly);
   font-size: 1.05rem;
   font-weight: 600;
   color: #667b8d;
@@ -1185,7 +1195,33 @@ body.has-site-logo {
 }
 
 @media (max-width: 640px) {
-  .activity-completion-frame { width: 88%; border-width: 7px; }
+  .activity-completion-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    padding:
+      max(12px, env(safe-area-inset-top))
+      max(10px, env(safe-area-inset-right))
+      max(12px, env(safe-area-inset-bottom))
+      max(10px, env(safe-area-inset-left));
+    overflow: auto;
+  }
+  .activity-completion-frame {
+    display: flex;
+    flex-direction: column;
+    width: min(92vw, 520px);
+    max-height: calc(100svh - 24px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+    border-width: 7px;
+  }
+  .activity-completion-video {
+    flex: 1 1 auto;
+    min-height: 0;
+    width: 100%;
+    height: auto;
+    max-height: calc(100svh - 118px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+    object-fit: contain;
+  }
+  .activity-completion-actions { flex: 0 0 auto; padding: 9px 10px 12px; }
   .activity-completion-close { width: 40px; height: 40px; font-size: 1.5rem; }
 }
 
