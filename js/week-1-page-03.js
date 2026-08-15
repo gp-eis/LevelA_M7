@@ -10,6 +10,7 @@
     first: 'I am first.',
     second: 'I am second.',
     third: 'I am third.',
+    fourth: 'I am fourth.',
     last: 'I am last.'
   };
 
@@ -67,6 +68,8 @@
     const videoCloseButton = document.getElementById('cyclist-video-close');
     const restartButton = document.getElementById('restart-cyclists');
     const goodJobVideo = document.getElementById('cyclist-good-job-video');
+    const startLayer = document.getElementById('page6-start-layer');
+    const startButton = document.getElementById('page6-start-button');
     let questions = [];
     let questionIndex = 0;
     let acceptingAnswer = true;
@@ -75,16 +78,22 @@
       return questions[questionIndex];
     }
 
+    function setHotspotsEnabled(enabled) {
+      hotspots.forEach((hotspot) => { hotspot.disabled = !enabled; });
+    }
+
     function showQuestion(readAloud = true) {
       const question = currentQuestion();
       questionElement.textContent = question.text;
       progressElement.textContent = `${questionIndex + 1} of ${questions.length}`;
       acceptingAnswer = true;
+      setHotspotsEnabled(true);
       if (readAloud) window.setTimeout(() => playQuestionAudio(question), 180);
     }
 
     function finishActivity() {
       acceptingAnswer = false;
+      setHotspotsEnabled(false);
       speaker.disabled = true;
       questionElement.textContent = 'You completed all four questions!';
       progressElement.textContent = '4 of 4';
@@ -95,10 +104,10 @@
         completionOverlay.hidden = false;
         goodJobVideo.currentTime = 0;
         goodJobVideo.play().catch(() => {
-          speak('Great job! You found all four cyclists!');
+          speak('Great job! You completed all four questions!');
         });
       } else {
-        speak('Great job! You found all four cyclists!');
+        speak('Great job! You completed all four questions!');
       }
     }
 
@@ -145,6 +154,8 @@
       questions = shuffle(QUESTION_BANK);
       questionIndex = 0;
       acceptingAnswer = false;
+      setHotspotsEnabled(false);
+      startLayer.hidden = true;
       speaker.disabled = false;
       completionOverlay.hidden = true;
       goodJobVideo.pause();
@@ -164,6 +175,7 @@
     }
 
     hotspots.forEach((hotspot) => hotspot.addEventListener('click', () => chooseCyclist(hotspot)));
+    startButton.addEventListener('click', startActivity);
     speaker.addEventListener('click', () => {
       stopIntroAudio();
       if (!acceptingAnswer) showQuestion(false);
@@ -176,8 +188,12 @@
       completionOverlay.hidden = true;
     });
     goodJobVideo.addEventListener('ended', () => {
-      speak('Great job! You found all four cyclists!');
+      speak('Great job! You completed all four questions!');
     });
-    startActivity();
+    acceptingAnswer = false;
+    setHotspotsEnabled(false);
+    speaker.disabled = true;
+    questionElement.textContent = 'Press Start Activity when you are ready.';
+    progressElement.textContent = 'Get ready!';
   });
 })();

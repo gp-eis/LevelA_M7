@@ -875,6 +875,60 @@ body.has-site-logo {
   cursor: pointer;
 }
 
+/* ---------- Literacy activity start gate ---------- */
+.activity-start-layer {
+  position: absolute;
+  z-index: 30;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  border-radius: inherit;
+  background: rgba(17, 41, 68, .42);
+  backdrop-filter: blur(2px);
+}
+
+.activity-start-layer[hidden] { display: none; }
+
+.activity-start-button {
+  min-width: min(320px, 78%);
+  min-height: 80px;
+  padding: 16px 30px;
+  border: 7px solid var(--white);
+  border-radius: 999px;
+  color: var(--white);
+  background: linear-gradient(180deg, #ffad59, #f05d2d);
+  box-shadow: 0 9px 0 #b93e1d, 0 16px 28px rgba(20, 31, 58, .38);
+  font-family: var(--font-display);
+  font-size: clamp(1.2rem, 3vw, 2rem);
+  font-weight: 800;
+  cursor: pointer;
+  transition: transform .15s ease, filter .15s ease;
+}
+
+.activity-start-button:hover,
+.activity-start-button:focus-visible {
+  transform: translateY(-3px);
+  filter: brightness(1.05);
+  outline: none;
+}
+
+.activity-start-button:active {
+  transform: translateY(5px);
+  box-shadow: 0 4px 0 #b93e1d, 0 9px 18px rgba(20, 31, 58, .3);
+}
+
+@media (max-width: 650px) {
+  .activity-start-layer { padding: 12px; }
+  .activity-start-button {
+    min-width: min(270px, 82%);
+    min-height: 60px;
+    padding: 11px 20px;
+    border-width: 5px;
+    font-size: 1.05rem;
+  }
+}
+
 .sports-number-box {
   position: absolute;
   z-index: 3;
@@ -1071,10 +1125,11 @@ body.has-site-logo {
   filter: drop-shadow(0 0 8px rgba(30, 111, 217, .45));
 }
 
-.cyclist-last   { left: 5.5%;  top: 42%; width: 19%; height: 38%; }
-.cyclist-third  { left: 21.5%; top: 39%; width: 22%; height: 37%; }
-.cyclist-second { left: 41%;   top: 40%; width: 22%; height: 37%; }
-.cyclist-first  { left: 64%;   top: 36%; width: 25%; height: 41%; }
+.cyclist-last   { left: 4.5%;  top: 43%; width: 21%; height: 35%; }
+.cyclist-fourth { left: 19%;   top: 39%; width: 20%; height: 35%; }
+.cyclist-third  { left: 31.5%; top: 36%; width: 21%; height: 38%; }
+.cyclist-second { left: 49%;   top: 33%; width: 21%; height: 40%; }
+.cyclist-first  { left: 67%;   top: 28%; width: 22%; height: 44%; }
 
 .cyclist-hotspot.is-correct {
   border-color: #46b82d;

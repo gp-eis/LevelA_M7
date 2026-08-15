@@ -10,7 +10,7 @@
   <style>
     .board {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(5, minmax(0, 1fr));
       gap: 14px;
       max-width: 900px;
       margin: 24px auto 0;
@@ -31,8 +31,6 @@
       position: relative;
       transition: transform .2s ease, background .2s ease, box-shadow .2s ease;
     }
-    .board > .mem-card:nth-last-child(2) { grid-column: 2; }
-    .board > .mem-card:last-child { grid-column: 3; }
     .mem-card::after {
       content: '?';
       color: #fff7b0;
@@ -192,7 +190,7 @@
       .confetti-piece { animation: none; top: var(--rest-top); }
     }
     @media (max-width: 480px) {
-      .board { grid-template-columns: repeat(4, minmax(62px, 1fr)); gap: 8px; }
+      .board { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; }
       .mem-card { border-radius: 15px; padding: 6px; }
       .card-picture { border-radius: 10px; }
     }

@@ -47,14 +47,17 @@
     <main id="lesson-focus" class="card cyclist-activity" aria-labelledby="cyclist-question">
       <div class="cyclist-picture-stage">
         <img
-          src="../assets/images/week-1/page-03-cyclists.webp"
+          src="../assets/images/week-1/page-03-cyclists-v2.png"
           width="1412"
           height="1114"
-          alt="Four cyclists approaching a finish line. From left to right they are last, third, second, and first."
+          alt="A race track with first, second, third, and last position labels. Five cyclists can be selected, including a fourth-place cyclist without a label."
         >
 
         <button class="cyclist-hotspot cyclist-last" type="button" data-position="last" aria-label="Choose the cyclist who is last">
           <img src="../assets/images/week-1/cyclists/cyclist-last.webp" alt=""><span>Last cyclist</span>
+        </button>
+        <button class="cyclist-hotspot cyclist-fourth" type="button" data-position="fourth" aria-label="Choose the cyclist who is fourth">
+          <img src="../assets/images/week-1/cyclists/cyclist-fourth.webp" alt=""><span>Fourth cyclist</span>
         </button>
         <button class="cyclist-hotspot cyclist-third" type="button" data-position="third" aria-label="Choose the cyclist who is third">
           <img src="../assets/images/week-1/cyclists/cyclist-third.webp" alt=""><span>Third cyclist</span>
@@ -65,6 +68,10 @@
         <button class="cyclist-hotspot cyclist-first" type="button" data-position="first" aria-label="Choose the cyclist who is first">
           <img src="../assets/images/week-1/cyclists/cyclist-first.webp" alt=""><span>First cyclist</span>
         </button>
+
+        <div id="page6-start-layer" class="activity-start-layer">
+          <button id="page6-start-button" class="activity-start-button" type="button">▶ Start Activity</button>
+        </div>
 
         <div id="cyclist-good-job-overlay" class="activity-completion-overlay" hidden>
           <div class="activity-completion-frame">

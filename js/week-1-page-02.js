@@ -33,7 +33,20 @@
     const choices = [...document.querySelectorAll('.sentence-choice')];
     const feedback = document.getElementById('answer-feedback');
     const restartButton = document.getElementById('restart-activity');
+    const startLayer = document.getElementById('page3-start-layer');
+    const startButton = document.getElementById('page3-start-button');
     let feedbackClip = false;
+    let activityStarted = false;
+
+    function setChoicesEnabled(enabled) {
+      activityStarted = enabled;
+      choices.forEach((choice) => {
+        choice.setAttribute('aria-disabled', String(!enabled));
+        choice.tabIndex = enabled ? 0 : -1;
+        const speaker = choice.querySelector('.sentence-speaker');
+        if (speaker) speaker.disabled = !enabled;
+      });
+    }
 
     function playClip(source, wrong = false) {
       feedbackClip = true;
@@ -93,6 +106,7 @@
     }
 
     function choose(choice) {
+      if (!activityStarted) return;
       if (choice.dataset.answer === CORRECT_ANSWER) markCorrect(choice);
       else markWrong(choice);
     }
@@ -139,6 +153,15 @@
       feedback.textContent = 'Choose one answer.';
       feedback.className = 'answer-feedback';
       shuffleChoices();
+      setChoicesEnabled(true);
+      restoreQuestionVideo(true);
+    });
+
+    startButton.addEventListener('click', () => {
+      startLayer.hidden = true;
+      feedback.textContent = 'Choose one answer.';
+      feedback.className = 'answer-feedback';
+      setChoicesEnabled(true);
       restoreQuestionVideo(true);
     });
 
@@ -146,6 +169,7 @@
       if (feedbackClip) restoreQuestionVideo(false);
     });
 
-    video.play().catch(() => {});
+    setChoicesEnabled(false);
+    restoreQuestionVideo(false);
   });
 })();

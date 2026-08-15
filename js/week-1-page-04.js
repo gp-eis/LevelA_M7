@@ -24,6 +24,7 @@
     const goButton = document.getElementById('sports-number-go');
     const introVideo = document.getElementById('page4-intro-video');
     const startButton = document.getElementById('page4-start-activity');
+    const startLayer = document.getElementById('page4-start-layer');
     const goodJobVideo = document.getElementById('page4-good-job-video');
     const completionOverlay = document.getElementById('page4-good-job-overlay');
     const videoCloseButton = document.getElementById('page4-video-close');
@@ -127,10 +128,25 @@
       introVideo.hidden = false;
       introVideo.muted = false;
       introVideo.currentTime = 0;
-      startButton.hidden = true;
+      startLayer.hidden = true;
       introVideo.play().catch(() => {
-        startButton.hidden = false;
+        playQuestionAudio();
       });
+    }
+
+    function prepareActivity() {
+      completed = false;
+      activityReady = false;
+      completionOverlay.hidden = true;
+      goodJobVideo.pause();
+      goodJobVideo.currentTime = 0;
+      introVideo.pause();
+      introVideo.currentTime = 0;
+      introVideo.hidden = true;
+      questionSpeaker.hidden = true;
+      questionSpeaker.disabled = true;
+      startLayer.hidden = false;
+      updateNumber(0);
     }
 
     function restartActivity() {
@@ -149,12 +165,9 @@
       showStaticCharacter();
     });
     startButton.addEventListener('click', () => {
-      startButton.hidden = true;
-      introVideo.muted = false;
-      introVideo.play().catch(() => { startButton.hidden = false; });
+      startIntroSequence();
     });
     introVideo.addEventListener('ended', () => {
-      startButton.hidden = true;
       introVideo.pause();
       introVideo.currentTime = 0;
       playQuestionAudio();
@@ -164,6 +177,6 @@
       speakCompletion();
     });
 
-    startIntroSequence();
+    prepareActivity();
   });
 })();

@@ -72,6 +72,8 @@
     const goodJobVideo = document.getElementById('race-good-job-video');
     const videoCloseButton = document.getElementById('race-video-close');
     const tryAgainButton = document.getElementById('race-try-again');
+    const startLayer = document.getElementById('page5-start-layer');
+    const startButton = document.getElementById('page5-start-button');
 
     let ready = false;
     let busy = false;
@@ -91,6 +93,7 @@
 
     async function startActivity() {
       if (busy) return;
+      startLayer.hidden = true;
       busy = true;
       ready = false;
       stopSpeech();
@@ -167,10 +170,14 @@
     answerButton.addEventListener('click', () => speak(selectedSentence));
     runners.forEach((runner) => runner.addEventListener('click', () => chooseRunner(runner)));
     videoCloseButton.addEventListener('click', closeGoodJobVideo);
+    startButton.addEventListener('click', startActivity);
     tryAgainButton.addEventListener('click', startActivity);
     goodJobVideo.addEventListener('ended', () => {
       feedbackText.textContent = 'Great job! C won the race.';
     });
-    startActivity();
+    setRunnersEnabled(false);
+    questionButton.disabled = true;
+    answerButton.hidden = true;
+    feedbackText.textContent = 'Press Start Activity when you are ready.';
   });
 })();
