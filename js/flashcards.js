@@ -3,8 +3,8 @@
   const titles = {
     1: 'Week 1 — What sport do you play?',
     2: 'Week 2 — What do you practice?',
-    3: 'Week 3 — What event is it?',
-    4: 'Week 4 — Where do Olympic athletes come from?'
+    3: 'Week 3 — Where are we?',
+    4: 'Week 4 — When are the Olympic Games?'
   };
 
   const back = document.getElementById('back-week');
@@ -15,7 +15,7 @@
   back.href = returnLink.href;
   back.textContent = returnLink.text;
   label.textContent = titles[week] || ('Week ' + week);
-  document.title = 'Flashcards — Week ' + week + ' — Athlete People';
+  document.title = 'Flashcards — Week ' + week + ' — Athlete';
 
   const WEEK_DATA = {
     1: {
@@ -27,6 +27,40 @@
         { id:'soccer',file:'soccer-flashcard.webp',label:'Soccer',phrase:'soccer',sentence:'I play soccer.' },
         { id:'golf',file:'golf-flashcard.webp',label:'Golf',phrase:'golf',sentence:'I play golf.' },
         { id:'athlete',file:'athlete-flashcard.webp',label:'Athlete',phrase:null,sentence:'I am an athlete.' }
+      ]
+    },
+    2: {
+      base: '../assets/images/week-2/flashcards/',
+      sentenceLead: 'I practice ',
+      cards: [
+        { id:'twisting',file:'twisting-flashcard.webp',label:'Twisting',phrase:'twisting',sentence:'I practice twisting.' },
+        { id:'kicking',file:'kicking-flashcard.webp',label:'Kicking',phrase:'kicking',sentence:'I practice kicking.' },
+        { id:'running',file:'running-flashcard.webp',label:'Running',phrase:'running',sentence:'I practice running.' },
+        { id:'stretching',file:'stretching-flashcard.webp',label:'Stretching',phrase:'stretching',sentence:'I practice stretching.' },
+        { id:'jumping',file:'jumping-flashcard.webp',label:'Jumping',phrase:'jumping',sentence:'I practice jumping.' }
+      ]
+    },
+    3: {
+      base: '../assets/images/week-3/flashcards/',
+      sentenceLead: 'It\'s ',
+      recordedOnly: true,
+      cards: [
+        { id:'skating',file:'skating-flashcard.webp',label:'Skating',phrase:'skating',sentence:'It\'s skating.',wordAudio:'../assets/audio/week-3/literacy/page-04-skating.mp3' },
+        { id:'swimming',file:'swimming-flashcard.webp',label:'Swimming',phrase:'swimming',sentence:'It\'s swimming.',wordAudio:'../assets/audio/week-3/literacy/page-04-swimming.mp3' },
+        { id:'diving',file:'diving-flashcard.webp',label:'Diving',phrase:'diving',sentence:'It\'s diving.',wordAudio:'../assets/audio/week-3/literacy/page-04-diving.mp3' },
+        { id:'jumping',file:'jumping-flashcard.webp',label:'Jumping',phrase:'jumping',sentence:'It\'s jumping.',wordAudio:'../assets/audio/week-3/literacy/page-04-jumping.mp3' },
+        { id:'running',file:'running-flashcard.webp',label:'Running',phrase:'running',sentence:'It\'s running.',wordAudio:'../assets/audio/week-3/literacy/page-04-running.mp3' }
+      ]
+    },
+    4: {
+      base: '../assets/images/week-4/flashcards/',
+      sentenceLead: 'They come from ',
+      cards: [
+        { id:'america',file:'america-flashcard.webp',label:'America',phrase:'America',sentence:'They come from America.',wordAudio:'../assets/audio/week-4/literacy/page-04/america.mp3' },
+        { id:'europe',file:'europe-flashcard.webp',label:'Europe',phrase:'Europe',sentence:'They come from Europe.',wordAudio:'../assets/audio/week-4/literacy/page-04/europe.mp3' },
+        { id:'africa',file:'africa-flashcard.webp',label:'Africa',phrase:'Africa',sentence:'They come from Africa.',wordAudio:'../assets/audio/week-4/literacy/page-04/asia.mp3' },
+        { id:'asia',file:'asia-flashcard.webp',label:'Asia',phrase:'Asia',sentence:'They come from Asia.',wordAudio:'../assets/audio/week-4/literacy/page-04/australia.mp3' },
+        { id:'australia',file:'australia-flashcard.webp',label:'Australia',phrase:'Australia',sentence:'They come from Australia.',wordAudio:'../assets/audio/week-4/literacy/page-04/africa.mp3' }
       ]
     }
   };

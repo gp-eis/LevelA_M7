@@ -1,5 +1,5 @@
 /* ============================================================
-   Letter phonemes for Athlete People phonics games
+   Letter phonemes for Athlete phonics games
 
    Primary classroom sound when a letter has more than one:
    A /æ/ cat  B /b/ bat  C /k/ cat  D /d/ dog  E /ĕ/ bed

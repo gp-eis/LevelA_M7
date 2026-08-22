@@ -1,7 +1,18 @@
 /* ============================================================
-   Athlete People — shared JavaScript
+   Athlete — shared JavaScript
    Sound toggle, dialogue buttons (audio/video hooks), and toasts
    ============================================================ */
+
+/* Load the saved English/Korean interface preference on every project page. */
+(() => {
+  if (window.athletePeopleLanguage || document.querySelector('script[src$="/i18n.js"], script[src="js/i18n.js"]')) return;
+  const mainScript = document.currentScript;
+  if (!mainScript?.src) return;
+  const languageScript = document.createElement('script');
+  languageScript.src = new URL('i18n.js', mainScript.src).href;
+  languageScript.dataset.athleteI18nLoader = 'true';
+  document.head.appendChild(languageScript);
+})();
 
 /* ---------- Button sounds (generated with Web Audio) ---------- */
 
@@ -316,8 +327,8 @@ function setupSiteLogo() {
 }
 
 /* ---------- Week unlocks (add week numbers here when materials are ready) ---------- */
-const OPEN_WEEKS = [1];
-const OPEN_GAME_WEEKS = [1];
+const OPEN_WEEKS = [1, 2, 3, 4];
+const OPEN_GAME_WEEKS = [1, 2, 3, 4];
 
 function isWeekOpen(week) {
   return OPEN_WEEKS.includes(Number(week));

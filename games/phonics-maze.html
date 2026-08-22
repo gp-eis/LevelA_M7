@@ -5,7 +5,7 @@
   <meta http-equiv="Content-Language" content="en-US">
   <meta name="google" content="notranslate">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Letter Maze ⭐ — Athlete People</title>
+  <title>Letter Maze ⭐ — Athlete</title>
   <link rel="stylesheet" href="../css/styles.css">
   <style>
     .game-toolbar {
@@ -148,6 +148,7 @@
     }
 
     .letter-tile:active { cursor: grabbing; }
+    .letter-tile[hidden] { display: none; }
     .letter-tile.dragging {
       transform: translate(-50%, -50%) scale(1.08);
       box-shadow: 0 8px 0 #b83232, 0 12px 20px rgba(74,59,82,.25);
@@ -165,7 +166,8 @@
       display: flex;
       align-items: center;
       gap: 4px;
-      transform: translate(-50%, -50%);
+      /* The maze path ends at the exact center of the blank letter square. */
+      transform: translate(-29px, -50%);
       z-index: 2;
       pointer-events: none;
     }
@@ -260,6 +262,7 @@
     @media (max-width: 560px) {
       .maze-board { padding: 16px 10px 20px; }
       .letter-tile, .blank-slot { width: 48px; height: 48px; font-size: 1.6rem; }
+      .goal-slot { transform: translate(-24px, -50%); }
       .suffix-letters { font-size: 1.6rem; }
       .path-line { stroke-width: 14; }
     }
@@ -562,6 +565,13 @@
       goalSlot.style.top = `${(point.y / VIEW_H) * 100}%`;
     }
 
+    function fitFinishPoint(point) {
+      const stageWidth = mazeStage.clientWidth || VIEW_W;
+      const spaceAfterBlankCenter = goalSlot.offsetWidth - (blankSlot.offsetWidth / 2);
+      const safePixelX = stageWidth - spaceAfterBlankCenter - 12;
+      point.x = Math.min(point.x, Math.max(80, (safePixelX / stageWidth) * VIEW_W));
+    }
+
     function nearestPointOnSegment(point, a, b) {
       const abx = b.x - a.x;
       const aby = b.y - a.y;
@@ -650,6 +660,8 @@
       } while (PATH_LAYOUTS.length > 1 && pathIndex === lastPathIndex);
       lastPathIndex = pathIndex;
       pathPoints = PATH_LAYOUTS[pathIndex].map(point => ({ ...point }));
+      /* Leave room for the full word while keeping the final tile centered in its box. */
+      fitFinishPoint(pathPoints[pathPoints.length - 1]);
       starIndexes = chooseStarIndexes(pathPoints);
 
       renderPath();
