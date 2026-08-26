@@ -5,7 +5,7 @@
   <meta http-equiv="Content-Language" content="en-US">
   <meta name="google" content="notranslate">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Week 1 — Page 2 — Athlete People</title>
+  <title>Week 1 — Page 2 — Athlete</title>
   <link rel="stylesheet" href="../css/styles.css">
 </head>
 <body>
@@ -21,12 +21,12 @@
       <span class="page-indicator" aria-current="page">📖 Page 3 of 6</span>
       <a class="back-link next-page-link" href="week-1-page-04.html#lesson-focus">Next Page ➡️</a>
     </nav>
-    <a class="literacy-list-link" href="../Month%207%20Level%20A.html#card-literacy">🏠 Week 1 Home</a>
+    <a class="literacy-list-link" href="../week-1.html#card-literacy">🏠 Week 1 Home</a>
 
     <header class="center" style="margin-top:16px;">
       <h1 class="big-title" style="font-size:2.4rem;">Week 1 - What sports do you play?</h1>
       <nav class="week-tools" aria-label="Week tools">
-        <a class="pill-btn orange" href="tpr.html?week=1">🤸 TPR</a>
+        <a class="pill-btn orange" href="tpr.html?week=1">🎵 Week Song</a>
         <a class="pill-btn blue" href="flashcards.html?week=1">🃏 Flashcards</a>
       </nav>
     </header>
@@ -50,29 +50,31 @@
             preload="auto"
             aria-label="Week 1 page 2 activity video"
           ></video>
-        </div>
-
-        <div class="answer-panel">
-          <div class="answer-list" role="radiogroup" aria-label="Choose who the person is">
-            <div class="sentence-choice" role="radio" aria-checked="false" tabindex="0" data-answer="farmer" data-sentence="I am a farmer.">
-              <span class="choice-circle" aria-hidden="true"><span></span></span>
-              <span class="choice-text">I am a farmer.</span>
-              <button class="sentence-speaker" type="button" aria-label="Listen to: I am a farmer." data-speak="I am a farmer.">🔊</button>
-            </div>
-
-            <div class="sentence-choice" role="radio" aria-checked="false" tabindex="0" data-answer="athlete" data-sentence="I am an athlete.">
-              <span class="choice-circle" aria-hidden="true"><span></span></span>
-              <span class="choice-text">I am an athlete.</span>
-              <button class="sentence-speaker" type="button" aria-label="Listen to: I am an athlete." data-speak="I am an athlete.">🔊</button>
-            </div>
-
-            <div class="sentence-choice" role="radio" aria-checked="false" tabindex="0" data-answer="student" data-sentence="I am a student.">
-              <span class="choice-circle" aria-hidden="true"><span></span></span>
-              <span class="choice-text">I am a student.</span>
-              <button class="sentence-speaker" type="button" aria-label="Listen to: I am a student." data-speak="I am a student.">🔊</button>
-            </div>
+          <div id="page3-start-layer" class="activity-start-layer">
+            <button id="page3-start-button" class="activity-start-button" type="button">▶ Start Activity</button>
           </div>
-          <p id="answer-feedback" class="answer-feedback" role="status" aria-live="polite">Choose one answer.</p>
+          <div class="answer-panel">
+            <div class="answer-list" role="radiogroup" aria-label="Choose who the person is">
+              <div class="sentence-choice" role="radio" aria-checked="false" tabindex="0" data-answer="farmer" data-sentence="I am a farmer.">
+                <span class="choice-circle" aria-hidden="true"><span></span></span>
+                <span class="choice-text">I am a farmer.</span>
+                <button class="sentence-speaker" type="button" aria-label="Listen to: I am a farmer." data-speak="I am a farmer.">🔊</button>
+              </div>
+
+              <div class="sentence-choice" role="radio" aria-checked="false" tabindex="0" data-answer="athlete" data-sentence="I am an athlete.">
+                <span class="choice-circle" aria-hidden="true"><span></span></span>
+                <span class="choice-text">I am an athlete.</span>
+                <button class="sentence-speaker" type="button" aria-label="Listen to: I am an athlete." data-speak="I am an athlete.">🔊</button>
+              </div>
+
+              <div class="sentence-choice" role="radio" aria-checked="false" tabindex="0" data-answer="student" data-sentence="I am a student.">
+                <span class="choice-circle" aria-hidden="true"><span></span></span>
+                <span class="choice-text">I am a student.</span>
+                <button class="sentence-speaker" type="button" aria-label="Listen to: I am a student." data-speak="I am a student.">🔊</button>
+              </div>
+            </div>
+            <p id="answer-feedback" class="answer-feedback" role="status" aria-live="polite">Choose one answer.</p>
+          </div>
         </div>
 
         <button id="restart-activity" class="pill-btn blue restart-activity" type="button">↻ Try Again</button>

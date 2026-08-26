@@ -5,7 +5,7 @@
   <meta http-equiv="Content-Language" content="en-US">
   <meta name="google" content="notranslate">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Letter Maze ⭐ — Athlete People</title>
+  <title>Letter Maze ⭐ — Athlete</title>
   <link rel="stylesheet" href="../css/styles.css">
   <style>
     .game-toolbar {
@@ -62,7 +62,7 @@
 
     .prompt-hint {
       color: var(--purple-d);
-      font-family: 'Fredoka', sans-serif;
+      font-family: var(--font-friendly);
       font-size: 1.1rem;
       font-weight: 600;
       text-align: center;
@@ -138,7 +138,7 @@
       background: linear-gradient(180deg, var(--pink), var(--pink-d));
       box-shadow: 0 5px 0 #b83232;
       color: var(--white);
-      font-family: inherit;
+      font-family: var(--font-literacy);
       font-size: 2rem;
       font-weight: 800;
       cursor: grab;
@@ -148,6 +148,7 @@
     }
 
     .letter-tile:active { cursor: grabbing; }
+    .letter-tile[hidden] { display: none; }
     .letter-tile.dragging {
       transform: translate(-50%, -50%) scale(1.08);
       box-shadow: 0 8px 0 #b83232, 0 12px 20px rgba(74,59,82,.25);
@@ -165,7 +166,8 @@
       display: flex;
       align-items: center;
       gap: 4px;
-      transform: translate(-50%, -50%);
+      /* The maze path ends at the exact center of the blank letter square. */
+      transform: translate(-29px, -50%);
       z-index: 2;
       pointer-events: none;
     }
@@ -179,6 +181,7 @@
       border-radius: 16px;
       background: rgba(255,255,255,.85);
       color: var(--blue-d);
+      font-family: var(--font-literacy);
       font-size: 2rem;
       font-weight: 800;
       transition: border-color .2s ease, background .2s ease, box-shadow .2s ease;
@@ -200,6 +203,7 @@
 
     .suffix-letters {
       color: var(--text);
+      font-family: var(--font-literacy);
       font-size: clamp(1.8rem, 5vw, 2.4rem);
       font-weight: 800;
       letter-spacing: .04em;
@@ -244,6 +248,7 @@
     .success-word {
       margin-bottom: 18px;
       color: var(--blue-d);
+      font-family: var(--font-literacy);
       font-size: clamp(1.8rem, 6vw, 2.6rem);
       font-weight: 800;
       letter-spacing: .08em;
@@ -257,6 +262,7 @@
     @media (max-width: 560px) {
       .maze-board { padding: 16px 10px 20px; }
       .letter-tile, .blank-slot { width: 48px; height: 48px; font-size: 1.6rem; }
+      .goal-slot { transform: translate(-24px, -50%); }
       .suffix-letters { font-size: 1.6rem; }
       .path-line { stroke-width: 14; }
     }
@@ -314,7 +320,7 @@
     <div class="success-card">
       <div class="success-emoji" aria-hidden="true">🎉</div>
       <h2 class="success-title" id="success-title">You made the word!</h2>
-      <p class="success-word" id="success-word">MILK</p>
+      <p class="success-word" id="success-word">Milk</p>
       <button class="pill-btn green" id="continue-btn" type="button">➡️ Next Word</button>
     </div>
   </div>
@@ -322,9 +328,9 @@
   <script src="../js/main.js"></script>
   <script>
     const WORDS = [
-      { word: 'MILK',  suffix: 'ilk',  emoji: '🥛', image: '../assets/images/week-1/memory/milk.webp' },
-      { word: 'MEAT',  suffix: 'eat',  emoji: '🥩', image: '../assets/images/week-1/memory/meat.webp' },
-      { word: 'MANGO', suffix: 'ango', emoji: '🥭', image: '../assets/images/week-1/memory/mango.webp' }
+      { word: 'MILK',  suffix: 'ilk',  emoji: '🥛', image: '../assets/images/week-1/phonics/milk.webp' },
+      { word: 'MEAT',  suffix: 'eat',  emoji: '🥩', image: '../assets/images/week-1/phonics/meat.webp' },
+      { word: 'MANGO', suffix: 'ango', emoji: '🥭', image: '../assets/images/week-1/phonics/mango.webp' }
     ];
 
     const PATH_LAYOUTS = [
@@ -527,6 +533,10 @@
       });
     }
 
+    function displayWord(word) {
+      return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+    }
+
     function pathToD(points) {
       return points.map((point, index) => `${index === 0 ? 'M' : 'L'} ${point.x} ${point.y}`).join(' ');
     }
@@ -553,6 +563,13 @@
     function setGoalPosition(point) {
       goalSlot.style.left = `${(point.x / VIEW_W) * 100}%`;
       goalSlot.style.top = `${(point.y / VIEW_H) * 100}%`;
+    }
+
+    function fitFinishPoint(point) {
+      const stageWidth = mazeStage.clientWidth || VIEW_W;
+      const spaceAfterBlankCenter = goalSlot.offsetWidth - (blankSlot.offsetWidth / 2);
+      const safePixelX = stageWidth - spaceAfterBlankCenter - 12;
+      point.x = Math.min(point.x, Math.max(80, (safePixelX / stageWidth) * VIEW_W));
     }
 
     function nearestPointOnSegment(point, a, b) {
@@ -643,6 +660,8 @@
       } while (PATH_LAYOUTS.length > 1 && pathIndex === lastPathIndex);
       lastPathIndex = pathIndex;
       pathPoints = PATH_LAYOUTS[pathIndex].map(point => ({ ...point }));
+      /* Leave room for the full word while keeping the final tile centered in its box. */
+      fitFinishPoint(pathPoints[pathPoints.length - 1]);
       starIndexes = chooseStarIndexes(pathPoints);
 
       renderPath();
@@ -686,8 +705,8 @@
       blankSlot.classList.add('filled');
       blankSlot.classList.remove('ready');
       sounds.correct();
-      statusText.textContent = `You built ${current.word}!`;
-      successWord.textContent = current.word;
+      statusText.textContent = `You built ${displayWord(current.word)}!`;
+      successWord.textContent = displayWord(current.word);
       successModal.hidden = false;
       continueBtn.focus();
       speak(current.word.toLowerCase());

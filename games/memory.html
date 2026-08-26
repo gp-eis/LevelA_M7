@@ -5,14 +5,14 @@
   <meta http-equiv="Content-Language" content="en-US">
   <meta name="google" content="notranslate">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Memory Game 🃏 — Athlete People</title>
+  <title>Memory Game 🃏 — Athlete</title>
   <link rel="stylesheet" href="../css/styles.css">
   <style>
     .board {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(5, minmax(0, 1fr));
       gap: 14px;
-      max-width: 540px;
+      max-width: 900px;
       margin: 24px auto 0;
     }
 
@@ -147,7 +147,7 @@
     .match-key-sentence {
       margin: 8px 0 20px;
       color: var(--text);
-      font-family: 'Fredoka', sans-serif;
+      font-family: var(--font-friendly);
       font-size: clamp(1.35rem, 5vw, 1.85rem);
       font-weight: 600;
     }
@@ -190,10 +190,21 @@
       .confetti-piece { animation: none; top: var(--rest-top); }
     }
     @media (max-width: 480px) {
-      .board { gap: 9px; }
+      .board { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; }
       .mem-card { border-radius: 15px; padding: 6px; }
       .card-picture { border-radius: 10px; }
     }
+    body.memory-viewport { overflow: hidden; }
+    .memory-viewport .page { min-height: 100svh; padding-top: max(10px, env(safe-area-inset-top)); padding-bottom: max(10px, env(safe-area-inset-bottom)); display: grid; grid-template-rows: auto auto auto auto; align-content: center; }
+    .memory-viewport .back-link { position: fixed; z-index: 20; top: max(10px, env(safe-area-inset-top)); left: max(10px, env(safe-area-inset-left)); }
+    .memory-viewport header { margin-top: 0!important; }
+    .memory-viewport .big-title { font-size: clamp(1.55rem,4vh,2.4rem)!important; }
+    .memory-viewport .subtitle { margin-top: 2px; font-size: clamp(.85rem,2vh,1.05rem); }
+    .memory-viewport .game-actions { margin-top: clamp(5px,1.2vh,10px); gap: 8px; }
+    .memory-viewport .game-actions .pill-btn { padding: clamp(7px,1.4vh,11px) clamp(11px,2vw,18px); font-size: clamp(.78rem,1.8vh,1rem); }
+    .memory-viewport .board { grid-template-columns: repeat(5,1fr); width: min(900px,94vw); margin: 24px auto 0; gap: 14px; }
+    .memory-viewport .status-row { margin-top: clamp(7px,1.2vh,12px); font-size: clamp(.9rem,2vh,1.1rem); }
+    @media(max-width:600px){.memory-viewport .page{padding-inline:6px}.memory-viewport .back-link{font-size:.78rem;padding:7px 9px}.memory-viewport .board{grid-template-columns:repeat(5,1fr);width:min(96vw,calc(52svh * 2.5));gap:5px}.memory-viewport .mem-card{padding:4px;border-radius:12px;border-width:2px}.memory-viewport .card-picture{border-width:2px}.memory-viewport .floaties{display:none}}
   </style>
 </head>
 <body>
@@ -208,7 +219,7 @@
 
     <header class="center" style="margin-top:16px;">
       <h1 class="big-title page-title-with-icon" style="font-size:2.4rem;"><img class="page-title-icon" src="../assets/images/ui/game-memory.webp" alt="">Memory Game</h1>
-      <p class="subtitle">Look carefully, then find the 6 matching pairs!</p>
+      <p class="subtitle">Look carefully, then find the 5 matching pairs!</p>
     </header>
 
     <div class="game-actions">
@@ -220,7 +231,7 @@
 
     <div class="status-row">
       <span>Moves: <span id="moves">0</span></span>
-      <span>Pairs: <span id="pairs">0</span> / 6</span>
+      <span>Pairs: <span id="pairs">0</span> / 5</span>
     </div>
   </div>
 
@@ -251,9 +262,6 @@
       { id: 'baseball', label: 'baseball', sentence: 'I play baseball.',   emoji: '⚾', src: '../assets/images/week-1/memory/baseball.webp' },
       { id: 'soccer',   label: 'soccer',   sentence: 'I play soccer.',     emoji: '⚽', src: '../assets/images/week-1/memory/soccer.webp' },
       { id: 'golf',     label: 'golf',     sentence: 'I play golf.',       emoji: '⛳', src: '../assets/images/week-1/memory/golf.webp' },
-      { id: 'mango',    label: 'mango',    sentence: 'The mango is here.', emoji: '🥭', src: '../assets/images/week-1/memory/mango.webp' },
-      { id: 'meat',     label: 'meat',     sentence: 'The meat is here.',  emoji: '🥩', src: '../assets/images/week-1/memory/meat.webp' },
-      { id: 'milk',     label: 'milk',     sentence: 'The milk is here.',  emoji: '🥛', src: '../assets/images/week-1/memory/milk.webp' },
       { id: 'athlete',  label: 'athlete',  sentence: 'I am an athlete.',   emoji: '🏃', src: '../assets/images/week-1/memory/athlete.webp' }
     ];
 
@@ -337,13 +345,17 @@
     }
 
     function speak(text) {
-      if (!('speechSynthesis' in window) || !text) return;
+      if (!('speechSynthesis' in window) || !text) return Promise.resolve();
       speechSynthesis.cancel();
       const utterance = new SpeechSynthesisUtterance(text);
       utterance.lang = 'en-US';
       utterance.rate = .92;
       if (usVoice) utterance.voice = usVoice;
-      speechSynthesis.speak(utterance);
+      return new Promise(resolve => {
+        utterance.onend = resolve;
+        utterance.onerror = resolve;
+        speechSynthesis.speak(utterance);
+      });
     }
 
     function shuffle(items) {
@@ -393,8 +405,8 @@
       matchSentenceModal.hidden = true;
       celebrateAfterSentence = false;
       confetti.innerHTML = '';
-      // Twelve cards total: six randomly selected matching pairs.
-      activePictures = shuffle(PICTURES).slice(0, 6);
+      // Ten cards total: all five matching pairs in a shuffled arrangement.
+      activePictures = shuffle(PICTURES).slice(0, PICTURES.length >= 6 ? 6 : PICTURES.length);
       let deck;
       let deckSignature;
       do {
@@ -403,6 +415,7 @@
       } while (deckSignature === lastDeckSignature);
       lastDeckSignature = deckSignature;
       board.innerHTML = '';
+      board.style.gridTemplateColumns = activePictures.length === 5 ? 'repeat(5, 1fr)' : 'repeat(4, 1fr)';
       first = null;
       lock = false;
       moves = 0;
@@ -454,7 +467,7 @@
       card.classList.add('flipped');
       card.setAttribute('aria-label', `Revealed ${card.dataset.label}`);
       sounds.click();
-      speak(card.dataset.label);
+      const wordNarration = speak(card.dataset.label);
 
       if (!first) { first = card; return; }
 
@@ -469,7 +482,13 @@
         first = null;
         matchedCount++;
         pairsEl.textContent = matchedCount;
-        setTimeout(() => showMatchSentence(card.dataset.picture), 300);
+        const matchedPicture = card.dataset.picture;
+        const currentGame = gameNumber;
+        wordNarration.then(() => {
+          setTimeout(() => {
+            if (currentGame === gameNumber) showMatchSentence(matchedPicture);
+          }, 400);
+        });
       } else {
         sounds.wrong();
         lock = true;
@@ -526,6 +545,7 @@
       if (celebrateAfterSentence) showCelebration();
       else lock = false;
     });
+    window.addEventListener('load', () => setTimeout(() => board.scrollIntoView({ block: 'center' }), 100));
     startGame();
   </script>
 </body>

@@ -3,8 +3,8 @@
   const titles = {
     1: 'Week 1 — What sport do you play?',
     2: 'Week 2 — What do you practice?',
-    3: 'Week 3 — What event is it?',
-    4: 'Week 4 — Where do Olympic athletes come from?'
+    3: 'Week 3 — Where are we?',
+    4: 'Week 4 — When are the Olympic Games?'
   };
 
   const back = document.getElementById('back-week');
@@ -15,18 +15,52 @@
   back.href = returnLink.href;
   back.textContent = returnLink.text;
   label.textContent = titles[week] || ('Week ' + week);
-  document.title = 'Flashcards — Week ' + week + ' — Athlete People';
+  document.title = 'Flashcards — Week ' + week + ' — Athlete';
 
   const WEEK_DATA = {
     1: {
       base: '../assets/images/week-1/flashcards/',
       cards: [
-        { id: 'sports', file: 'many-sports-flashcard.webp', label: 'Many sports', phrase: 'many sports' },
-        { id: 'baseball', file: 'baseball-flashcard.webp', label: 'Baseball', phrase: 'baseball' },
-        { id: 'tennis', file: 'tennis-flashcard.webp', label: 'Tennis', phrase: 'tennis' },
-        { id: 'soccer', file: 'soccer-flashcard.webp', label: 'Soccer', phrase: 'soccer' },
-        { id: 'golf', file: 'golf-flashcard.webp', label: 'Golf', phrase: 'golf' },
-        { id: 'athlete', file: 'athlete-flashcard.webp', label: 'Athlete', phrase: null }
+        { id:'sports',file:'many-sports-flashcard.webp',label:'Many sports',phrase:'many sports',sentence:'I play many sports.' },
+        { id:'baseball',file:'baseball-flashcard.webp',label:'Baseball',phrase:'baseball',sentence:'I play baseball.' },
+        { id:'tennis',file:'tennis-flashcard.webp',label:'Tennis',phrase:'tennis',sentence:'I play tennis.' },
+        { id:'soccer',file:'soccer-flashcard.webp',label:'Soccer',phrase:'soccer',sentence:'I play soccer.' },
+        { id:'golf',file:'golf-flashcard.webp',label:'Golf',phrase:'golf',sentence:'I play golf.' },
+        { id:'athlete',file:'athlete-flashcard.webp',label:'Athlete',phrase:null,sentence:'I am an athlete.' }
+      ]
+    },
+    2: {
+      base: '../assets/images/week-2/flashcards/',
+      sentenceLead: 'I practice ',
+      cards: [
+        { id:'twisting',file:'twisting-flashcard.webp',label:'Twisting',phrase:'twisting',sentence:'I practice twisting.' },
+        { id:'kicking',file:'kicking-flashcard.webp',label:'Kicking',phrase:'kicking',sentence:'I practice kicking.' },
+        { id:'running',file:'running-flashcard.webp',label:'Running',phrase:'running',sentence:'I practice running.' },
+        { id:'stretching',file:'stretching-flashcard.webp',label:'Stretching',phrase:'stretching',sentence:'I practice stretching.' },
+        { id:'jumping',file:'jumping-flashcard.webp',label:'Jumping',phrase:'jumping',sentence:'I practice jumping.' }
+      ]
+    },
+    3: {
+      base: '../assets/images/week-3/flashcards/',
+      sentenceLead: 'It\'s ',
+      recordedOnly: true,
+      cards: [
+        { id:'skating',file:'skating-flashcard.webp',label:'Skating',phrase:'skating',sentence:'It\'s skating.',wordAudio:'../assets/audio/week-3/literacy/page-04-skating.mp3' },
+        { id:'swimming',file:'swimming-flashcard.webp',label:'Swimming',phrase:'swimming',sentence:'It\'s swimming.',wordAudio:'../assets/audio/week-3/literacy/page-04-swimming.mp3' },
+        { id:'diving',file:'diving-flashcard.webp',label:'Diving',phrase:'diving',sentence:'It\'s diving.',wordAudio:'../assets/audio/week-3/literacy/page-04-diving.mp3' },
+        { id:'jumping',file:'jumping-flashcard.webp',label:'Jumping',phrase:'jumping',sentence:'It\'s jumping.',wordAudio:'../assets/audio/week-3/literacy/page-04-jumping.mp3' },
+        { id:'running',file:'running-flashcard.webp',label:'Running',phrase:'running',sentence:'It\'s running.',wordAudio:'../assets/audio/week-3/literacy/page-04-running.mp3' }
+      ]
+    },
+    4: {
+      base: '../assets/images/week-4/flashcards/',
+      sentenceLead: 'They come from ',
+      cards: [
+        { id:'america',file:'america-flashcard.webp',label:'America',phrase:'America',sentence:'They come from America.',wordAudio:'../assets/audio/week-4/literacy/page-04/america.mp3' },
+        { id:'europe',file:'europe-flashcard.webp',label:'Europe',phrase:'Europe',sentence:'They come from Europe.',wordAudio:'../assets/audio/week-4/literacy/page-04/europe.mp3' },
+        { id:'africa',file:'africa-flashcard.webp',label:'Africa',phrase:'Africa',sentence:'They come from Africa.',wordAudio:'../assets/audio/week-4/literacy/page-04/asia.mp3' },
+        { id:'asia',file:'asia-flashcard.webp',label:'Asia',phrase:'Asia',sentence:'They come from Asia.',wordAudio:'../assets/audio/week-4/literacy/page-04/australia.mp3' },
+        { id:'australia',file:'australia-flashcard.webp',label:'Australia',phrase:'Australia',sentence:'They come from Australia.',wordAudio:'../assets/audio/week-4/literacy/page-04/africa.mp3' }
       ]
     }
   };
@@ -34,6 +68,9 @@
   const lockedEl = document.getElementById('fc-locked');
   const appEl = document.getElementById('fc-app');
   const data = WEEK_DATA[week];
+  const sentenceLead = data && data.sentenceLead ? data.sentenceLead : 'I play ';
+  const sentenceLeadEl = document.getElementById('sentence-lead');
+  if (sentenceLeadEl) sentenceLeadEl.textContent = sentenceLead;
 
   if (!data || (typeof isWeekOpen === 'function' && !isWeekOpen(week))) {
     lockedEl.style.display = '';
@@ -72,15 +109,17 @@
   /* ========== Lesson Flashcards ========== */
   const lessonImg = document.getElementById('lesson-img');
   const lessonList = document.getElementById('lesson-list');
+  const lessonSpeak = document.getElementById('lesson-speak');
   let lessonSelectedId = null;
 
-  function selectLessonCard(card) {
+  function selectLessonCard(card, announce = true) {
     lessonSelectedId = card.id;
     lessonImg.src = card.src;
     lessonImg.alt = card.label;
     Array.from(lessonList.querySelectorAll('.fc-lesson-item')).forEach((btn) => {
       btn.classList.toggle('is-selected', btn.dataset.id === card.id);
     });
+    if (announce) speakFlashcard(card);
   }
 
   function buildLessonList() {
@@ -94,9 +133,26 @@
       btn.innerHTML = '<img src="' + card.src + '" alt="' + card.label + '">';
       btn.addEventListener('click', () => selectLessonCard(card));
       lessonList.appendChild(btn);
-      if (i === 0) selectLessonCard(card);
+      if (i === 0) selectLessonCard(card, false);
     });
   }
+
+  lessonImg.addEventListener('click', () => {
+    const card = gameCards.find((item) => item.id === lessonSelectedId);
+    if (card) speakFlashcard(card);
+  });
+  lessonSpeak.addEventListener('click', () => {
+    const card = gameCards.find((item) => item.id === lessonSelectedId);
+    if (card) speakFlashcard(card);
+  });
+  lessonImg.setAttribute('role', 'button');
+  lessonImg.setAttribute('tabindex', '0');
+  lessonImg.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      lessonImg.click();
+    }
+  });
 
   /* ---------- Helpers ---------- */
   function shuffle(arr) {
@@ -115,6 +171,34 @@
   }
 
   let fcVoice = null;
+  let recordedAudio = null;
+
+  function stopRecordedAudio() {
+    if (!recordedAudio) return;
+    recordedAudio.pause();
+    recordedAudio.currentTime = 0;
+    recordedAudio = null;
+  }
+
+  function playRecordedWord(card, onComplete) {
+    if (!card || !card.wordAudio) return false;
+    stopRecordedAudio();
+    if (window.speechSynthesis) window.speechSynthesis.cancel();
+    const audio = new Audio(card.wordAudio);
+    recordedAudio = audio;
+    let settled = false;
+    const finish = (failed) => {
+      if (settled) return;
+      settled = true;
+      if (recordedAudio === audio) recordedAudio = null;
+      if (failed && !data.recordedOnly) speakText(card.label);
+      if (onComplete) window.setTimeout(onComplete, failed ? 850 : 350);
+    };
+    audio.addEventListener('ended', () => finish(false), { once: true });
+    audio.addEventListener('error', () => finish(true), { once: true });
+    audio.play().catch(() => finish(true));
+    return true;
+  }
 
   function pickFcVoice() {
     if (!window.speechSynthesis) return null;
@@ -129,6 +213,7 @@
   }
 
   function speakText(text) {
+    stopRecordedAudio();
     if (!window.speechSynthesis || !text) return;
     window.speechSynthesis.cancel();
     if (!fcVoice) fcVoice = pickFcVoice();
@@ -139,6 +224,34 @@
     utter.volume = 1;
     if (fcVoice) utter.voice = fcVoice;
     window.speechSynthesis.speak(utter);
+  }
+
+  function speakFlashcard(card) {
+    if (!card) return;
+    const sentencePlayback = data.recordedOnly
+      ? null
+      : () => speakText(card.sentence || (sentenceLead + card.phrase + '.'));
+    if (playRecordedWord(card, sentencePlayback)) return;
+    if (data.recordedOnly) return;
+    if (!window.speechSynthesis) return;
+    window.speechSynthesis.cancel();
+    if (!fcVoice) fcVoice = pickFcVoice();
+    const word = new SpeechSynthesisUtterance(card.label);
+    const sentence = new SpeechSynthesisUtterance(card.sentence || (sentenceLead + card.phrase + '.'));
+    [word, sentence].forEach((utterance) => {
+      utterance.lang = 'en-US';
+      utterance.rate = 0.9;
+      utterance.pitch = 1.1;
+      utterance.volume = 1;
+      if (fcVoice) utterance.voice = fcVoice;
+    });
+    word.onend = () => window.setTimeout(() => window.speechSynthesis.speak(sentence), 350);
+    window.speechSynthesis.speak(word);
+  }
+
+  function speakCardWord(card) {
+    if (!card) return;
+    if (!playRecordedWord(card) && !data.recordedOnly) speakText(card.label);
   }
 
   if (window.speechSynthesis) {
@@ -187,7 +300,7 @@
     clearFastTimer();
     fastRevealed = true;
     fastCover.classList.add('is-hidden');
-    speakText(fastCard.label);
+    speakCardWord(fastCard);
   }
 
   function resetFast(newCard) {
@@ -249,7 +362,7 @@
     if (!spotCard) return;
     spotRevealed = true;
     spotArea.classList.add('is-revealed');
-    speakText(spotCard.label);
+    speakCardWord(spotCard);
   });
   spotNextBtn.addEventListener('click', resetSpot);
 
@@ -268,6 +381,14 @@
     { left: 55, top: 52, rot: -11 }
   ];
 
+  const MOBILE_SCATTER_LAYOUTS = [
+    { left: 3, top: 12, rot: -6 },
+    { left: 30, top: 8, rot: 5 },
+    { left: 57, top: 13, rot: -4 },
+    { left: 16, top: 53, rot: 7 },
+    { left: 52, top: 55, rot: -7 }
+  ];
+
   function resetSentence() {
     scatterEl.innerHTML = '';
     placedCardEl = null;
@@ -276,8 +397,11 @@
     blankEl.dataset.filled = '';
 
     const cards = shuffle(sentenceCards);
+    const scatterLayouts = window.matchMedia('(max-width: 480px)').matches
+      ? MOBILE_SCATTER_LAYOUTS
+      : SCATTER_LAYOUTS;
     cards.forEach((card, i) => {
-      const layout = SCATTER_LAYOUTS[i % SCATTER_LAYOUTS.length];
+      const layout = scatterLayouts[i % scatterLayouts.length];
       const el = document.createElement('button');
       el.type = 'button';
       el.className = 'fc-scatter-card';
@@ -319,7 +443,12 @@
       cardEl.classList.add('is-placed');
       cardEl.style.display = 'none';
     }
-    speakText('I play ' + phrase + '.');
+    if (data.recordedOnly) {
+      const card = sentenceCards.find((item) => item.phrase === phrase);
+      if (card) speakCardWord(card);
+    } else {
+      speakText(sentenceLead + phrase + '.');
+    }
   }
 
   function enableDrag(el) {

@@ -5,24 +5,25 @@
   <meta http-equiv="Content-Language" content="en-US">
   <meta name="google" content="notranslate">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Choose a Week — Athlete People</title>
+  <title data-i18n="page.weekSelectorTitle">Choose a Week — Athlete</title>
   <link rel="stylesheet" href="css/styles.css">
+  <script src="js/i18n.js" defer></script>
 </head>
 <body class="weekly-selection-page">
   <main class="page weekly-selection-content">
     <header class="weekly-selection-header">
       <div class="weekly-selection-title-row">
         <img src="assets/images/ui/sport-medal-3d.webp" alt="" aria-hidden="true">
-        <h1 class="big-title">Choose a Week</h1>
+        <h1 class="big-title" data-i18n="home.chooseWeek">Choose a Week</h1>
         <img src="assets/images/ui/sport-trophy-3d.webp" alt="" aria-hidden="true">
       </div>
-      <p>Pick a week to learn, read, and play together!</p>
+      <p data-i18n="home.prompt">Pick a week to learn, read, and play together!</p>
     </header>
-    <nav class="week-grid" aria-label="Choose a week">
-      <a class="week-card week-orange" href="Month%207%20Level%20A.html" data-week="1"><span class="week-card__inner"><span class="week-card__icon"><img src="assets/images/week-1/memory/soccer.webp" alt=""></span><strong>Week 1</strong><span>What sport do you play?</span></span></a>
-      <a class="week-card week-red" href="lessons/page-02.html" data-week="2"><span class="week-card__inner"><span class="week-card__icon"><img src="assets/images/ui/gp-weightlifting-3d.webp" alt=""></span><strong>Week 2</strong><span>Coming soon</span></span></a>
-      <a class="week-card week-yellow" href="lessons/page-03.html" data-week="3"><span class="week-card__inner"><span class="week-card__icon"><img src="assets/images/ui/sport-medal-3d.webp" alt=""></span><strong>Week 3</strong><span>Coming soon</span></span></a>
-      <a class="week-card week-green" href="lessons/page-04.html" data-week="4"><span class="week-card__inner"><span class="week-card__icon"><img src="assets/images/ui/world-globe-3d.webp" alt=""></span><strong>Week 4</strong><span>Coming soon</span></span></a>
+    <nav class="week-grid" aria-label="Choose a week" data-i18n-aria-label="home.weekChoices">
+      <a class="week-card week-orange" href="week-1.html" data-week="1"><span class="week-card__inner"><span class="week-card__icon"><img src="assets/images/week-1/memory/soccer.webp" alt=""></span><strong data-i18n="week.1.label">Week 1</strong><span class="week-card__title" data-i18n="week.1.topic">What sport do you play?</span></span></a>
+      <div class="week-card week-red is-locked" data-week="2" aria-disabled="true"><span class="week-card__inner"><span class="week-card__icon"><img src="assets/images/ui/gp-weightlifting-3d.webp" alt=""></span><strong data-i18n="week.2.label">Week 2</strong><span class="week-card__title" data-i18n="common.comingSoon">Coming soon</span></span></div>
+      <div class="week-card week-yellow is-locked" data-week="3" aria-disabled="true"><span class="week-card__inner"><span class="week-card__icon"><img src="assets/images/ui/sport-medal-3d.webp" alt=""></span><strong data-i18n="week.3.label">Week 3</strong><span class="week-card__title" data-i18n="common.comingSoon">Coming soon</span></span></div>
+      <div class="week-card week-green is-locked" data-week="4" aria-disabled="true"><span class="week-card__inner"><span class="week-card__icon"><img src="assets/images/ui/world-globe-3d.webp" alt=""></span><strong data-i18n="week.4.label">Week 4</strong><span class="week-card__title" data-i18n="common.comingSoon">Coming soon</span></span></div>
     </nav>
   </main>
   <script src="js/main.js"></script>

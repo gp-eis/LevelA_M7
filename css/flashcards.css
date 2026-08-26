@@ -5,7 +5,7 @@
 }
 
 .fc-msg {
-  font-family: 'Fredoka', sans-serif;
+  font-family: var(--font-friendly);
   font-weight: 600;
   color: #3d5a78;
   font-size: 1.1rem;
@@ -28,7 +28,7 @@
 }
 
 .fc-nav-btn {
-  font-family: 'Fredoka', sans-serif;
+  font-family: var(--font-friendly);
   font-weight: 700;
   font-size: 1rem;
   text-align: left;
@@ -72,14 +72,14 @@
 }
 
 .fc-panel-title {
-  font-family: 'Fredoka', sans-serif;
+  font-family: var(--font-friendly);
   font-size: 1.55rem;
   margin: 0 0 6px;
   color: #1f3d5c;
 }
 
 .fc-panel-hint {
-  font-family: 'Fredoka', sans-serif;
+  font-family: var(--font-friendly);
   font-weight: 500;
   color: #4a6a88;
   margin: 0 0 18px;
@@ -153,6 +153,26 @@
   -webkit-user-drag: none;
 }
 
+.fc-speak-btn {
+  position: absolute;
+  z-index: 4;
+  top: 14px;
+  right: 14px;
+  width: 56px;
+  aspect-ratio: 1;
+  border: 4px solid #fff;
+  border-radius: 50%;
+  background: #1769c7;
+  color: #fff;
+  box-shadow: 0 5px 0 #0d4384, 0 8px 16px rgba(20, 52, 92, .25);
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.fc-speak-btn:hover {
+  transform: translateY(-2px);
+}
+
 .fc-cover {
   position: absolute;
   inset: 0;
@@ -163,7 +183,7 @@
     radial-gradient(circle at 30% 25%, #7ec8ff 0%, transparent 45%),
     linear-gradient(160deg, #3a7bd5 0%, #1e4f8c 100%);
   color: #fff;
-  font-family: 'Fredoka', sans-serif;
+  font-family: var(--font-friendly);
   font-size: 4rem;
   font-weight: 700;
   transition: opacity 0.15s ease;
@@ -292,7 +312,7 @@
 }
 
 .fc-sentence {
-  font-family: 'Fredoka', sans-serif;
+  font-family: var(--font-friendly);
   font-size: clamp(1.4rem, 3vw, 2rem);
   font-weight: 700;
   color: #1f3d5c;
@@ -358,5 +378,38 @@
 
   .fc-lesson-list {
     grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+  }
+
+  .fc-speak-btn {
+    top: 9px;
+    right: 9px;
+    width: 44px;
+    border-width: 3px;
+    font-size: 1.15rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .fc-main {
+    padding: 18px 16px 22px;
+  }
+
+  .fc-scatter {
+    min-height: 250px;
+  }
+
+  .fc-scatter-card {
+    width: 38%;
+    max-width: 96px;
+  }
+
+  .fc-sentence {
+    font-size: clamp(1.2rem, 6vw, 1.55rem);
+    gap: .18em;
+  }
+
+  .fc-blank {
+    min-width: min(145px, 46vw);
+    padding-inline: .35em;
   }
 }

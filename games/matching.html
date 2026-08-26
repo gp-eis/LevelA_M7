@@ -5,7 +5,7 @@
   <meta http-equiv="Content-Language" content="en-US">
   <meta name="google" content="notranslate">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Picture Match 🧩 — Athlete People</title>
+  <title>Picture Match 🧩 — Athlete</title>
   <link rel="stylesheet" href="../css/styles.css">
   <style>
     .game-toolbar {
@@ -100,7 +100,7 @@
     .sentence-text {
       flex: 1;
       color: var(--text);
-      font-family: 'Fredoka', sans-serif;
+      font-family: var(--font-friendly);
       font-size: clamp(1.2rem, 4vw, 1.65rem);
       font-weight: 600;
       line-height: 1.35;
@@ -178,7 +178,7 @@
     .success-review.show-emoji .review-emoji { display: grid; }
     .success-review p {
       margin: 0;
-      font-family: 'Fredoka', sans-serif;
+      font-family: var(--font-friendly);
       font-size: 1.1rem;
       line-height: 1.35;
       color: var(--text);
@@ -251,16 +251,10 @@
       { id: 'soccer',   label: 'soccer',   emoji: '⚽', image: `${IMAGE_BASE}/soccer.webp` },
       { id: 'baseball', label: 'baseball', emoji: '⚾', image: `${IMAGE_BASE}/baseball.webp` },
       { id: 'tennis',   label: 'tennis',   emoji: '🎾', image: `${IMAGE_BASE}/tennis.webp` },
-      { id: 'milk',     label: 'milk',     emoji: '🥛', image: `${IMAGE_BASE}/milk.webp` },
-      { id: 'meat',     label: 'meat',     emoji: '🥩', image: `${IMAGE_BASE}/meat.webp` },
-      { id: 'mango',    label: 'mango',    emoji: '🥭', image: `${IMAGE_BASE}/mango.webp` },
       { id: 'athlete',  label: 'athlete',  emoji: '🏃', image: `${IMAGE_BASE}/athlete.webp` }
     ];
 
     const SENTENCES = [
-      { text: 'The mango is here.', pictureId: 'mango' },
-      { text: 'The meat is here.',  pictureId: 'meat' },
-      { text: 'The milk is here.',  pictureId: 'milk' },
       { text: 'I play soccer.',     pictureId: 'soccer' },
       { text: 'I play baseball.',   pictureId: 'baseball' },
       { text: 'I play tennis.',     pictureId: 'tennis' },
