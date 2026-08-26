@@ -381,6 +381,14 @@
     { left: 55, top: 52, rot: -11 }
   ];
 
+  const MOBILE_SCATTER_LAYOUTS = [
+    { left: 3, top: 12, rot: -6 },
+    { left: 30, top: 8, rot: 5 },
+    { left: 57, top: 13, rot: -4 },
+    { left: 16, top: 53, rot: 7 },
+    { left: 52, top: 55, rot: -7 }
+  ];
+
   function resetSentence() {
     scatterEl.innerHTML = '';
     placedCardEl = null;
@@ -389,8 +397,11 @@
     blankEl.dataset.filled = '';
 
     const cards = shuffle(sentenceCards);
+    const scatterLayouts = window.matchMedia('(max-width: 480px)').matches
+      ? MOBILE_SCATTER_LAYOUTS
+      : SCATTER_LAYOUTS;
     cards.forEach((card, i) => {
-      const layout = SCATTER_LAYOUTS[i % SCATTER_LAYOUTS.length];
+      const layout = scatterLayouts[i % scatterLayouts.length];
       const el = document.createElement('button');
       el.type = 'button';
       el.className = 'fc-scatter-card';

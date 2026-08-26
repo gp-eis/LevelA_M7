@@ -668,46 +668,65 @@ body.has-site-logo {
 
 @media (max-width: 780px) {
   .literacy-quiz {
-    padding: 14px;
+    padding: 10px;
   }
 
   .literacy-quiz .answer-panel {
-    position: static;
-    width: 100%;
-    margin-top: 14px;
+    /* Keep the choices inside the lesson artwork on phones, matching desktop. */
+    position: absolute;
+    z-index: 4;
+    top: 39%;
+    left: 3.5%;
+    width: 48%;
+    margin: 0;
   }
 
   .answer-list {
-    gap: 10px;
+    gap: clamp(2px, 1vw, 6px);
   }
 
   .sentence-choice {
-    grid-template-columns: 30px 1fr 46px;
-    gap: 10px;
-    min-height: 58px;
-    padding: 6px 8px 6px 12px;
-    border-width: 2px;
-    border-radius: 14px;
+    grid-template-columns: clamp(16px, 5vw, 25px) minmax(0, 1fr) clamp(25px, 8vw, 40px);
+    gap: clamp(3px, 1.2vw, 7px);
+    min-height: clamp(27px, 9vw, 48px);
+    padding: clamp(2px, .8vw, 5px) clamp(3px, 1vw, 7px);
+    border-width: clamp(1px, .6vw, 2px);
+    border-radius: clamp(8px, 2.8vw, 14px);
+    box-shadow: 0 2px 7px rgba(30, 58, 95, .18);
   }
 
   .choice-circle {
-    width: 27px;
-    height: 27px;
-    border-width: 3px;
+    width: clamp(15px, 5vw, 24px);
+    height: clamp(15px, 5vw, 24px);
+    border-width: clamp(2px, .7vw, 3px);
   }
 
-  .choice-circle span { width: 10px; height: 10px; }
+  .choice-circle span {
+    width: clamp(6px, 2vw, 10px);
+    height: clamp(6px, 2vw, 10px);
+  }
 
   .choice-text {
-    font-size: 1rem;
+    min-width: 0;
+    font-size: clamp(.52rem, 2.45vw, .95rem);
+    line-height: 1.05;
+    white-space: nowrap;
   }
 
   .sentence-speaker {
-    width: 44px;
-    height: 44px;
+    width: clamp(22px, 6.8vw, 36px);
+    height: clamp(22px, 6.8vw, 36px);
+    font-size: clamp(.75rem, 3.5vw, 1.15rem);
+    box-shadow: 0 2px 0 #1b7fae;
   }
 
-  .answer-feedback { font-size: .8rem; margin-top: 7px; padding: 4px 8px; }
+  .answer-feedback {
+    min-height: 0;
+    margin: clamp(3px, 1vw, 6px) 2px 0;
+    padding: 2px clamp(4px, 1.4vw, 8px);
+    font-size: clamp(.45rem, 2vw, .75rem);
+    line-height: 1.15;
+  }
 
   .restart-activity {
     position: static;
@@ -1280,6 +1299,27 @@ body.has-site-logo {
   }
   .activity-completion-actions { flex: 0 0 auto; padding: 9px 10px 12px; }
   .activity-completion-close { width: 40px; height: 40px; font-size: 1.5rem; }
+}
+
+@media (max-width: 480px) {
+  /* Modal parents already provide safe padding; keep cards inside that space. */
+  .match-sentence-card,
+  .success-card,
+  .completion-card,
+  .continent-modal-card,
+  .celebration-card {
+    max-width: 100% !important;
+  }
+
+  .match-sentence-card { width: calc(100% - 44px) !important; }
+  .success-card,
+  .completion-card,
+  .continent-modal-card { width: calc(100% - 40px) !important; }
+  .celebration-card { width: calc(100% - 48px) !important; }
+
+  .success-card img,
+  .completion-card img,
+  .continent-modal-card img { max-width: 100% !important; }
 }
 
 @media (max-width: 720px) {

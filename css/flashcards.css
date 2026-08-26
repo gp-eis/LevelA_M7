@@ -388,3 +388,28 @@
     font-size: 1.15rem;
   }
 }
+
+@media (max-width: 480px) {
+  .fc-main {
+    padding: 18px 16px 22px;
+  }
+
+  .fc-scatter {
+    min-height: 250px;
+  }
+
+  .fc-scatter-card {
+    width: 38%;
+    max-width: 96px;
+  }
+
+  .fc-sentence {
+    font-size: clamp(1.2rem, 6vw, 1.55rem);
+    gap: .18em;
+  }
+
+  .fc-blank {
+    min-width: min(145px, 46vw);
+    padding-inline: .35em;
+  }
+}

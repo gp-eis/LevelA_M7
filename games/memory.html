@@ -345,13 +345,17 @@
     }
 
     function speak(text) {
-      if (!('speechSynthesis' in window) || !text) return;
+      if (!('speechSynthesis' in window) || !text) return Promise.resolve();
       speechSynthesis.cancel();
       const utterance = new SpeechSynthesisUtterance(text);
       utterance.lang = 'en-US';
       utterance.rate = .92;
       if (usVoice) utterance.voice = usVoice;
-      speechSynthesis.speak(utterance);
+      return new Promise(resolve => {
+        utterance.onend = resolve;
+        utterance.onerror = resolve;
+        speechSynthesis.speak(utterance);
+      });
     }
 
     function shuffle(items) {
@@ -463,7 +467,7 @@
       card.classList.add('flipped');
       card.setAttribute('aria-label', `Revealed ${card.dataset.label}`);
       sounds.click();
-      speak(card.dataset.label);
+      const wordNarration = speak(card.dataset.label);
 
       if (!first) { first = card; return; }
 
@@ -478,7 +482,13 @@
         first = null;
         matchedCount++;
         pairsEl.textContent = matchedCount;
-        setTimeout(() => showMatchSentence(card.dataset.picture), 300);
+        const matchedPicture = card.dataset.picture;
+        const currentGame = gameNumber;
+        wordNarration.then(() => {
+          setTimeout(() => {
+            if (currentGame === gameNumber) showMatchSentence(matchedPicture);
+          }, 400);
+        });
       } else {
         sounds.wrong();
         lock = true;
