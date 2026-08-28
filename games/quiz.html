@@ -210,7 +210,11 @@
     }
     @media (max-width: 420px) {
       .page { padding-inline: 7px; }
-      .quiz-board { gap: 6px; padding: 7px; }
+      .quiz-board {
+        grid-template-columns: minmax(0, .75fr) minmax(0, 1.25fr);
+        gap: 6px;
+        padding: 7px;
+      }
       .quiz-option img { width: 76px; height: 76px; }
       .drop-instruction { font-size: .75rem; }
     }

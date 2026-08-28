@@ -27,5 +27,18 @@
     </nav>
   </main>
   <script src="js/main.js"></script>
+  <script>
+    (() => {
+      const requestedSection = new URLSearchParams(window.location.search).get('section');
+      if (requestedSection !== 'games') return;
+
+      document.querySelectorAll('a.week-card[data-week]').forEach(card => {
+        const week = card.dataset.week;
+        if (['1', '2', '3', '4'].includes(week)) {
+          card.href = `games/index.html?week=${week}`;
+        }
+      });
+    })();
+  </script>
 </body>
 </html>

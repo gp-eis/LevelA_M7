@@ -56,11 +56,13 @@
       base: '../assets/images/week-4/flashcards/',
       sentenceLead: 'They come from ',
       cards: [
-        { id:'america',file:'america-flashcard.webp',label:'America',phrase:'America',sentence:'They come from America.',wordAudio:'../assets/audio/week-4/literacy/page-04/america.mp3' },
-        { id:'europe',file:'europe-flashcard.webp',label:'Europe',phrase:'Europe',sentence:'They come from Europe.',wordAudio:'../assets/audio/week-4/literacy/page-04/europe.mp3' },
-        { id:'africa',file:'africa-flashcard.webp',label:'Africa',phrase:'Africa',sentence:'They come from Africa.',wordAudio:'../assets/audio/week-4/literacy/page-04/asia.mp3' },
-        { id:'asia',file:'asia-flashcard.webp',label:'Asia',phrase:'Asia',sentence:'They come from Asia.',wordAudio:'../assets/audio/week-4/literacy/page-04/australia.mp3' },
-        { id:'australia',file:'australia-flashcard.webp',label:'Australia',phrase:'Australia',sentence:'They come from Australia.',wordAudio:'../assets/audio/week-4/literacy/page-04/africa.mp3' }
+        { id:'north-america',file:'north-america-flashcard.webp',label:'North America',phrase:'North America',sentence:'They come from North America.' },
+        { id:'south-america',file:'south-america-flashcard.webp',label:'South America',phrase:'South America',sentence:'They come from South America.' },
+        { id:'europe',file:'europe-flashcard.webp',label:'Europe',phrase:'Europe',sentence:'They come from Europe.' },
+        { id:'africa',file:'africa-flashcard.webp',label:'Africa',phrase:'Africa',sentence:'They come from Africa.' },
+        { id:'asia',file:'asia-flashcard.webp',label:'Asia',phrase:'Asia',sentence:'They come from Asia.' },
+        { id:'oceania',file:'oceania-flashcard.webp',label:'Oceania',phrase:'Oceania',sentence:'They come from Oceania.' },
+        { id:'antarctica',file:'antarctica-flashcard.webp',label:'Antarctica',phrase:'Antarctica',sentence:'They come from Antarctica.' }
       ]
     }
   };
@@ -389,6 +391,26 @@
     { left: 52, top: 55, rot: -7 }
   ];
 
+  const SEVEN_CARD_LAYOUTS = [
+    { left: 2, top: 7, rot: -6 },
+    { left: 26, top: 5, rot: 4 },
+    { left: 50, top: 8, rot: -3 },
+    { left: 74, top: 5, rot: 5 },
+    { left: 13, top: 54, rot: 6 },
+    { left: 39, top: 52, rot: -5 },
+    { left: 65, top: 54, rot: 3 }
+  ];
+
+  const SEVEN_CARD_MOBILE_LAYOUTS = [
+    { left: 3, top: 5, rot: -5 },
+    { left: 34, top: 4, rot: 4 },
+    { left: 65, top: 6, rot: -3 },
+    { left: 17, top: 36, rot: 5 },
+    { left: 53, top: 35, rot: -4 },
+    { left: 17, top: 68, rot: -3 },
+    { left: 53, top: 68, rot: 4 }
+  ];
+
   function resetSentence() {
     scatterEl.innerHTML = '';
     placedCardEl = null;
@@ -397,9 +419,11 @@
     blankEl.dataset.filled = '';
 
     const cards = shuffle(sentenceCards);
-    const scatterLayouts = window.matchMedia('(max-width: 480px)').matches
-      ? MOBILE_SCATTER_LAYOUTS
-      : SCATTER_LAYOUTS;
+    const isMobile = window.matchMedia('(max-width: 480px)').matches;
+    const scatterLayouts = cards.length > 5
+      ? (isMobile ? SEVEN_CARD_MOBILE_LAYOUTS : SEVEN_CARD_LAYOUTS)
+      : (isMobile ? MOBILE_SCATTER_LAYOUTS : SCATTER_LAYOUTS);
+    scatterEl.classList.toggle('has-seven-cards', cards.length > 5);
     cards.forEach((card, i) => {
       const layout = scatterLayouts[i % scatterLayouts.length];
       const el = document.createElement('button');

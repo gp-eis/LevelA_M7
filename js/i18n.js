@@ -108,6 +108,7 @@
     'Continue': '계속하기',
     'Activity': '활동',
     'Flashcards': '플래시카드',
+    'Conversation': '대화',
     'All Weeks': '모든 주차',
     'All Games': '모든 게임',
     'Phonics Lesson': '파닉스 수업',

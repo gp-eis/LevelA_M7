@@ -387,7 +387,7 @@
     });
 
     document.querySelectorAll('.back-weeks').forEach(button => {
-      button.addEventListener('click', () => { window.location.href = '../index.html'; });
+      button.addEventListener('click', () => { window.location.href = '../index.html?section=games'; });
     });
 
     const requestedWeek = new URLSearchParams(window.location.search).get('week');
