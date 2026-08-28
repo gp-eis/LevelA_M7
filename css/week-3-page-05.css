@@ -1,0 +1,38 @@
+:root{--week-yellow:#f6c934;--week-light:#ffe982;--week-dark:#c79a08}
+.week-3-words-body{background:linear-gradient(180deg,#9cddff 0%,#fff8c9 62%,#e9fff3 100%)}
+.week-3-words-title{color:var(--week-dark);text-shadow:3px 3px #fff,6px 6px rgba(199,154,8,.18)}
+.week-3-words-card{max-width:1120px;margin:24px auto 0;padding:clamp(10px,2vw,18px);border-top:9px solid var(--week-yellow)}
+.week-3-words-stage{position:relative;overflow:hidden;width:100%;aspect-ratio:1412/1114;border:7px solid #fff;border-radius:28px;background:#079ee8;box-shadow:0 10px 0 rgba(199,154,8,.2),0 18px 30px rgba(40,55,75,.18)}
+.week-3-words-picture{display:block;width:100%;height:100%;object-fit:contain}
+.week-3-words-character-video{position:absolute;z-index:2;left:46.6418%;top:30.6604%;width:53.3582%;height:69.3396%;object-fit:fill;background:transparent;pointer-events:none;-webkit-mask-image:linear-gradient(to right,transparent 0%,rgba(0,0,0,.12) 2.5%,rgba(0,0,0,.62) 7%,#000 13%);mask-image:linear-gradient(to right,transparent 0%,rgba(0,0,0,.12) 2.5%,rgba(0,0,0,.62) 7%,#000 13%)}
+.week-3-words-question-speaker{position:absolute;z-index:8;right:3%;top:28%;width:clamp(40px,5vw,58px);aspect-ratio:1;border:4px solid #fff;border-radius:50%;background:#1769c7;color:#fff;font-size:clamp(18px,2.2vw,27px);box-shadow:0 5px 0 #0d4384;cursor:pointer}
+.week-3-words-question-speaker:disabled{opacity:.48;cursor:wait}
+.week-3-sentence-progress{position:absolute;z-index:5;inset:0;color:#111;font:500 clamp(.9rem,2.7vw,2.25rem)/1 var(--font-literacy);letter-spacing:0;white-space:nowrap;pointer-events:none}
+.week-3-sentence-progress span{position:absolute;top:43.45%;display:flex;align-items:flex-start;justify-content:center;height:6.9%;opacity:0;transition:opacity .2s ease}
+.week-3-sentence-progress span[data-step="0"]{left:8.05%;width:6.55%}
+.week-3-sentence-progress span[data-step="1"]{left:15.7%;width:16.2%}
+.week-3-sentence-progress span[data-step="2"]{left:33.35%;width:13.55%}
+.week-3-sentence-progress span.is-filled{opacity:1;color:#111}
+.week-3-word-bank{position:absolute;inset:0;z-index:6}
+.word-choice{position:absolute;width:16%;height:9.5%;padding:0 1%;border:4px solid rgba(255,255,255,.95);border-radius:16px;background:#eefaff;color:#1456ad;box-shadow:0 6px 0 rgba(40,88,130,.3),0 10px 15px rgba(30,58,95,.18);font:800 clamp(.9rem,2.5vw,2rem) 'Fredoka',sans-serif;cursor:pointer;transition:transform .16s ease,filter .16s ease,opacity .16s ease}
+.word-choice:not(:disabled):hover{transform:translateY(-3px);filter:brightness(1.05)}
+.word-choice:disabled{cursor:default;opacity:.72}
+.word-choice.is-correct{border-color:#56b32e;background:#efffe8;color:#28751d;transform:scale(.96)}
+.word-choice.is-next{animation:next-word-pulse 1s ease-in-out infinite}
+.word-choice.is-wrong{border-color:#ef5350;background:#fff0f0;animation:word-shake .38s ease}
+.word-green{background:#dbffa3;color:#27831f}.word-sky{background:#e7f8ff;color:#1456ad}.word-red{background:#fff0f0;color:#b52b29}.word-purple{background:#f4e5ff;color:#7040b5}.word-orange{background:#ffe6a3;color:#b65a00}
+.week-3-word-path{position:absolute;inset:0;z-index:4;width:100%;height:100%;pointer-events:none;opacity:0;transition:opacity .2s ease}
+.week-3-word-path.is-visible{opacity:1}
+.week-3-word-path polyline{fill:none;stroke:#fff;stroke-width:7;stroke-dasharray:15 12;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 3px 2px rgba(20,70,120,.4))}
+.week-3-words-start{position:absolute;z-index:12;inset:0;display:grid;place-items:center;background:rgba(17,41,68,.42)}
+.week-3-words-start[hidden]{display:none}
+.week-3-words-start-button{min-width:min(320px,72%);min-height:80px;padding:16px 30px;border:7px solid #fff;border-radius:999px;background:linear-gradient(180deg,var(--week-light),var(--week-yellow));color:#664d00;box-shadow:0 9px 0 var(--week-dark),0 16px 28px rgba(20,31,58,.38);font:900 clamp(1.25rem,3vw,2rem) 'Fredoka',sans-serif;cursor:pointer}
+.week-3-words-start-button:hover{transform:translateY(-3px)}
+.week-3-words-status{margin:14px 0 0;min-height:1.5em;color:#315273;font-size:clamp(1rem,2vw,1.25rem);font-weight:800;text-align:center}
+.week-3-words-status.is-correct{color:#27831f}.week-3-words-status.is-wrong{color:#c62c3b}
+.week-3-words-restart{display:flex;margin:12px auto 0}
+.week-3-words-completion-frame{width:min(64%,540px);text-align:center}
+@keyframes word-shake{25%{transform:translateX(-8px)}50%{transform:translateX(8px)}75%{transform:translateX(-4px)}}
+@keyframes next-word-pulse{50%{transform:scale(1.07);box-shadow:0 0 0 8px rgba(255,235,59,.45),0 7px 0 rgba(40,88,130,.3)}}
+@media(max-width:650px){.week-3-words-card{padding:8px}.week-3-words-stage{border-width:4px;border-radius:18px}.word-choice{width:17%;height:10%;border-width:2px;border-radius:9px;font-size:.75rem}.week-3-sentence-progress{font-size:clamp(.66rem,2.85vw,1.25rem)}.week-3-words-question-speaker{right:2%;top:27%;width:36px;border-width:3px;font-size:1rem}.week-3-words-start-button{min-height:64px;border-width:5px}}
+@media(prefers-reduced-motion:reduce){.word-choice{transition:none}.word-choice.is-wrong,.word-choice.is-next{animation:none}}

@@ -1,0 +1,34 @@
+.year-activity-card { margin-top:24px; padding:clamp(10px,2vw,20px); border-top:9px solid #ff7080; }
+.year-activity-toolbar { display:flex; align-items:center; justify-content:center; min-height:1.5em; margin:16px 0 0; }
+.year-activity-toolbar p { margin:0; color:#bd3038; font:800 clamp(1rem,2.2vw,1.25rem) var(--font-friendly); }
+.year-board { position:relative; width:min(100%,1080px); margin:auto; overflow:hidden; aspect-ratio:1412/1114; border:6px solid #fff; border-radius:28px; background:#ff8e9e; box-shadow:0 10px 0 #d94c5d,0 18px 28px rgba(69,40,58,.2); }
+.year-board-image { display:block; width:100%; height:100%; object-fit:cover; }
+.year-board > .board-instruction-speaker { position:absolute; z-index:7; left:78%; top:25%; }
+.year-hotspots { position:absolute; inset:0; }
+.year-hotspot { position:absolute; left:var(--x); top:var(--y); width:14.8%; height:12.5%; padding:0; border:0; border-radius:22px; background:transparent; cursor:pointer; transform:translate(-50%,-50%); }
+.year-hotspot:disabled { cursor:default; }
+.year-hotspot:not(:disabled):hover { background:rgba(255,255,255,.15); }
+.year-hotspot:not(:disabled):focus-visible { outline:6px solid #1876d2; outline-offset:3px; }
+.year-hotspot span { position:absolute; z-index:2; left:50%; top:58%; padding:0 .12em; border-radius:.2em; color:transparent; font:900 clamp(1.05rem,4.3vw,3.15rem)/1 var(--font-friendly); letter-spacing:-.05em; transform:translate(-50%,-50%); }
+.year-hotspot.is-correct span { color:#ed1717; background:#fff7ec; text-shadow:0 2px 0 #fff,0 3px 3px rgba(115,0,0,.24); }
+.year-hotspot.is-correct::after { content:""; position:absolute; z-index:3; left:50%; top:57%; width:91%; height:58%; border:clamp(4px,.55vw,8px) solid #ef4a45; border-radius:50%; box-shadow:0 3px 0 #b5282b,inset 0 2px 3px rgba(255,255,255,.8); transform:translate(-50%,-50%) rotate(-2deg); }
+.year-hotspot.is-wrong {
+  z-index:4;
+  border:clamp(4px,.55vw,8px) solid #e53935;
+  background:rgba(229,57,53,.16);
+  box-shadow:0 0 0 clamp(3px,.35vw,5px) rgba(255,255,255,.9),0 7px 16px rgba(160,24,24,.34);
+  animation:year-wrong-shake .42s ease;
+}
+.year-start { position:absolute; z-index:8; inset:0; display:grid; place-items:center; background:rgba(255,235,238,.72); backdrop-filter:blur(2px); }
+.year-start[hidden] { display:none; }
+#year-start-button { min-width:min(360px,78%); min-height:82px; padding:14px 30px; border:7px solid #fff; border-radius:999px; background:linear-gradient(180deg,#ff9a9f,#ef4f5d); color:#fff; box-shadow:0 9px 0 #b92f43,0 16px 28px rgba(68,31,45,.32); font:900 clamp(1.3rem,3vw,2rem) var(--font-friendly); cursor:pointer; }
+#year-start-button:hover { transform:translateY(-3px); filter:brightness(1.04); }
+.activity-completion-frame { width:min(720px,92%); }
+.activity-completion-video { aspect-ratio:1; object-fit:contain; background:#fff; }
+@keyframes year-wrong-shake {
+  0%,100% { transform:translate(-50%,-50%); }
+  20%,60% { transform:translate(calc(-50% - 10px),-50%) rotate(-1deg); }
+  40%,80% { transform:translate(calc(-50% + 10px),-50%) rotate(1deg); }
+}
+@media(max-width:650px){.year-board{border-width:4px;border-radius:18px}.year-board>.board-instruction-speaker{left:77%;top:24%}.year-hotspot{border-radius:12px}.year-hotspot.is-correct::after{border-width:3px}.year-activity-toolbar p{font-size:.92rem}}
+@media(prefers-reduced-motion:reduce){.year-hotspot.is-wrong{animation:none}}

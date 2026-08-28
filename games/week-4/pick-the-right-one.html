@@ -5,7 +5,7 @@
   <meta http-equiv="Content-Language" content="en-US">
   <meta name="google" content="notranslate">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pick the Right One ✅ — Athlete People</title>
+  <title>Week 4 Pick the Right One ✅ — Athlete</title>
   <link rel="stylesheet" href="../../css/styles.css">
   <style>
     .game-toolbar {
@@ -22,18 +22,26 @@
       box-shadow: 0 10px 0 rgba(179,136,255,.18), 0 16px 30px rgba(74,59,82,.1);
     }
     .question-box {
-      display: flex;
-      align-items: flex-start;
+      display: grid;
+      grid-template-columns: 170px 1fr 52px;
+      align-items: center;
       gap: 14px;
       padding: 22px 20px;
       border: 6px solid var(--purple);
       border-radius: 26px;
       background: linear-gradient(180deg, #faf5ff, #fff);
     }
+    .question-visual {
+      width: 170px;
+      height: 145px;
+      border-radius: 18px;
+      object-fit: contain;
+      background: #eef8ff;
+    }
     .question-text {
       flex: 1;
       color: var(--text);
-      font-family: 'Fredoka', sans-serif;
+      font-family: var(--font-friendly);
       font-size: clamp(1.25rem, 4vw, 1.75rem);
       font-weight: 600;
       line-height: 1.35;
@@ -84,10 +92,18 @@
     .answer-btn .answer-text {
       flex: 1;
       color: var(--text);
-      font-family: 'Fredoka', sans-serif;
+      font-family: var(--font-friendly);
       font-size: clamp(1rem, 3.2vw, 1.25rem);
       font-weight: 600;
       line-height: 1.3;
+    }
+    .answer-visual {
+      display: block;
+      width: 100%;
+      height: 180px;
+      border-radius: 16px;
+      object-fit: contain;
+      background: #eef8ff;
     }
     .answer-btn .listen-btn { margin: 0 auto; }
     .answer-btn.wrong {
@@ -134,7 +150,7 @@
     }
     .success-review p {
       margin: 0 0 10px;
-      font-family: 'Fredoka', sans-serif;
+      font-family: var(--font-friendly);
       font-size: 1.05rem;
       line-height: 1.35;
       color: var(--text);
@@ -153,6 +169,8 @@
     @media (max-width: 560px) {
       .answers-row { grid-template-columns: 1fr; }
       .pick-board { padding: 18px 12px 24px; }
+      .question-box { grid-template-columns: 1fr 52px; }
+      .question-visual { grid-column: 1 / -1; width: 100%; height: 170px; }
     }
   </style>
 </head>
@@ -177,6 +195,7 @@
 
     <section class="pick-board">
       <div class="question-box">
+        <img class="question-visual" id="question-visual" src="" alt="">
         <p class="question-text" id="question-text"></p>
         <button class="listen-btn" id="question-listen" type="button" aria-label="Listen to the question">🔊</button>
       </div>
@@ -199,34 +218,36 @@
 
   <script src="../../js/main.js"></script>
   <script>
-    const GROOMING_ANSWERS = [
-      'I can cut its fur.',
-      'I can brush its fur.',
-      'I can dry its fur.',
-      'I can wash its fur.',
-      'I can stroke its fur.'
-    ];
+    const imageRoot = '../../assets/images/week-4/games/pick-right/';
+    const continentImageRoot = '../../assets/images/week-4/games/continents/';
+    const ANSWERS = {
+      fourYears: {id:'fourYears',text:'Every four years.',image:`${imageRoot}q1-four-years.jpg`,imageAlt:'Four calendar pages forming a clockwise cycle from one to four with the fourth year highlighted'},
+      worldwide: {id:'worldwide',text:'They come from all over the world.',image:`${imageRoot}q2-worldwide.webp`,imageAlt:'Child athletes from around the world traveling to a sports stadium'},
+      europe: {id:'europe',text:'They come from Europe.',image:`${continentImageRoot}europe.webp`,imageAlt:'Map of Europe with famous landmarks'},
+      northAmerica: {id:'northAmerica',text:'They come from North America.',image:`${continentImageRoot}north-america.webp`,imageAlt:'Pink map of North America with famous landmarks'},
+      southAmerica: {id:'southAmerica',text:'They come from South America.',image:`${continentImageRoot}south-america.webp`,imageAlt:'Red map of South America with famous landmarks'},
+      asia: {id:'asia',text:'They come from Asia.',image:`${continentImageRoot}asia-color.webp`,imageAlt:'Purple map of Asia with famous landmarks'},
+      africa: {id:'africa',text:'They come from Africa.',image:`${continentImageRoot}africa-color.webp`,imageAlt:'Green map of Africa with famous landmarks'},
+      oceania: {id:'oceania',text:'They come from Oceania.',image:`${continentImageRoot}oceania.webp`,imageAlt:'Yellow map of Oceania with famous landmarks'},
+      antarctica: {id:'antarctica',text:'They come from Antarctica.',image:`${continentImageRoot}antarctica.webp`,imageAlt:'Blue and white map of Antarctica with a penguin and research station'},
+      manyCountries: {id:'manyCountries',text:'People from many countries.',image:`${imageRoot}q3-many-countries.webp`,imageAlt:'Many people carrying different flags toward a sports stadium'},
+      tryBest: {id:'tryBest',text:"Let's try our best!",image:`${imageRoot}q4-encourage.webp`,imageAlt:'Children encouraging athletes and showing fair play'},
+      playFair: {id:'playFair',text:"Let's play fair!",image:`${imageRoot}q4-encourage.webp`,imageAlt:'Children encouraging athletes and showing fair play'},
+      beKind: {id:'beKind',text:'Be kind to everyone.',image:`${imageRoot}q4-encourage.webp`,imageAlt:'Children encouraging athletes and showing fair play'},
+      goodLuck: {id:'goodLuck',text:'Good luck!',image:`${imageRoot}q4-encourage.webp`,imageAlt:'Children encouraging athletes and showing fair play'}
+    };
 
+    const WHERE_ANSWER_IDS = ['worldwide','northAmerica','southAmerica','europe','asia','africa','oceania','antarctica'];
+    const ENCOURAGEMENT_ANSWER_IDS = ['tryBest','playFair','beKind','goodLuck'];
     const QUESTION_BANK = [
-      {
-        question: 'Hello! Are you a pet groomer?',
-        correct: 'Yes. I am a pet groomer.'
-      },
-      {
-        question: 'What do you groom?',
-        correct: 'I groom pets.'
-      },
-      {
-        question: 'Are you okay?',
-        correct: 'Yes. I am.'
-      },
-      {
-        question: 'How do you groom a cat?',
-        correctOptions: GROOMING_ANSWERS
-      }
+      {id:'when',question:'When are the Olympic Games?',visual:ANSWERS.fourYears.image,visualAlt:ANSWERS.fourYears.imageAlt,correctIds:['fourYears'],wrongIds:[...WHERE_ANSWER_IDS,'manyCountries',...ENCOURAGEMENT_ANSWER_IDS]},
+      {id:'whereFrom',question:'Where do Olympic athletes come from?',visual:ANSWERS.worldwide.image,visualAlt:ANSWERS.worldwide.imageAlt,correctIds:WHERE_ANSWER_IDS,wrongIds:['fourYears','manyCountries',...ENCOURAGEMENT_ANSWER_IDS]},
+      {id:'who',question:'Who goes to the Olympic Games?',visual:ANSWERS.manyCountries.image,visualAlt:ANSWERS.manyCountries.imageAlt,correctIds:['manyCountries'],wrongIds:['fourYears',...WHERE_ANSWER_IDS,...ENCOURAGEMENT_ANSWER_IDS]},
+      {id:'say',question:'What do you say to Olympic athletes?',visual:ANSWERS.tryBest.image,visualAlt:ANSWERS.tryBest.imageAlt,correctIds:ENCOURAGEMENT_ANSWER_IDS,wrongIds:['fourYears',...WHERE_ANSWER_IDS,'manyCountries']}
     ];
 
     const questionText = document.getElementById('question-text');
+    const questionVisual = document.getElementById('question-visual');
     const questionListen = document.getElementById('question-listen');
     const answersRow = document.getElementById('answers-row');
     const successModal = document.getElementById('success-modal');
@@ -236,8 +257,9 @@
 
     let locked = false;
     let currentRound = null;
-    let lastQuestionKey = '';
+    let questionQueue = [];
     let usVoice = null;
+    let recordedAudio = null;
 
     const sounds = (() => {
       let ctx = null;
@@ -295,13 +317,22 @@
       speechSynthesis.addEventListener('voiceschanged', pickVoice);
     }
 
+    function stopAudio() {
+      if (recordedAudio) {
+        recordedAudio.pause();
+        recordedAudio.currentTime = 0;
+        recordedAudio = null;
+      }
+      if ('speechSynthesis' in window) speechSynthesis.cancel();
+    }
+
     function speak(text) {
       return new Promise(resolve => {
         if (!('speechSynthesis' in window)) {
           resolve();
           return;
         }
-        speechSynthesis.cancel();
+        stopAudio();
         const utterance = new SpeechSynthesisUtterance(text);
         utterance.lang = 'en-US';
         utterance.rate = .92;
@@ -312,40 +343,44 @@
       });
     }
 
-    function speakSequence(parts) {
-      return parts.reduce((chain, text) => chain.then(() => speak(text)), Promise.resolve());
-    }
-
-    function getCorrectAnswersForItem(item) {
-      return item.correctOptions ? [...item.correctOptions] : [item.correct];
-    }
-
-    function getWrongOptionsForItem(item, correct) {
-      return QUESTION_BANK
-        .filter(other => other !== item)
-        .flatMap(getCorrectAnswersForItem)
-        .filter(answer => answer !== correct);
+    function playRecorded(src, fallbackText) {
+      stopAudio();
+      return new Promise(resolve => {
+        if (!src) {
+          speak(fallbackText).then(resolve);
+          return;
+        }
+        const audio = new Audio(src);
+        recordedAudio = audio;
+        let settled = false;
+        const finish = () => {
+          if (settled) return;
+          settled = true;
+          if (recordedAudio === audio) recordedAudio = null;
+          resolve();
+        };
+        audio.addEventListener('ended', finish, { once: true });
+        audio.addEventListener('error', () => {
+          finish();
+          speak(fallbackText);
+        }, { once: true });
+        audio.play().catch(() => {
+          finish();
+          speak(fallbackText);
+        });
+      });
     }
 
     function buildRound() {
-      let item;
-      let key;
-      do {
-        item = QUESTION_BANK[Math.floor(Math.random() * QUESTION_BANK.length)];
-        const correct = item.correctOptions
-          ? item.correctOptions[Math.floor(Math.random() * item.correctOptions.length)]
-          : item.correct;
-        key = `${item.question}|${correct}`;
-        if (key !== lastQuestionKey) {
-          lastQuestionKey = key;
-          const wrongOptions = getWrongOptionsForItem(item, correct);
-          const wrong = wrongOptions[Math.floor(Math.random() * wrongOptions.length)];
-          return { question: item.question, correct, wrong };
-        }
-      } while (true);
+      if (!questionQueue.length) questionQueue = shuffle(QUESTION_BANK);
+      const item = questionQueue.pop();
+      const correctId = item.correctIds[Math.floor(Math.random() * item.correctIds.length)];
+      const wrongId = item.wrongIds[Math.floor(Math.random() * item.wrongIds.length)];
+      const correct = ANSWERS[correctId];
+      return {question:item.question,visual:item.visual,visualAlt:item.visualAlt,correct,wrong:ANSWERS[wrongId]};
     }
 
-    function makeListenButton(label, text) {
+    function makeListenButton(label, answer) {
       const btn = document.createElement('button');
       btn.className = 'listen-btn';
       btn.type = 'button';
@@ -354,7 +389,7 @@
       btn.addEventListener('click', event => {
         event.stopPropagation();
         if (locked) return;
-        speak(text);
+        playRecorded(answer.audio, answer.text);
       });
       return btn;
     }
@@ -364,29 +399,41 @@
       successModal.hidden = true;
       currentRound = buildRound();
       questionText.textContent = currentRound.question;
+      questionVisual.src = currentRound.visual;
+      questionVisual.alt = currentRound.visualAlt;
       answersRow.innerHTML = '';
 
       questionListen.onclick = () => {
         if (locked) return;
-        speak(currentRound.question);
+        playRecorded(currentRound.questionAudio, currentRound.question);
       };
 
       shuffle([currentRound.correct, currentRound.wrong]).forEach(answer => {
         const btn = document.createElement('button');
         btn.type = 'button';
         btn.className = 'answer-btn';
-        btn.dataset.answer = answer;
+        btn.dataset.answer = answer.id;
+
+        const image = document.createElement('img');
+        image.className = 'answer-visual';
+        image.src = answer.image;
+        image.alt = answer.imageAlt;
 
         const text = document.createElement('span');
         text.className = 'answer-text';
-        text.textContent = answer;
+        text.textContent = answer.text;
 
+        btn.appendChild(image);
         btn.appendChild(text);
-        btn.appendChild(makeListenButton(`Listen to answer: ${answer}`, answer));
+        btn.appendChild(makeListenButton(`Listen to answer: ${answer.text}`, answer));
 
         btn.addEventListener('click', () => chooseAnswer(btn, answer));
         answersRow.appendChild(btn);
       });
+
+      setTimeout(() => {
+        if (!locked) playRecorded(currentRound.questionAudio, currentRound.question);
+      }, 250);
     }
 
     async function chooseAnswer(button, answer) {
@@ -394,15 +441,15 @@
       locked = true;
       answersRow.querySelectorAll('.answer-btn').forEach(btn => btn.disabled = true);
 
-      if (answer === currentRound.correct) {
+      if (answer.id === currentRound.correct.id) {
         sounds.correct();
         button.classList.add('correct');
         reviewQuestion.textContent = currentRound.question;
-        reviewAnswer.textContent = currentRound.correct;
+        reviewAnswer.textContent = currentRound.correct.text;
         successModal.hidden = false;
         continueBtn.focus();
         questionListen.disabled = true;
-        await speakSequence([currentRound.question, currentRound.correct]);
+        await playRecorded(currentRound.correct.audio, currentRound.correct.text);
       } else {
         sounds.wrong();
         button.classList.add('wrong');
@@ -415,10 +462,15 @@
     }
 
     continueBtn.addEventListener('click', () => {
+      stopAudio();
       questionListen.disabled = false;
       renderRound();
     });
-    document.getElementById('new-question').addEventListener('click', renderRound);
+    document.getElementById('new-question').addEventListener('click', () => {
+      stopAudio();
+      questionListen.disabled = false;
+      renderRound();
+    });
     renderRound();
   </script>
 </body>

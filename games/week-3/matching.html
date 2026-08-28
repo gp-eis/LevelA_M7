@@ -5,7 +5,7 @@
   <meta http-equiv="Content-Language" content="en-US">
   <meta name="google" content="notranslate">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Matching Pairs 🧩 — Athlete People</title>
+  <title>Picture Match 🧩 — Athlete</title>
   <link rel="stylesheet" href="../../css/styles.css">
   <style>
     .game-toolbar {
@@ -21,249 +21,160 @@
       font-size: 1.2rem;
       font-weight: 800;
     }
-    .match-columns {
+    .match-board {
+      max-width: 820px;
+      margin: 22px auto 0;
+      padding: 28px 24px 32px;
+      border-radius: 30px;
+      background: rgba(255,255,255,.88);
+      box-shadow: 0 10px 0 rgba(179,136,255,.18), 0 16px 30px rgba(74,59,82,.1);
+    }
+    .choices-row {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 24px;
-      max-width: 900px;
-      margin: 20px auto 0;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
     }
-    .match-column {
-      min-width: 0;
-      padding: 18px;
-      border-radius: 26px;
-      background: rgba(255,255,255,.68);
-      box-shadow: 0 7px 0 rgba(74,59,82,.08);
-    }
-    .column-title {
-      margin-bottom: 12px;
-      color: var(--blue-d);
-      font-size: 1.35rem;
-      font-weight: 800;
-      text-align: center;
-    }
-    .options-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 12px;
-      min-height: 304px;
-    }
-    .match-item {
-      position: relative;
+    .choice-btn {
       display: flex;
-      min-width: 0;
-      min-height: 140px;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      gap: 5px;
+      gap: 8px;
+      min-height: 0;
+      padding: 12px 10px 14px;
+      border: 5px solid transparent;
+      border-radius: 24px;
       background: var(--white);
-      border: 4px solid transparent;
-      border-radius: 20px;
-      padding: 8px;
-      color: var(--text);
-      font-family: inherit;
-      font-size: .95rem;
-      font-weight: 800;
-      box-shadow: 0 6px 0 rgba(74,59,82,.10);
-      cursor: grab;
-      touch-action: manipulation;
-      transition: transform .18s ease, border-color .18s ease, background .18s ease;
+      box-shadow: 0 7px 0 rgba(74,59,82,.12);
+      cursor: pointer;
+      transition: transform .15s ease, border-color .15s ease;
     }
-    .match-item:hover { transform: translateY(-3px); border-color: var(--yellow); }
-    .match-item:active { cursor: grabbing; }
-    .match-item:focus-visible { outline: 5px solid var(--yellow); outline-offset: 2px; }
-    .match-item.dragging { opacity: .45; transform: scale(.94); }
-    .match-item img {
+    .choice-btn:hover:not(:disabled) {
+      border-color: var(--yellow);
+      transform: translateY(-4px);
+    }
+    .choice-btn:focus-visible {
+      outline: 5px solid var(--yellow);
+      outline-offset: 2px;
+    }
+    .choice-btn:disabled { cursor: default; }
+    .choice-btn img {
       display: block;
       width: 100%;
-      height: 100px;
-      border-radius: 14px;
+      height: min(170px, 28vw);
       object-fit: contain;
+      border-radius: 16px;
       pointer-events: none;
       user-select: none;
     }
-    .match-item.correct {
+    .choice-btn.correct {
       border-color: var(--green);
       background: #eaffdf;
-      animation: correct-pop .45s ease;
     }
-    .match-item.correct::after {
-      content: '✓';
-      position: absolute;
-      top: 7px;
-      right: 7px;
-      display: grid;
-      place-items: center;
-      width: 34px;
-      height: 34px;
-      border-radius: 50%;
-      background: var(--green-d);
-      color: var(--white);
-      font-size: 1.5rem;
-      box-shadow: 0 3px 0 #3d8c1e;
+    .choice-btn.wrong {
+      border-color: #e04b55;
+      background: #ffe9eb;
+      animation: wrong-shake .55s ease;
     }
-    .match-item.wrong { animation: wrong-flash .6s ease; }
-    .drop-label {
-      margin: 20px 0 8px;
-      color: var(--purple-d);
-      font-weight: 800;
+    .sentence-box {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      margin-top: 26px;
+      padding: 22px 20px;
+      border: 6px solid var(--blue);
+      border-radius: 26px;
+      background: linear-gradient(180deg, #eef9ff, #fff);
+    }
+    .sentence-text {
+      flex: 1;
+      color: var(--text);
+      font-family: var(--font-friendly);
+      font-size: clamp(1.2rem, 4vw, 1.65rem);
+      font-weight: 600;
+      line-height: 1.35;
       text-align: center;
     }
-    .drop-zone {
+    .listen-btn {
+      flex-shrink: 0;
       display: grid;
-      min-height: 168px;
       place-items: center;
-      padding: 10px;
-      border: 4px dashed var(--purple);
-      border-radius: 22px;
-      background: rgba(246,239,255,.7);
-      color: #8c72a7;
-      font-family: 'Fredoka', sans-serif;
-      font-weight: 600;
-      transition: border-color .16s ease, background .16s ease, transform .16s ease;
-    }
-    .drop-zone.drag-over {
-      border-color: var(--blue-d);
-      background: #e7f8ff;
-      transform: scale(1.02);
-    }
-    .drop-zone.correct { border-color: var(--green); background: #eaffdf; }
-    .drop-zone.wrong { animation: wrong-flash .6s ease; }
-    .drop-zone .match-item {
-      width: 100%;
-      min-height: 140px;
-    }
-    .feedback-popup {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      z-index: 150;
-      padding: 22px 42px;
-      border: 6px solid var(--white);
-      border-radius: 28px;
+      width: 52px;
+      height: 52px;
+      border: none;
+      border-radius: 50%;
+      background: linear-gradient(180deg, var(--blue), var(--blue-d));
+      box-shadow: 0 5px 0 #1b7fae;
       color: var(--white);
-      font-size: clamp(2rem, 6vw, 3.2rem);
-      font-weight: 800;
-      box-shadow: 0 12px 35px rgba(74,59,82,.3);
-      transform: translate(-50%, -50%) scale(0);
-      pointer-events: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      transition: transform .12s ease;
     }
-    .feedback-popup.show { animation: feedback-pop 1.05s ease; }
-    .feedback-popup.correct-feedback { background: var(--green-d); }
-    .feedback-popup.wrong-feedback { background: #e04b55; }
-    .correct-modal {
+    .listen-btn:hover { transform: scale(1.08); }
+    .listen-btn:active { transform: translateY(2px); }
+    .listen-btn:focus-visible { outline: 4px solid var(--yellow); outline-offset: 2px; }
+    .listen-btn:disabled { opacity: .55; cursor: not-allowed; transform: none; }
+    .success-modal {
       position: fixed;
       inset: 0;
-      z-index: 170;
+      z-index: 160;
       display: grid;
       place-items: center;
       padding: 20px;
-      background: rgba(65,45,86,.48);
+      background: rgba(65,45,86,.45);
       backdrop-filter: blur(3px);
     }
-    .correct-modal[hidden] { display: none; }
-    .correct-dialog {
-      width: min(620px, 94vw);
-      padding: 26px;
+    .success-modal[hidden] { display: none; }
+    .success-card {
+      width: min(520px, 94vw);
+      padding: 28px 26px 24px;
       border: 7px solid var(--green);
       border-radius: 32px;
       background: var(--white);
-      box-shadow: 0 12px 0 rgba(61,140,30,.25), 0 24px 55px rgba(74,59,82,.3);
+      box-shadow: 0 12px 0 rgba(61,140,30,.25), 0 24px 50px rgba(74,59,82,.28);
       text-align: center;
-      animation: correct-dialog-pop .5s cubic-bezier(.34,1.56,.64,1);
+      animation: pop-in .5s cubic-bezier(.34,1.56,.64,1);
     }
-    .correct-title {
-      margin-bottom: 18px;
+    .success-title {
+      margin-bottom: 16px;
       color: var(--green-d);
-      font-size: clamp(2rem, 7vw, 3.2rem);
-      line-height: 1;
+      font-size: clamp(2rem, 7vw, 2.8rem);
     }
-    .correct-pictures {
+    .success-review {
       display: grid;
-      grid-template-columns: 1fr auto 1fr;
-      align-items: center;
       gap: 14px;
       margin-bottom: 20px;
+      padding: 16px;
+      border-radius: 20px;
+      background: #f6f0ff;
     }
-    .correct-picture {
-      position: relative;
-      min-width: 0;
-      padding: 10px;
-      border: 5px solid var(--green);
-      border-radius: 22px;
-      background: #eaffdf;
-      color: var(--text);
-      font-weight: 800;
-    }
-    .correct-picture::after {
-      content: '✓';
-      position: absolute;
-      top: 7px;
-      right: 7px;
-      display: grid;
-      place-items: center;
-      width: 34px;
-      height: 34px;
-      border-radius: 50%;
-      background: var(--green-d);
-      color: var(--white);
-      font-size: 1.45rem;
-      box-shadow: 0 3px 0 #3d8c1e;
-    }
-    .correct-picture img {
+    .success-review img {
       display: block;
-      width: 100%;
+      width: min(220px, 70%);
       height: 180px;
-      border-radius: 15px;
+      margin: 0 auto;
       object-fit: contain;
+      border-radius: 16px;
     }
-    .correct-plus {
-      color: var(--pink-d);
-      font-size: 2.5rem;
-      font-weight: 800;
+    .success-review p {
+      margin: 0;
+      font-family: var(--font-friendly);
+      font-size: 1.1rem;
+      line-height: 1.35;
+      color: var(--text);
     }
-    @keyframes correct-dialog-pop {
-      from { opacity: 0; transform: scale(.45) rotate(-5deg); }
+    @keyframes pop-in {
+      from { opacity: 0; transform: scale(.5) rotate(-4deg); }
       to { opacity: 1; transform: scale(1) rotate(0); }
     }
-    @keyframes feedback-pop {
-      0% { opacity: 0; transform: translate(-50%, -50%) scale(.35) rotate(-5deg); }
-      20%, 72% { opacity: 1; transform: translate(-50%, -50%) scale(1) rotate(0); }
-      100% { opacity: 0; transform: translate(-50%, -50%) scale(.8); }
+    @keyframes wrong-shake {
+      0%, 100% { transform: translateX(0); }
+      25%, 75% { transform: translateX(-8px); }
+      50% { transform: translateX(8px); }
     }
-    @keyframes correct-pop {
-      50% { transform: scale(1.05); }
-    }
-    @keyframes wrong-flash {
-      0%, 100% { border-color: transparent; background: var(--white); transform: translateX(0); }
-      20%, 60% { border-color: #e04b55; background: #ffe8ea; transform: translateX(-7px); box-shadow: 0 0 20px #ff6974; }
-      40%, 80% { border-color: #e04b55; background: #ffe8ea; transform: translateX(7px); box-shadow: 0 0 20px #ff6974; }
-    }
-    @media (prefers-reduced-motion: reduce) {
-      .match-item, .drop-zone { transition: none; }
-      .match-item.correct, .match-item.wrong, .drop-zone.wrong, .feedback-popup.show { animation-duration: .01ms; }
-      .correct-dialog { animation: none; }
-    }
-    @media (max-width: 700px) {
-      .match-columns { gap: 10px; }
-      .match-column { padding: 10px; }
-      .options-grid { grid-template-columns: 1fr; min-height: 576px; }
-      .match-item { min-height: 132px; font-size: .82rem; }
-      .match-item img { height: 92px; }
-      .column-title { font-size: 1.05rem; }
-      .drop-zone { min-height: 154px; }
-      .correct-dialog { padding: 18px 12px; }
-      .correct-pictures { gap: 7px; }
-      .correct-picture { padding: 6px; font-size: .82rem; }
-      .correct-picture img { height: 130px; }
-      .correct-plus { font-size: 1.7rem; }
-    }
-    @media (max-width: 420px) {
-      .page { padding-inline: 8px; }
-      .match-columns { gap: 6px; }
-      .match-column { padding: 7px; border-radius: 18px; }
-      .match-item { padding: 5px; }
+    @media (max-width: 640px) {
+      .choices-row { grid-template-columns: 1fr; }
+      .choice-btn img { height: 150px; }
+      .match-board { padding: 18px 12px 24px; }
     }
   </style>
 </head>
@@ -271,143 +182,103 @@
 
   <div class="floaties" aria-hidden="true">
     <span style="top:10%; left:4%;">🧩</span>
-    <span style="top:75%; left:93%;">⚽</span>
+    <span style="top:75%; left:93%;">🌧️</span>
   </div>
 
   <div class="page">
     <a class="back-link" href="../index.html?week=3">⬅️ All Games</a>
 
     <header class="center" style="margin-top:16px;">
-      <h1 class="big-title page-title-with-icon" style="font-size:2.4rem;"><img class="page-title-icon" src="../../assets/images/ui/game-matching.webp" alt="">Matching Pairs</h1>
-      <p class="subtitle">Drag one picture from each column into the boxes!</p>
+      <h1 class="big-title page-title-with-icon" style="font-size:2.4rem;"><img class="page-title-icon" src="../../assets/images/ui/game-matching.webp" alt="">Picture Match</h1>
+      <p class="subtitle">Listen to the sentence, then pick the picture that matches!</p>
     </header>
 
     <div class="game-toolbar">
-      <button class="pill-btn orange" id="refresh" type="button">🔄 New Set</button>
-      <span class="score">Pairs: <span id="score">0</span> / 4</span>
+      <button class="pill-btn orange" id="new-round" type="button">🔄 New Round</button>
+      <span class="score">Correct: <span id="score">0</span></span>
     </div>
 
-    <section class="card" style="margin-top:18px;">
-      <div class="match-columns">
-        <div class="match-column">
-          <h2 class="column-title">Column A — Grooming</h2>
-          <div class="options-grid" id="column-a-options"></div>
-          <p class="drop-label">Drop a grooming picture here</p>
-          <div class="drop-zone" id="column-a-drop" data-accept="a">Empty box</div>
-        </div>
+    <section class="match-board">
+      <div class="choices-row" id="choices-row"></div>
 
-        <div class="match-column">
-          <h2 class="column-title">Column B — Pets</h2>
-          <div class="options-grid" id="column-b-options"></div>
-          <p class="drop-label">Drop a pet picture here</p>
-          <div class="drop-zone" id="column-b-drop" data-accept="b">Empty box</div>
-        </div>
+      <div class="sentence-box">
+        <p class="sentence-text" id="sentence-text"></p>
+        <button class="listen-btn" id="sentence-listen" type="button" aria-label="Listen to the sentence">🔊</button>
       </div>
     </section>
   </div>
 
-  <div class="feedback-popup" id="feedback" role="status" aria-live="assertive"></div>
-
-  <div class="correct-modal" id="correct-modal" role="dialog" aria-modal="true"
-       aria-labelledby="correct-title" hidden>
-    <div class="correct-dialog">
-      <h2 class="correct-title" id="correct-title">Correct!</h2>
-      <div class="correct-pictures">
-        <div class="correct-picture">
-          <img id="correct-left-image" src="" alt="">
-          <span id="correct-left-label"></span>
-        </div>
-        <span class="correct-plus" aria-hidden="true">+</span>
-        <div class="correct-picture">
-          <img id="correct-right-image" src="" alt="">
-          <span id="correct-right-label"></span>
-        </div>
+  <div class="success-modal" id="success-modal" role="dialog" aria-modal="true"
+       aria-labelledby="success-title" hidden>
+    <div class="success-card">
+      <h2 class="success-title" id="success-title">Correct! 🎉</h2>
+      <div class="success-review">
+        <img id="review-image" src="" alt="">
+        <p id="review-sentence"></p>
       </div>
-      <button class="pill-btn green" id="continue-button" type="button">✓ Close &amp; Continue</button>
+      <button class="pill-btn green" id="continue-btn" type="button">✓ Continue</button>
     </div>
   </div>
 
   <script src="../../js/main.js"></script>
   <script>
-    const PAIRS = [
-      {
-        id: 'scissors',
-        left: { label: 'Scissors', image: '../../assets/images/week-1/memory/cut.webp' },
-        right: { label: 'Long fur', image: '../../assets/images/week-1/matching/long-fur.webp' }
-      },
-      {
-        id: 'brush',
-        left: { label: 'Brush', image: '../../assets/images/week-1/memory/brush.webp' },
-        right: { label: 'Frizzy fur', image: '../../assets/images/week-1/matching/frizzy-fur.webp' }
-      },
-      {
-        id: 'dryer',
-        left: { label: 'Hair dryer', image: '../../assets/images/week-1/memory/dry.webp' },
-        right: { label: 'Wet fur', image: '../../assets/images/week-1/matching/wet-fur.webp' }
-      },
-      {
-        id: 'bath',
-        left: { label: 'Bath tub', image: '../../assets/images/week-1/memory/wash.webp' },
-        right: { label: 'Dirty fur', image: '../../assets/images/week-1/matching/dirty-fur.webp' }
-      },
-      {
-        id: 'stroke',
-        left: { label: 'Stroking hand', image: '../../assets/images/week-1/memory/stroke.webp' },
-        right: { label: 'Sad pet', image: '../../assets/images/week-1/matching/sad-pet.webp' }
-      }
+    const IMAGE_BASE = '../../assets/images/week-3/games/actions';
+
+    const PICTURES = [
+      {id:'skating',label:'skating',image:`${IMAGE_BASE}/skating-setting.png`,audio:'../../assets/audio/week-3/literacy/page-04-skating.mp3'},
+      {id:'swimming',label:'swimming',image:`${IMAGE_BASE}/swimming-setting.png`,audio:'../../assets/audio/week-3/literacy/page-04-swimming.mp3'},
+      {id:'diving',label:'diving',image:`${IMAGE_BASE}/diving-setting.png`,audio:'../../assets/audio/week-3/literacy/page-04-diving.mp3'},
+      {id:'running',label:'running',image:`${IMAGE_BASE}/running-setting.png`,audio:'../../assets/audio/week-3/literacy/page-04-running.mp3'},
+      {id:'jumping',label:'jumping',image:`${IMAGE_BASE}/jumping-setting.png`,audio:'../../assets/audio/week-3/literacy/page-04-jumping.mp3'}
     ];
 
-    const columnA = document.getElementById('column-a-options');
-    const columnB = document.getElementById('column-b-options');
-    const dropA = document.getElementById('column-a-drop');
-    const dropB = document.getElementById('column-b-drop');
+    const SENTENCES = [
+      {text:'It\'s skating.',pictureId:'skating'},
+      {text:'It\'s swimming.',pictureId:'swimming'},
+      {text:'It\'s diving.',pictureId:'diving'},
+      {text:'It\'s jumping.',pictureId:'jumping'},
+      {text:'It\'s running.',pictureId:'running'}
+    ];
+
+    const choicesRow = document.getElementById('choices-row');
+    const sentenceText = document.getElementById('sentence-text');
+    const sentenceListen = document.getElementById('sentence-listen');
+    const successModal = document.getElementById('success-modal');
+    const reviewImage = document.getElementById('review-image');
+    const reviewSentence = document.getElementById('review-sentence');
+    const continueBtn = document.getElementById('continue-btn');
     const scoreEl = document.getElementById('score');
-    const feedback = document.getElementById('feedback');
-    const correctModal = document.getElementById('correct-modal');
-    const continueButton = document.getElementById('continue-button');
-    const correctLeftImage = document.getElementById('correct-left-image');
-    const correctRightImage = document.getElementById('correct-right-image');
-    const correctLeftLabel = document.getElementById('correct-left-label');
-    const correctRightLabel = document.getElementById('correct-right-label');
-    let matchedCount = 0;
+
+    const pictureById = Object.fromEntries(PICTURES.map(picture => [picture.id, picture]));
+
     let locked = false;
-    let feedbackTimer = null;
-    let resolutionTimer = null;
-    let gameNumber = 0;
-    let lastSetSignature = '';
-    let pendingCorrectPair = null;
+    let score = 0;
+    let currentRound = null;
+    let lastRoundKey = '';
+    let usVoice = null;
+    let narrationAudio = null;
 
     const sounds = (() => {
-      let context = null;
+      let ctx = null;
       function audio() {
-        if (!context) context = new (window.AudioContext || window.webkitAudioContext)();
-        if (context.state === 'suspended') context.resume();
-        return context;
+        if (!ctx) ctx = new (window.AudioContext || window.webkitAudioContext)();
+        if (ctx.state === 'suspended') ctx.resume();
+        return ctx;
       }
-      function tone(frequency, start, duration, type = 'sine', volume = .13) {
-        const ctx = audio();
-        const oscillator = ctx.createOscillator();
-        const gain = ctx.createGain();
-        oscillator.type = type;
-        oscillator.frequency.setValueAtTime(frequency, start);
+      function tone(frequency, start, duration, type = 'sine', volume = .14) {
+        const osc = audio().createOscillator();
+        const gain = audio().createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(frequency, start);
         gain.gain.setValueAtTime(.0001, start);
         gain.gain.exponentialRampToValueAtTime(volume, start + .012);
         gain.gain.exponentialRampToValueAtTime(.0001, start + duration);
-        oscillator.connect(gain);
-        gain.connect(ctx.destination);
-        oscillator.start(start);
-        oscillator.stop(start + duration + .02);
+        osc.connect(gain);
+        gain.connect(audio().destination);
+        osc.start(start);
+        osc.stop(start + duration + .02);
       }
       return {
-        click() {
-          const now = audio().currentTime;
-          tone(620, now, .07, 'triangle', .11);
-        },
-        drag() {
-          const now = audio().currentTime;
-          tone(360, now, .08, 'sine', .1);
-          tone(480, now + .05, .1, 'sine', .1);
-        },
         correct() {
           const now = audio().currentTime;
           tone(523, now, .12, 'sine', .15);
@@ -431,195 +302,136 @@
       return copy;
     }
 
-    function showFeedback(message, correct) {
-      clearTimeout(feedbackTimer);
-      feedback.textContent = message;
-      feedback.className = `feedback-popup ${correct ? 'correct-feedback' : 'wrong-feedback'}`;
-      void feedback.offsetWidth;
-      feedback.classList.add('show');
-      feedbackTimer = setTimeout(() => feedback.classList.remove('show'), 1050);
+    function pickVoice() {
+      const voices = speechSynthesis.getVoices();
+      usVoice = voices.find(v => /^en[-_]US$/i.test(v.lang || '') && /google|samantha|zira|jenny|aria|english/i.test(v.name))
+        || voices.find(v => /^en[-_]US$/i.test(v.lang || ''))
+        || null;
     }
 
-    function showCorrectModal(left, right, currentGame) {
-      const leftImage = left.querySelector('img');
-      const rightImage = right.querySelector('img');
-      correctLeftImage.src = leftImage.src;
-      correctLeftImage.alt = leftImage.alt;
-      correctRightImage.src = rightImage.src;
-      correctRightImage.alt = rightImage.alt;
-      correctLeftLabel.textContent = left.querySelector('span').textContent;
-      correctRightLabel.textContent = right.querySelector('span').textContent;
-      pendingCorrectPair = { left, right, currentGame };
-      correctModal.hidden = false;
-      continueButton.focus();
+    if ('speechSynthesis' in window) {
+      pickVoice();
+      speechSynthesis.addEventListener('voiceschanged', pickVoice);
     }
 
-    function makeCard(pair, column, order) {
-      const data = column === 'a' ? pair.left : pair.right;
-      const card = document.createElement('button');
-      card.className = 'match-item';
-      card.id = `${column}-${pair.id}`;
-      card.type = 'button';
-      card.draggable = true;
-      card.dataset.column = column;
-      card.dataset.pair = pair.id;
-      card.dataset.order = order;
-      card.setAttribute('aria-label', `${data.label}. Drag or click to move it to the matching box.`);
-      card.innerHTML = `<img src="${data.image}" alt="${data.label}" draggable="false"><span>${data.label}</span>`;
-
-      card.addEventListener('click', () => {
-        if (locked) return;
-        sounds.click();
-        if (card.parentElement.classList.contains('drop-zone')) {
-          returnToSource(card);
-        } else {
-          placeInZone(card, column === 'a' ? dropA : dropB);
-        }
-      });
-      card.addEventListener('dragstart', (event) => {
-        if (locked) {
-          event.preventDefault();
+    function speak(text) {
+      return new Promise(resolve => {
+        if (!('speechSynthesis' in window)) {
+          resolve();
           return;
         }
-        sounds.drag();
-        card.classList.add('dragging');
-        event.dataTransfer.effectAllowed = 'move';
-        event.dataTransfer.setData('text/plain', card.id);
+        speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'en-US';
+        utterance.rate = .92;
+        if (usVoice) utterance.voice = usVoice;
+        utterance.onend = () => resolve();
+        utterance.onerror = () => resolve();
+        speechSynthesis.speak(utterance);
       });
-      card.addEventListener('dragend', () => card.classList.remove('dragging'));
-      return card;
     }
 
-    function resetZone(zone) {
-      zone.classList.remove('correct', 'wrong', 'drag-over');
-      if (!zone.querySelector('.match-item')) zone.textContent = 'Empty box';
+    function playSentenceAudio() {
+      const picture = currentRound && pictureById[currentRound.correctId];
+      if (!picture) return Promise.resolve();
+      if ('speechSynthesis' in window) speechSynthesis.cancel();
+      if (narrationAudio) {
+        narrationAudio.pause();
+        narrationAudio.currentTime = 0;
+      }
+      narrationAudio = new Audio(picture.audio);
+      return new Promise(resolve => {
+        narrationAudio.addEventListener('ended', resolve, { once: true });
+        narrationAudio.play().catch(() => speak(currentRound.sentence).then(resolve));
+      });
     }
 
-    function startGame() {
-      gameNumber++;
-      clearTimeout(resolutionTimer);
-      clearTimeout(feedbackTimer);
-      feedback.classList.remove('show');
-      correctModal.hidden = true;
-      pendingCorrectPair = null;
-      locked = false;
-      matchedCount = 0;
-      scoreEl.textContent = '0';
-      columnA.innerHTML = '';
-      columnB.innerHTML = '';
-      dropA.innerHTML = 'Empty box';
-      dropB.innerHTML = 'Empty box';
-      resetZone(dropA);
-      resetZone(dropB);
-
-      let set;
-      let signature;
+    function buildRound() {
+      let sentence;
+      let key;
       do {
-        set = shuffle(PAIRS).slice(0, 4);
-        signature = set.map(pair => pair.id).sort().join(',');
-      } while (signature === lastSetSignature);
-      lastSetSignature = signature;
-      shuffle(set).forEach((pair, index) => columnA.appendChild(makeCard(pair, 'a', index)));
-      shuffle(set).forEach((pair, index) => columnB.appendChild(makeCard(pair, 'b', index)));
+        sentence = SENTENCES[Math.floor(Math.random() * SENTENCES.length)];
+        const correctPicture = pictureById[sentence.pictureId];
+        const wrongPool = PICTURES.filter(picture => picture.id !== sentence.pictureId);
+        const choices = shuffle([
+          correctPicture,
+          ...shuffle(wrongPool).slice(0, 2)
+        ]);
+        key = `${sentence.text}|${choices.map(choice => choice.id).sort().join(',')}`;
+        if (key !== lastRoundKey) {
+          lastRoundKey = key;
+          return { sentence: sentence.text, correctId: sentence.pictureId, choices };
+        }
+      } while (true);
     }
 
-    function returnToSource(card) {
-      const source = card.dataset.column === 'a' ? columnA : columnB;
-      source.appendChild(card);
-      [...source.children]
-        .sort((a, b) => Number(a.dataset.order) - Number(b.dataset.order))
-        .forEach(item => source.appendChild(item));
-      card.classList.remove('wrong', 'correct');
-      card.setAttribute('aria-label', `${card.querySelector('span').textContent}. Drag or click to move it to the matching box.`);
-      resetZone(card.dataset.column === 'a' ? dropA : dropB);
+    function renderRound(autoSpeak = true) {
+      locked = false;
+      successModal.hidden = true;
+      currentRound = buildRound();
+      sentenceText.textContent = currentRound.sentence;
+      choicesRow.innerHTML = '';
+
+      sentenceListen.onclick = () => {
+        if (locked) return;
+        playSentenceAudio();
+      };
+
+      currentRound.choices.forEach(picture => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'choice-btn';
+        btn.dataset.pictureId = picture.id;
+        btn.setAttribute('aria-label', `Choose picture: ${picture.label}`);
+
+        const image = document.createElement('img');
+        image.src = picture.image;
+        image.alt = picture.label;
+        image.draggable = false;
+
+        btn.appendChild(image);
+        btn.addEventListener('click', () => choosePicture(btn, picture.id));
+        choicesRow.appendChild(btn);
+      });
+
+      if (autoSpeak) playSentenceAudio();
     }
 
-    function placeInZone(card, zone) {
-      if (locked || card.dataset.column !== zone.dataset.accept) return;
-      const existing = zone.querySelector('.match-item');
-      if (existing && existing !== card) returnToSource(existing);
-      zone.textContent = '';
-      zone.appendChild(card);
-      card.setAttribute('aria-label', `${card.querySelector('span').textContent} is in the matching box. Click to return it.`);
-      checkPair();
-    }
-
-    function checkPair() {
-      const left = dropA.querySelector('.match-item');
-      const right = dropB.querySelector('.match-item');
-      if (!left || !right) return;
+    async function choosePicture(button, pictureId) {
+      if (locked) return;
       locked = true;
-      const currentGame = gameNumber;
+      choicesRow.querySelectorAll('.choice-btn').forEach(btn => btn.disabled = true);
 
-      if (left.dataset.pair === right.dataset.pair) {
+      if (pictureId === currentRound.correctId) {
         sounds.correct();
-        left.classList.add('correct');
-        right.classList.add('correct');
-        dropA.classList.add('correct');
-        dropB.classList.add('correct');
-        matchedCount++;
-        scoreEl.textContent = matchedCount;
-        showCorrectModal(left, right, currentGame);
+        button.classList.add('correct');
+        const correctPicture = pictureById[currentRound.correctId];
+        reviewImage.src = correctPicture.image;
+        reviewImage.alt = correctPicture.label;
+        reviewSentence.textContent = currentRound.sentence;
+        successModal.hidden = false;
+        continueBtn.focus();
+        sentenceListen.disabled = true;
+        score++;
+        scoreEl.textContent = score;
+        await playSentenceAudio();
       } else {
         sounds.wrong();
-        showFeedback('Try again.', false);
-        left.classList.add('wrong');
-        right.classList.add('wrong');
-        dropA.classList.add('wrong');
-        dropB.classList.add('wrong');
-
-        resolutionTimer = setTimeout(() => {
-          if (currentGame !== gameNumber) return;
-          returnToSource(left);
-          returnToSource(right);
-          resetZone(dropA);
-          resetZone(dropB);
+        button.classList.add('wrong');
+        setTimeout(() => {
+          button.classList.remove('wrong');
+          choicesRow.querySelectorAll('.choice-btn').forEach(btn => btn.disabled = false);
           locked = false;
         }, 650);
       }
     }
 
-    [dropA, dropB].forEach(zone => {
-      zone.addEventListener('dragover', event => {
-        event.preventDefault();
-        event.dataTransfer.dropEffect = 'move';
-        zone.classList.add('drag-over');
-      });
-      zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
-      zone.addEventListener('drop', event => {
-        event.preventDefault();
-        zone.classList.remove('drag-over');
-        const card = document.getElementById(event.dataTransfer.getData('text/plain'));
-        if (card) placeInZone(card, zone);
-      });
+    continueBtn.addEventListener('click', () => {
+      sentenceListen.disabled = false;
+      renderRound();
     });
-
-    document.getElementById('refresh').addEventListener('click', () => {
-      sounds.click();
-      startGame();
-    });
-    continueButton.addEventListener('click', () => {
-      if (!pendingCorrectPair) return;
-      sounds.click();
-      const { left, right, currentGame } = pendingCorrectPair;
-      correctModal.hidden = true;
-      pendingCorrectPair = null;
-      if (currentGame !== gameNumber) return;
-      left.remove();
-      right.remove();
-      dropA.textContent = 'Empty box';
-      dropB.textContent = 'Empty box';
-      resetZone(dropA);
-      resetZone(dropB);
-      locked = false;
-      if (matchedCount === 4) {
-        showFeedback('All matched!', true);
-      } else {
-        const nextCard = columnA.querySelector('.match-item');
-        (nextCard || document.getElementById('refresh')).focus();
-      }
-    });
-    startGame();
+    document.getElementById('new-round').addEventListener('click', () => renderRound());
+    renderRound();
   </script>
 </body>
 </html>

@@ -1,0 +1,26 @@
+.continent-activity-card { margin-top:24px; padding:clamp(10px,2vw,20px); border-top:9px solid #ff8a98; }
+.continent-toolbar { display:flex; align-items:center; justify-content:center; min-height:1.5em; margin:16px 0 0; }
+.continent-toolbar p { margin:0; color:#bd3038; font:800 clamp(1rem,2.2vw,1.25rem) var(--font-friendly); }
+.continent-board { position:relative; width:min(100%,1080px); margin:auto; overflow:hidden; aspect-ratio:1412/1114; border:6px solid #fff; border-radius:28px; background:#ffb2bc; box-shadow:0 10px 0 #d95c6b,0 18px 28px rgba(69,40,58,.2); }
+.continent-board-image { display:block; width:100%; height:100%; object-fit:cover; }
+.continent-board > .board-instruction-speaker { position:absolute; z-index:7; left:75%; top:23%; }
+.continent-hotspots { position:absolute; inset:0; }
+.continent-hotspot { position:absolute; padding:0; border:0; border-radius:50%; background:transparent; cursor:pointer; transform:rotate(var(--rotate,0deg)); }
+.continent-hotspot:disabled { cursor:default; }
+.continent-hotspot:not(:disabled):hover { background:rgba(255,255,255,.13); }
+.continent-hotspot:not(:disabled):focus-visible { outline:6px solid #176ac2; outline-offset:3px; }
+.continent-hotspot.is-selected::after { content:""; position:absolute; inset:2%; border:clamp(5px,.65vw,9px) solid #f6a7a5; border-radius:50%; box-shadow:0 3px 0 #ca6b72,inset 0 2px 3px rgba(255,255,255,.86); }
+.continent-hotspot.north-america { left:8.2%; top:35.8%; width:25.4%; height:27%; --rotate:-8deg; }
+.continent-hotspot.south-america { left:21.7%; top:59.4%; width:15.2%; height:27.2%; --rotate:-6deg; }
+.continent-hotspot.europe { left:41.3%; top:36.9%; width:17.2%; height:14.5%; --rotate:2deg; }
+.continent-hotspot.africa { left:39.8%; top:51.1%; width:19.3%; height:29.5%; --rotate:-4deg; }
+.continent-hotspot.asia { left:60.1%; top:35.6%; width:29.1%; height:28%; --rotate:6deg; }
+.continent-hotspot.oceania { left:74.3%; top:64.7%; width:20.2%; height:22.3%; --rotate:4deg; }
+.continent-hotspot.antarctica { left:16.7%; top:82.5%; width:65.2%; height:11.2%; --rotate:0deg; }
+.continent-start { position:absolute; z-index:8; inset:0; display:grid; place-items:center; background:rgba(255,235,238,.72); backdrop-filter:blur(2px); }
+.continent-start[hidden] { display:none; }
+#continent-start-button { min-width:min(360px,78%); min-height:82px; padding:14px 30px; border:7px solid #fff; border-radius:999px; background:linear-gradient(180deg,#ff9a9f,#ef4f5d); color:#fff; box-shadow:0 9px 0 #b92f43,0 16px 28px rgba(68,31,45,.32); font:900 clamp(1.3rem,3vw,2rem) var(--font-friendly); cursor:pointer; }
+#continent-start-button:hover { transform:translateY(-3px); filter:brightness(1.04); }
+.activity-completion-frame { width:min(720px,92%); }
+.activity-completion-video { aspect-ratio:1; object-fit:contain; background:#fff; }
+@media(max-width:650px){.continent-board{border-width:4px;border-radius:18px}.continent-board>.board-instruction-speaker{left:74%;top:22%}.continent-hotspot.is-selected::after{border-width:3px}.continent-toolbar p{font-size:.92rem}}

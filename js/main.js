@@ -171,18 +171,31 @@ function centerLinkedLessonActivity() {
   });
 }
 
-/* ---------- Return from TPR / Flashcards to the originating Literacy page ---------- */
+/* ---------- Return from Literacy tools to the originating Literacy page ---------- */
 
 function setupLiteracyToolReturnLinks() {
   const currentFile = window.location.pathname.split('/').pop();
-  if (!currentFile || /^(?:tpr|flashcards)\.html$/i.test(currentFile)) return;
+  if (!currentFile || /^(?:tpr|flashcards|conversation)\.html$/i.test(currentFile)) return;
 
   const returnTarget = currentFile + '#lesson-focus';
   const pageText = document.querySelector('.page-indicator')?.textContent || '';
   const pageMatch = pageText.match(/Page\s+(\d+)/i);
   const pageNumber = pageMatch ? pageMatch[1] : '';
 
-  document.querySelectorAll('a[href*="tpr.html"], a[href*="flashcards.html"]').forEach((link) => {
+  document.querySelectorAll('.week-tools').forEach((tools) => {
+    if (tools.querySelector('a[href*="conversation.html"]')) return;
+    const referenceLink = tools.querySelector('a[href*="tpr.html"], a[href*="flashcards.html"]');
+    if (!referenceLink) return;
+    const week = new URL(referenceLink.getAttribute('href'), window.location.href).searchParams.get('week');
+    if (!/^[1-4]$/.test(week || '')) return;
+    const conversation = document.createElement('a');
+    conversation.className = 'pill-btn green';
+    conversation.href = `conversation.html?week=${week}`;
+    conversation.textContent = '💬 Conversation';
+    tools.appendChild(conversation);
+  });
+
+  document.querySelectorAll('a[href*="tpr.html"], a[href*="flashcards.html"], a[href*="conversation.html"]').forEach((link) => {
     const toolUrl = new URL(link.getAttribute('href'), window.location.href);
     toolUrl.searchParams.set('return', returnTarget);
     if (pageNumber) toolUrl.searchParams.set('from', pageNumber);

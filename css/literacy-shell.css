@@ -1,0 +1,15 @@
+.literacy-shell-page .week-tools { margin-top:16px; }
+.literacy-shell-card {
+  display:grid;
+  place-items:center;
+  min-height:clamp(320px,55svh,620px);
+  margin-top:24px;
+  padding:clamp(24px,5vw,56px);
+  border:6px dashed #9ed8ff;
+  text-align:center;
+}
+.literacy-shell-card h2 { margin-bottom:10px; }
+.literacy-shell-card p { max-width:34rem; margin:0; color:#3d5a78; font-size:clamp(1rem,2.4vw,1.2rem); font-weight:700; }
+@media (max-width:600px) {
+  .literacy-shell-card { min-height:50svh; border-width:4px; border-radius:22px; }
+}

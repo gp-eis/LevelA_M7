@@ -5,12 +5,14 @@
   <meta http-equiv="Content-Language" content="en-US">
   <meta name="google" content="notranslate">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Spin the Wheel 🎡 — Athlete People</title>
+  <title>Spin the Wheel 🎡 — Athlete</title>
   <link rel="stylesheet" href="../../css/styles.css">
   <style>
-    body { overflow: hidden; }
+    body { overflow-x: hidden; }
     .page {
-      height: 100vh;
+      min-height: 100vh;
+      min-height: 100svh;
+      height: auto;
       padding-top: 18px;
       padding-bottom: 12px;
     }
@@ -65,16 +67,13 @@
       top: var(--label-y);
       left: var(--label-x);
       width: 24%;
-      color: #3f3049;
-      font-size: clamp(.42rem, 2.5cqw, .72rem);
-      font-weight: 800;
-      line-height: 1.05;
-      text-align: center;
-      text-shadow: 0 1px 1px rgba(255,255,255,.7);
-      white-space: normal;
+      aspect-ratio: 1;
+      display: grid;
+      place-items: center;
       transform: translate(-50%, -50%);
       pointer-events: none;
     }
+    .wheel-label img { width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 5px 3px rgba(30,58,95,.3)); }
 
     #result {
       margin-top: 12px;
@@ -86,15 +85,41 @@
     .wheel-actions {
       display: flex;
       justify-content: center;
+      align-items: center;
       flex-wrap: wrap;
       gap: 14px;
       margin-top: 4px;
+      min-height: 64px;
+    }
+    .wheel-action-btn {
+      min-width: 190px;
+      padding: 16px 44px;
+      font-size: 1.4rem;
+    }
+    body.wheel-is-spinning .wheel-actions {
+      position: fixed;
+      left: 50%;
+      bottom: max(12px, env(safe-area-inset-bottom));
+      z-index: 90;
+      width: min(330px, 92vw);
+      min-height: 0;
+      margin: 0;
+      padding: 8px;
+      transform: translateX(-50%);
+      border: 4px solid rgba(255,255,255,.95);
+      border-radius: 999px;
+      background: rgba(235,249,255,.97);
+      box-shadow: 0 10px 26px rgba(30,58,95,.28);
+      backdrop-filter: blur(8px);
+    }
+    body.wheel-is-spinning .wheel-action-btn {
+      width: 100%;
     }
     .stop-btn {
       background: linear-gradient(180deg, #ff6f6f, #d94343);
       box-shadow: 0 5px 0 #a62929;
     }
-    .stop-btn[hidden] { display: none; }
+    .wheel-action-btn[hidden] { display: none; }
     .pill-btn:disabled {
       cursor: not-allowed;
       filter: grayscale(.35);
@@ -121,7 +146,7 @@
       border-radius: 999px;
       background: var(--white);
       color: var(--purple-d);
-      font-family: 'Fredoka', sans-serif;
+      font-family: var(--font-friendly);
       font-weight: 600;
       box-shadow: 0 4px 0 rgba(74,59,82,.14);
     }
@@ -187,7 +212,7 @@
     }
     .card-sentence {
       color: var(--text);
-      font-family: 'Fredoka', sans-serif;
+      font-family: var(--font-friendly);
       font-size: 1.25rem;
       font-weight: 600;
       line-height: 1.25;
@@ -206,11 +231,20 @@
     }
     @media (max-width: 480px) {
       .page { padding-top: 12px; }
-      .wheel-wrap { width: min(330px, 50vh, 91vw); margin-top: 12px; }
+      .wheel-wrap { width: min(330px, 46svh, calc(100vw - 40px)); margin-top: 12px; }
       #wheel::after { width: 62px; height: 62px; }
+      .wheel-action-btn { min-width: min(230px, 78vw); padding: 12px 28px; font-size: 1.15rem; }
       .word-card { height: min(325px, 60vh); }
       .card-face { padding: 16px; }
       .card-sentence { font-size: 1.1rem; }
+    }
+    @media (max-height: 650px) {
+      .page { padding-top: 7px; }
+      header { margin-top: 6px !important; }
+      header .big-title { font-size: 1.65rem !important; }
+      header .subtitle { margin-top: 3px; font-size: .86rem; line-height: 1.15; }
+      .wheel-wrap { width: min(280px, 43svh, 82vw); margin-top: 8px; }
+      #result { margin-top: 6px; min-height: 1.5rem; font-size: 1.1rem; }
     }
   </style>
 </head>
@@ -237,8 +271,8 @@
     <div id="result"></div>
 
     <div class="wheel-actions">
-      <button class="pill-btn" id="spin-btn" style="font-size:1.4rem; padding:16px 44px;">🎡 SPIN!</button>
-      <button class="pill-btn stop-btn" id="stop-btn" style="font-size:1.4rem; padding:16px 44px;" hidden>🛑 STOP!</button>
+      <button class="pill-btn wheel-action-btn" id="spin-btn">🎡 SPIN!</button>
+      <button class="pill-btn wheel-action-btn stop-btn" id="stop-btn" hidden>🛑 STOP!</button>
     </div>
 
     <section class="selected-area" id="selected-area" role="dialog" aria-modal="true"
@@ -263,17 +297,11 @@
   <script src="../../js/main.js"></script>
   <script>
     const SEGMENTS = [
-      { word: 'king',                   color: '#ff6fa5', sentence: 'I found a king.',                   image: '../../assets/images/week-2/memory/king.webp' },
-      { word: 'koala',                  color: '#ffd93d', sentence: 'I found a koala.',                  image: '../../assets/images/week-2/memory/koala.webp' },
-      { word: 'kitten',                 color: '#4fc3f7', sentence: 'I found a kitten.',                 image: '../../assets/images/week-2/memory/kitten.webp' },
-      { word: 'umbrella',               color: '#7ed957', sentence: 'I found an umbrella.',              image: '../../assets/images/week-2/memory/umbrella.webp' },
-      { word: 'raincoat',               color: '#b388ff', sentence: 'I found a raincoat.',               image: '../../assets/images/week-2/memory/raincoat.webp' },
-      { word: 'rain boots',             color: '#ffa62b', sentence: 'I found rain boots.',               image: '../../assets/images/week-2/memory/rain-boots.webp' },
-      { word: 'raining lightly',        color: '#ff8f66', sentence: "It's raining lightly.",             image: '../../assets/images/week-2/memory/raining-lightly.webp' },
-      { word: 'raining heavily',        color: '#5dd4c8', sentence: "It's raining heavily.",             image: '../../assets/images/week-2/memory/raining-heavily.webp' },
-      { word: 'raining cats and dogs',  color: '#e066ff', sentence: "It's raining cats and dogs.",       image: '../../assets/images/week-2/memory/raining-cats-and-dogs.webp' },
-      { word: 'raining very lightly',   color: '#66d9ff', sentence: "It's raining very lightly.",        image: '../../assets/images/week-2/memory/raining-very-lightly.webp' },
-      { word: 'raining very heavily',   color: '#ff6666', sentence: "It's raining very heavily.",        image: '../../assets/images/week-2/memory/raining-very-heavily.webp' }
+      { word: 'twisting',   color: '#ff6fa5', sentence: 'I practice twisting.',   image: '../../assets/images/week-2/games/actions/twisting.webp' },
+      { word: 'kicking',    color: '#ffd93d', sentence: 'I practice kicking.',    image: '../../assets/images/week-2/games/actions/kicking.webp' },
+      { word: 'running',    color: '#4fc3f7', sentence: 'I practice running.',    image: '../../assets/images/week-2/games/actions/running.webp' },
+      { word: 'stretching', color: '#7ed957', sentence: 'I practice stretching.', image: '../../assets/images/week-2/games/actions/stretching.webp' },
+      { word: 'jumping',    color: '#b388ff', sentence: 'I practice jumping.',    image: '../../assets/images/week-2/games/actions/jumping.webp' }
     ];
 
     const wheel = document.getElementById('wheel');
@@ -294,6 +322,9 @@
     let stopping = false;
     let animationFrame = null;
     let lastFrameTime = 0;
+    let currentSegment = null;
+    function speak(text,onEnd){if(!text||!('speechSynthesis' in window))return;speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang='en-US';u.rate=.9;const voices=speechSynthesis.getVoices();u.voice=voices.find(v=>/^en-US$/i.test(v.lang)&&/Samantha|Jenny|Aria|Zira|Google US English/i.test(v.name))||voices.find(v=>/^en-US$/i.test(v.lang))||null;if(onEnd)u.onend=onEnd;speechSynthesis.speak(u)}
+    function narrateResult(segment){speak(segment.word,()=>setTimeout(()=>{wordCard.classList.add('flipped');wordCard.setAttribute('aria-pressed','true');speak(segment.sentence)},350))}
 
     wheel.style.setProperty(
       '--wheel-gradient',
@@ -306,7 +337,11 @@
       const label = document.createElement('span');
       const angle = (index * segmentAngle + segmentAngle / 2) * Math.PI / 180;
       label.className = 'wheel-label';
-      label.textContent = segment.word;
+      const image = document.createElement('img');
+      image.src = segment.image;
+      image.alt = '';
+      image.setAttribute('aria-hidden', 'true');
+      label.appendChild(image);
       label.style.setProperty('--label-x', `${50 + Math.sin(angle) * 31}%`);
       label.style.setProperty('--label-y', `${50 - Math.cos(angle) * 31}%`);
       wheel.appendChild(label);
@@ -327,6 +362,7 @@
     }
 
     function showSelectedCard(segment) {
+      currentSegment = segment;
       resultEl.textContent = `🎉 You landed on ${segment.word}!`;
       frontImage.src = segment.image;
       frontImage.alt = segment.word;
@@ -340,6 +376,7 @@
       wordCard.setAttribute('aria-label', `${segment.word} picture card. Click to reveal the sentence.`);
       selectedArea.hidden = false;
       wordCard.focus();
+      narrateResult(segment);
       showToast(`🎉 ${segment.word}!`);
     }
 
@@ -349,8 +386,10 @@
       const index = Math.floor(pointerAngle / segmentAngle) % SEGMENTS.length;
       spinning = false;
       stopping = false;
+      document.body.classList.remove('wheel-is-spinning');
       stopBtn.hidden = true;
       stopBtn.disabled = false;
+      spinBtn.hidden = false;
       spinBtn.disabled = false;
       showSelectedCard(SEGMENTS[index]);
     }
@@ -363,7 +402,10 @@
       resultEl.textContent = '';
       selectedArea.hidden = true;
       spinBtn.disabled = true;
+      spinBtn.hidden = true;
       stopBtn.hidden = false;
+      document.body.classList.add('wheel-is-spinning');
+      requestAnimationFrame(() => stopBtn.focus({ preventScroll: true }));
       animationFrame = requestAnimationFrame(spinFrame);
     });
 
@@ -398,10 +440,12 @@
         'aria-label',
         flipped ? `${cardSentence.textContent} Click to see the word card again.` : `${cardWord.textContent} picture card. Click to reveal the sentence.`
       );
+      if(currentSegment)speak(flipped?currentSegment.sentence:currentSegment.word);
     });
 
     returnBtn.addEventListener('click', () => {
       selectedArea.hidden = true;
+      currentSegment=null;if('speechSynthesis' in window)speechSynthesis.cancel();
       spinBtn.focus();
     });
   </script>

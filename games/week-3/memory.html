@@ -5,14 +5,14 @@
   <meta http-equiv="Content-Language" content="en-US">
   <meta name="google" content="notranslate">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Memory Game 🃏 — Athlete People</title>
+  <title>Memory Game 🃏 — Athlete</title>
   <link rel="stylesheet" href="../../css/styles.css">
   <style>
     .board {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(4, 1fr);
       gap: 14px;
-      max-width: 540px;
+      max-width: 900px;
       margin: 24px auto 0;
     }
 
@@ -106,6 +106,7 @@
       overflow: hidden;
     }
     .celebration[hidden] { display: none; }
+    .match-sentence-modal{position:fixed;inset:0;z-index:180;display:grid;place-items:center;padding:22px;background:rgba(30,58,95,.38);backdrop-filter:blur(4px)}.match-sentence-modal[hidden]{display:none}.match-sentence-card{width:min(470px,94vw);padding:24px;border:7px solid var(--yellow);border-radius:34px;background:#fff;text-align:center}.match-sentence-card img{width:min(230px,64vw);height:210px;object-fit:contain}.match-sentence-card h2{color:var(--green-d);font-size:2rem}.match-key-sentence{font-size:clamp(1.35rem,5vw,1.85rem);font-weight:700}
     .celebration-card {
       position: relative;
       z-index: 2;
@@ -145,10 +146,17 @@
       .confetti-piece { animation: none; top: var(--rest-top); }
     }
     @media (max-width: 480px) {
-      .board { gap: 9px; }
+      .board { grid-template-columns: repeat(4, minmax(62px, 1fr)); gap: 8px; }
       .mem-card { border-radius: 15px; padding: 6px; }
       .card-picture { border-radius: 10px; }
     }
+    body.memory-viewport { overflow: hidden; }
+    .memory-viewport .page { min-height: 100svh; padding-top: max(10px, env(safe-area-inset-top)); padding-bottom: max(10px, env(safe-area-inset-bottom)); display:grid; grid-template-rows:auto auto auto auto; align-content:center; }
+    .memory-viewport .back-link { position:fixed; z-index:20; top:max(10px,env(safe-area-inset-top)); left:max(10px,env(safe-area-inset-left)); }
+    .memory-viewport header{margin-top:0!important}.memory-viewport .big-title{font-size:clamp(1.55rem,4vh,2.4rem)!important}.memory-viewport .subtitle{margin-top:2px;font-size:clamp(.85rem,2vh,1.05rem)}
+    .memory-viewport .game-actions{margin-top:clamp(5px,1.2vh,10px);gap:8px}.memory-viewport .game-actions .pill-btn{padding:clamp(7px,1.4vh,11px) clamp(11px,2vw,18px);font-size:clamp(.78rem,1.8vh,1rem)}
+    .memory-viewport .board{grid-template-columns:repeat(5,1fr);width:min(900px,94vw);margin:24px auto 0;gap:14px}.memory-viewport .status-row{margin-top:20px;font-size:1.2rem}
+    @media(max-width:600px){.memory-viewport .page{padding-inline:6px}.memory-viewport .back-link{font-size:.78rem;padding:7px 9px}.memory-viewport .board{grid-template-columns:repeat(5,1fr);width:min(96vw,calc(52svh * 2.5));gap:5px}.memory-viewport .mem-card{padding:4px;border-radius:12px}.memory-viewport .card-picture{border-radius:9px}.memory-viewport .floaties{display:none}}
   </style>
 </head>
 <body>
@@ -163,7 +171,7 @@
 
     <header class="center" style="margin-top:16px;">
       <h1 class="big-title page-title-with-icon" style="font-size:2.4rem;"><img class="page-title-icon" src="../../assets/images/ui/game-memory.webp" alt="">Memory Game</h1>
-      <p class="subtitle">Look carefully, then find the 6 matching pairs!</p>
+      <p class="subtitle">Look carefully, then find the 5 matching pairs!</p>
     </header>
 
     <div class="game-actions">
@@ -175,10 +183,11 @@
 
     <div class="status-row">
       <span>Moves: <span id="moves">0</span></span>
-      <span>Pairs: <span id="pairs">0</span> / 6</span>
+      <span>Pairs: <span id="pairs">0</span> / 5</span>
     </div>
   </div>
 
+  <div class="match-sentence-modal" id="match-sentence-modal" role="dialog" aria-modal="true" aria-labelledby="match-sentence-title" hidden><div class="match-sentence-card"><h2 id="match-sentence-title">Great match!</h2><img id="match-sentence-image" src="" alt=""><p class="match-key-sentence" id="match-key-sentence"></p><button class="pill-btn green" id="match-sentence-continue" type="button">✓ Continue</button></div></div>
   <div class="celebration" id="celebration" role="dialog" aria-modal="true"
        aria-labelledby="celebration-title" hidden>
     <div id="confetti" aria-hidden="true"></div>
@@ -192,14 +201,11 @@
   <script src="../../js/main.js"></script>
   <script>
     const PICTURES = [
-      { id: 'wash',   label: 'washing a cat',   src: '../../assets/images/week-1/memory/wash.webp' },
-      { id: 'stroke', label: 'stroking a cat',  src: '../../assets/images/week-1/memory/stroke.webp' },
-      { id: 'dry',    label: 'hair dryer',       src: '../../assets/images/week-1/memory/dry.webp' },
-      { id: 'brush',  label: 'brush',            src: '../../assets/images/week-1/memory/brush.webp' },
-      { id: 'cut',    label: 'scissors',         src: '../../assets/images/week-1/memory/cut.webp' },
-      { id: 'kangaroo', label: 'kangaroo', src: '../../assets/images/week-1/memory/kangaroo.webp' },
-      { id: 'key',      label: 'key',      src: '../../assets/images/week-1/memory/key.webp' },
-      { id: 'kettle',   label: 'kettle',   src: '../../assets/images/week-1/memory/kettle.webp' }
+      {id:'skating',label:'skating',sentence:'It\'s skating.',src:'../../assets/images/week-3/games/actions/skating-setting.png',audio:'../../assets/audio/week-3/literacy/page-04-skating.mp3'},
+      {id:'swimming',label:'swimming',sentence:'It\'s swimming.',src:'../../assets/images/week-3/games/actions/swimming-setting.png',audio:'../../assets/audio/week-3/literacy/page-04-swimming.mp3'},
+      {id:'diving',label:'diving',sentence:'It\'s diving.',src:'../../assets/images/week-3/games/actions/diving-setting.png',audio:'../../assets/audio/week-3/literacy/page-04-diving.mp3'},
+      {id:'jumping',label:'jumping',sentence:'It\'s jumping.',src:'../../assets/images/week-3/games/actions/jumping-setting.png',audio:'../../assets/audio/week-3/literacy/page-04-jumping.mp3'},
+      {id:'running',label:'running',sentence:'It\'s running.',src:'../../assets/images/week-3/games/actions/running-setting.png',audio:'../../assets/audio/week-3/literacy/page-04-running.mp3'}
     ];
 
     const board = document.getElementById('board');
@@ -208,6 +214,7 @@
     const previewButton = document.getElementById('preview');
     const celebration = document.getElementById('celebration');
     const celebrationAgain = document.getElementById('celebration-again');
+    const matchSentenceModal=document.getElementById('match-sentence-modal'),matchSentenceImage=document.getElementById('match-sentence-image'),matchKeySentence=document.getElementById('match-key-sentence'),matchSentenceContinue=document.getElementById('match-sentence-continue');let celebrateAfterSentence=false;
     const confetti = document.getElementById('confetti');
     const sounds = (() => {
       let ctx = null;
@@ -263,6 +270,7 @@
     let previewTimeout = null;
 
     let usVoice = null;
+    let narrationAudio = null;
 
     function pickVoice() {
       const voices = speechSynthesis.getVoices();
@@ -277,13 +285,32 @@
     }
 
     function speak(text) {
-      if (!('speechSynthesis' in window) || !text) return;
+      if (narrationAudio) {
+        narrationAudio.pause();
+        narrationAudio.currentTime = 0;
+      }
+      if (!('speechSynthesis' in window) || !text) return Promise.resolve();
       speechSynthesis.cancel();
       const utterance = new SpeechSynthesisUtterance(text);
       utterance.lang = 'en-US';
       utterance.rate = .92;
       if (usVoice) utterance.voice = usVoice;
-      speechSynthesis.speak(utterance);
+      return new Promise(resolve => {
+        utterance.onend = resolve;
+        utterance.onerror = resolve;
+        speechSynthesis.speak(utterance);
+      });
+    }
+
+    function playPictureAudio(picture) {
+      if (!picture) return;
+      if ('speechSynthesis' in window) speechSynthesis.cancel();
+      if (narrationAudio) {
+        narrationAudio.pause();
+        narrationAudio.currentTime = 0;
+      }
+      narrationAudio = new Audio(picture.audio);
+      narrationAudio.play().catch(() => speak(picture.sentence));
     }
 
     function shuffle(items) {
@@ -319,7 +346,7 @@
       clearTimeout(previewTimeout);
       celebration.hidden = true;
       confetti.innerHTML = '';
-      activePictures = shuffle(PICTURES).slice(0, 6);
+      activePictures = shuffle(PICTURES).slice(0, PICTURES.length >= 6 ? 6 : PICTURES.length);
       let deck;
       let deckSignature;
       do {
@@ -328,6 +355,7 @@
       } while (deckSignature === lastDeckSignature);
       lastDeckSignature = deckSignature;
       board.innerHTML = '';
+      board.style.gridTemplateColumns = activePictures.length === 5 ? 'repeat(5, 1fr)' : 'repeat(4, 1fr)';
       first = null;
       lock = false;
       moves = 0;
@@ -370,7 +398,7 @@
       card.classList.add('flipped');
       card.setAttribute('aria-label', `Revealed ${card.dataset.label}`);
       sounds.click();
-      speak(card.dataset.label);
+      const wordNarration = speak(card.dataset.label);
 
       if (!first) { first = card; return; }
 
@@ -384,9 +412,14 @@
         first = null;
         matchedCount++;
         pairsEl.textContent = matchedCount;
-        if (matchedCount === activePictures.length) {
-          setTimeout(showCelebration, 350);
-        }
+        lock = true;
+        const matchedPicture = card.dataset.picture;
+        const currentGame = gameNumber;
+        wordNarration.then(() => {
+          setTimeout(() => {
+            if (currentGame === gameNumber) showMatchSentence(matchedPicture);
+          }, 400);
+        });
       } else {
         sounds.wrong();
         lock = true;
@@ -437,6 +470,9 @@
     previewButton.addEventListener('click', previewCards);
     document.getElementById('restart').addEventListener('click', startGame);
     celebrationAgain.addEventListener('click', startGame);
+    function showMatchSentence(id){const picture=PICTURES.find(p=>p.id===id);celebrateAfterSentence=matchedCount===activePictures.length;matchSentenceImage.src=picture.src;matchSentenceImage.alt=picture.label;matchKeySentence.textContent=picture.sentence;matchSentenceModal.hidden=false;playPictureAudio(picture);matchSentenceContinue.focus()}
+    matchSentenceContinue.addEventListener('click',()=>{matchSentenceModal.hidden=true;if(celebrateAfterSentence)showCelebration();else lock=false});
+    window.addEventListener('load', () => setTimeout(() => board.scrollIntoView({ block: 'center' }), 100));
     startGame();
   </script>
 </body>

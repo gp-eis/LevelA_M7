@@ -388,8 +388,10 @@
     font-size: 1.15rem;
   }
 }
+.fc-scatter.has-seven-cards { min-height:360px; }
 
 @media (max-width: 480px) {
+  .fc-scatter.has-seven-cards { min-height:430px; }
   .fc-main {
     padding: 18px 16px 22px;
   }

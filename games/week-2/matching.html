@@ -5,7 +5,7 @@
   <meta http-equiv="Content-Language" content="en-US">
   <meta name="google" content="notranslate">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Picture Match 🧩 — Athlete People</title>
+  <title>Picture Match 🧩 — Athlete</title>
   <link rel="stylesheet" href="../../css/styles.css">
   <style>
     .game-toolbar {
@@ -88,7 +88,7 @@
     .sentence-text {
       flex: 1;
       color: var(--text);
-      font-family: 'Fredoka', sans-serif;
+      font-family: var(--font-friendly);
       font-size: clamp(1.2rem, 4vw, 1.65rem);
       font-weight: 600;
       line-height: 1.35;
@@ -157,7 +157,7 @@
     }
     .success-review p {
       margin: 0;
-      font-family: 'Fredoka', sans-serif;
+      font-family: var(--font-friendly);
       font-size: 1.1rem;
       line-height: 1.35;
       color: var(--text);
@@ -222,26 +222,22 @@
 
   <script src="../../js/main.js"></script>
   <script>
-    const IMAGE_BASE = '../../assets/images/week-2/memory';
+    const IMAGE_BASE = '../../assets/images/week-2/games/actions';
 
     const PICTURES = [
-      { id: 'king',          label: 'king',                 image: `${IMAGE_BASE}/king.webp` },
-      { id: 'koala',         label: 'koala',                image: `${IMAGE_BASE}/koala.webp` },
-      { id: 'kitten',        label: 'kitten',               image: `${IMAGE_BASE}/kitten.webp` },
-      { id: 'rain-heavy',    label: 'raining heavily',      image: `${IMAGE_BASE}/raining-heavily.webp` },
-      { id: 'rain-light',    label: 'raining lightly',      image: `${IMAGE_BASE}/raining-lightly.webp` },
-      { id: 'rain-cats-dogs', label: 'raining cats and dogs', image: `${IMAGE_BASE}/raining-cats-and-dogs.webp` }
+      {id:'twisting',label:'twisting',image:`${IMAGE_BASE}/twisting.webp`},
+      {id:'kicking',label:'kicking',image:`${IMAGE_BASE}/kicking.webp`},
+      {id:'running',label:'running',image:`${IMAGE_BASE}/running.webp`},
+      {id:'stretching',label:'stretching',image:`${IMAGE_BASE}/stretching.webp`},
+      {id:'jumping',label:'jumping',image:`${IMAGE_BASE}/jumping.webp`}
     ];
 
     const SENTENCES = [
-      { text: 'I found a king.', pictureId: 'king' },
-      { text: 'I found a koala.', pictureId: 'koala' },
-      { text: 'I found a kitten.', pictureId: 'kitten' },
-      { text: "It's raining heavily.", pictureId: 'rain-heavy' },
-      { text: "It's raining very heavily.", pictureId: 'rain-heavy' },
-      { text: "It's raining lightly.", pictureId: 'rain-light' },
-      { text: "It's raining very lightly.", pictureId: 'rain-light' },
-      { text: "It's raining cats and dogs.", pictureId: 'rain-cats-dogs' }
+      {text:'I practice twisting every day.',pictureId:'twisting'},
+      {text:'I practice kicking every day.',pictureId:'kicking'},
+      {text:'I practice running every day.',pictureId:'running'},
+      {text:'I practice stretching every day.',pictureId:'stretching'},
+      {text:'I practice jumping every day.',pictureId:'jumping'}
     ];
 
     const choicesRow = document.getElementById('choices-row');

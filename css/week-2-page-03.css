@@ -1,0 +1,23 @@
+.practice-activity-card { max-width:1120px; margin:24px auto 0; padding:clamp(10px,2vw,18px); }
+.practice-stage { position:relative; overflow:hidden; width:100%; aspect-ratio:1412/1114; border:7px solid #fff; border-radius:28px; background:#f8d86c; box-shadow:0 10px 0 rgba(229,170,48,.25),0 18px 30px rgba(40,55,75,.18); }
+.practice-picture { display:block; width:100%; height:100%; object-fit:contain; }
+.question-speaker { position:absolute; z-index:4; top:29.4%; left:64.5%; width:clamp(44px,5vw,60px); height:clamp(44px,5vw,60px); }
+.question-speaker:hover { transform:translateY(-2px); }
+.practice-choices { position:absolute; z-index:3; left:6%; right:6%; bottom:5.5%; display:grid; grid-template-columns:1fr 1fr; gap:clamp(10px,2vw,24px); }
+.practice-choice { position:relative; display:grid; grid-template-columns:1fr auto; align-items:center; gap:10px; min-height:clamp(70px,9vw,102px); padding:clamp(10px,2vw,18px) clamp(12px,2.3vw,24px); border:5px solid #fff; border-radius:22px; background:#fff; color:#213b5d; box-shadow:0 7px 0 rgba(71,103,126,.25),0 12px 20px rgba(30,58,95,.18); font:800 clamp(.9rem,2.1vw,1.45rem)/1.25 'Fredoka',sans-serif; text-align:left; cursor:pointer; transition:transform .16s ease,border-color .16s ease; }
+.practice-choice:hover,.practice-choice:focus-visible { transform:translateY(-3px); border-color:#ffd54f; outline:none; }
+.practice-choice .sentence-speaker { width:clamp(38px,4.7vw,54px); height:clamp(38px,4.7vw,54px); }
+.choice-mark { position:absolute; left:50%; top:-55px; display:grid; place-items:center; width:45px; height:45px; border:7px solid #ef5350; border-radius:50%; background:rgba(255,255,255,.9); color:#2f9c35; font-size:1.5rem; font-weight:900; opacity:0; transform:translateX(-50%) scale(.5); transition:opacity .18s ease,transform .18s ease; }
+.practice-choice.is-correct { border-color:#62cb49; background:#f6fff2; }
+.practice-choice.is-correct .choice-mark { opacity:1; transform:translateX(-50%) scale(1); }
+.practice-choice.is-wrong { border-color:#ef5350; animation:practice-shake .35s ease; }
+.practice-start { position:absolute; z-index:8; inset:0; display:grid; place-items:center; background:rgba(17,41,68,.42); }
+.practice-start[hidden] { display:none; }
+.practice-start-button { min-width:min(320px,72%); min-height:80px; border:7px solid #fff; border-radius:999px; background:linear-gradient(180deg,#ffad59,#f05d2d); color:#fff; box-shadow:0 9px 0 #b93e1d,0 16px 28px rgba(20,31,58,.38); font:900 clamp(1.25rem,3vw,2rem) 'Fredoka',sans-serif; cursor:pointer; }
+.practice-status { margin:14px 0 0; min-height:1.5em; color:#315273; font-size:clamp(1rem,2vw,1.25rem); font-weight:800; text-align:center; }
+.practice-status.is-correct { color:#27831f; }
+.practice-status.is-wrong { color:#c62c3b; }
+.practice-completion-frame { text-align:center; }
+@keyframes practice-shake { 25%{transform:translateX(-8px)} 50%{transform:translateX(8px)} 75%{transform:translateX(-4px)} }
+@media (max-width:650px) { .practice-stage{border-width:4px;border-radius:18px}.practice-choices{left:3%;right:3%;bottom:3%;gap:7px}.practice-choice{grid-template-columns:1fr auto;padding:7px 8px;border-width:3px;border-radius:14px;font-size:.72rem;min-height:62px}.choice-mark{top:-38px;width:30px;height:30px;border-width:5px}.question-speaker{top:28.2%;left:64.8%;}.practice-choice .sentence-speaker{width:34px;height:34px;font-size:.9rem} }
+@media (prefers-reduced-motion:reduce) { .practice-choice,.choice-mark{transition:none}.practice-choice.is-wrong{animation:none} }

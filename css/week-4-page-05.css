@@ -1,0 +1,32 @@
+.countries-activity-card{max-width:1140px;margin:24px auto 0;padding:clamp(10px,2vw,18px);border-top:9px solid #8bc719}
+.countries-toolbar{display:flex;align-items:center;justify-content:center;min-height:1.5em;margin:16px 0 0}
+.countries-toolbar p{margin:0;color:#4d7c0f;font:800 clamp(1rem,2.2vw,1.25rem) var(--font-friendly)}
+.countries-board{position:relative;width:min(100%,clamp(320px,calc(126.75svh - 310px),1080px));margin:auto;overflow:hidden;aspect-ratio:1412/1114;border:6px solid #fff;border-radius:28px;background:#a8dc24;box-shadow:0 10px 0 #70a716,0 18px 28px rgba(52,79,24,.22)}
+.countries-board-image{display:block;width:100%;height:100%;object-fit:cover}
+.countries-board>.board-instruction-speaker{position:absolute;z-index:7;left:86%;top:25%}
+.countries-path{position:absolute;z-index:2;inset:0;width:100%;height:100%;pointer-events:none}
+.countries-path polyline{fill:none;stroke:#f34e54;stroke-width:5;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 1px #fff) drop-shadow(0 2px 1px rgba(116,20,26,.35));vector-effect:non-scaling-stroke}
+.countries-hotspots{position:absolute;z-index:3;inset:0}
+.letter-hotspot{position:absolute;left:var(--x);top:var(--y);width:9.6%;aspect-ratio:1;padding:0;border:0;border-radius:50%;background:transparent;cursor:pointer;transform:translate(-50%,-50%)}
+.letter-hotspot:disabled{cursor:default}.letter-hotspot:not(:disabled):hover{background:rgba(255,255,255,.16)}
+.letter-hotspot:not(:disabled):focus-visible{outline:5px solid #176fd0;outline-offset:3px}
+.letter-hotspot.is-selected::after{content:"";position:absolute;inset:-6%;border:clamp(4px,.52vw,8px) solid #f34e54;border-radius:50%;box-shadow:0 0 0 3px rgba(255,255,255,.88),0 5px 7px rgba(116,20,26,.28);transform:rotate(-5deg)}
+.letter-hotspot.is-wrong{border:clamp(4px,.52vw,8px) solid #e53935;background:rgba(229,57,53,.2);box-shadow:0 0 0 3px rgba(255,255,255,.9);animation:letter-wrong-shake .42s ease}
+.countries-start{position:absolute;z-index:8;inset:0;display:grid;place-items:center;background:rgba(39,84,19,.28);backdrop-filter:blur(2px)}
+.countries-start[hidden]{display:none}
+#countries-start-button{min-width:min(360px,78%);min-height:82px;padding:14px 30px;border:7px solid #fff;border-radius:999px;background:linear-gradient(180deg,#b9ec4d,#7fc51d);color:#315d0b;box-shadow:0 9px 0 #55980f,0 16px 28px rgba(33,70,14,.34);font:900 clamp(1.3rem,3vw,2rem) var(--font-friendly);cursor:pointer}
+#countries-start-button:hover{transform:translateY(-3px);filter:brightness(1.04)}
+.countries-word{display:block;min-width:min(92%,620px);margin:14px auto 4px;padding:8px 24px;border:6px solid #fff;border-radius:24px;background:linear-gradient(180deg,#f7ffca,#d9f57c);color:#315d0b;box-shadow:0 7px 0 #8dbd2b,0 12px 20px rgba(52,79,24,.18);font:900 clamp(2.1rem,7svh,4.4rem)/1 var(--font-friendly);letter-spacing:.05em;cursor:pointer;text-transform:lowercase}
+.countries-word-letter{display:inline-block;color:inherit;transition:color .18s ease,transform .18s ease,text-shadow .18s ease}
+.countries-word-letter.is-revealed{color:#e53935;text-shadow:0 2px 0 #fff,0 4px 5px rgba(143,25,22,.2);animation:word-letter-reveal .38s ease}
+.countries-word.is-complete{animation:word-celebrate .65s ease 2}
+.countries-try-again{display:flex;margin:16px auto 0}.countries-try-again[hidden]{display:none}
+.countries-completion-frame{width:min(720px,92%)}
+.countries-completion-video{aspect-ratio:1;object-fit:contain;background:#fff}
+.countries-board .activity-completion-overlay{position:fixed;inset:0;z-index:1000}
+.countries-board .countries-completion-frame{width:min(620px,88vw,calc(100svh - 100px))}
+@keyframes letter-wrong-shake{0%,100%{transform:translate(-50%,-50%)}25%,75%{transform:translate(calc(-50% - 9px),-50%)}50%{transform:translate(calc(-50% + 9px),-50%)}}
+@keyframes word-letter-reveal{50%{transform:translateY(-10%) scale(1.16)}}
+@keyframes word-celebrate{50%{transform:scale(1.06) rotate(-1deg)}}
+@media(max-width:650px){.countries-board{border-width:4px;border-radius:18px}.countries-board>.board-instruction-speaker{left:84%;top:24%}.letter-hotspot.is-selected::after,.letter-hotspot.is-wrong{border-width:3px}.countries-toolbar p{font-size:.9rem}.countries-word{border-width:4px;border-radius:18px}}
+@media(prefers-reduced-motion:reduce){.letter-hotspot.is-wrong,.countries-word-letter.is-revealed,.countries-word.is-complete{animation:none}}

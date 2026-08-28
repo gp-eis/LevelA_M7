@@ -4,39 +4,47 @@
   <meta charset="UTF-8">
   <meta http-equiv="Content-Language" content="en-US">
   <meta name="google" content="notranslate">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Phonics Games 🔤 — Athlete People</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Week 3 Phonics Games — Athlete</title>
   <link rel="stylesheet" href="../../css/styles.css">
+  <style>
+    :root{--week-yellow:#f6c934;--week-dark:#c79a08}
+    body{background:linear-gradient(180deg,#9cddff 0%,#fff8c9 62%,#e9fff3 100%)}
+    .week-3-title{color:var(--week-dark);text-shadow:3px 3px #fff,6px 6px rgba(199,154,8,.18)}
+    .week-3-phonics-grid .nav-card{border-top-color:var(--week-yellow)}
+  </style>
 </head>
 <body>
-
-  <div class="floaties" aria-hidden="true">
-    <span style="top:10%; left:4%;">🔤</span>
-    <span style="top:72%; left:92%;">✨</span>
-  </div>
-
-  <div class="page">
-    <a class="back-link" href="../index.html?week=3">⬅️ All Games</a>
-
-    <header class="center" style="margin-top:16px;">
-      <h1 class="big-title page-title-with-icon" style="font-size:2.4rem;"><img class="page-title-icon" src="../../assets/images/ui/literacy-3d.webp" alt="">Phonics</h1>
+  <div class="floaties" aria-hidden="true"><span style="top:10%;left:4%">🔤</span><span style="top:72%;left:92%">✨</span></div>
+  <main class="page">
+    <a class="back-link" href="../index.html?week=3">⬅️ Week 3 Games</a>
+    <header class="center" style="margin-top:16px">
+      <h1 class="big-title page-title-with-icon week-3-title" style="font-size:2.4rem"><img class="page-title-icon" src="../../assets/images/ui/literacy-3d.webp" alt="">Phonics</h1>
       <p class="subtitle">Week 3 — pick a phonics game!</p>
     </header>
-
-    <div class="card-grid" style="margin-top:28px;">
+    <nav class="card-grid week-3-phonics-grid" style="margin-top:28px" aria-label="Week 3 phonics games">
       <a class="nav-card" href="phonics-find-letter.html">
-        <span class="emoji" aria-hidden="true">🔍</span>
+        <img class="icon-img" src="../../assets/images/ui/phonics-games/find-letter-3d.png" alt="">
         <span class="label">Find the Letter</span>
-        <span class="hint">Circle every N and n!</span>
+        <span class="hint">Find every Week 3 target letter!</span>
       </a>
       <a class="nav-card" href="phonics-build.html">
-        <span class="emoji" aria-hidden="true">🧩</span>
+        <img class="icon-img" src="../../assets/images/ui/phonics-games/build-word-3d.png" alt="">
         <span class="label">Build the Word</span>
-        <span class="hint">Tap letters to spell nail, nest, and net!</span>
+        <span class="hint">Use letter tiles to build the Week 3 words!</span>
       </a>
-    </div>
-  </div>
-
+      <a class="nav-card" href="phonics-maze.html">
+        <img class="icon-img" src="../../assets/images/ui/phonics-games/letter-maze-3d.png" alt="">
+        <span class="label">Letter Maze</span>
+        <span class="hint">Drag the letter along the path to finish the word!</span>
+      </a>
+      <a class="nav-card" href="phonics-picture-match.html">
+        <img class="icon-img" src="../../assets/images/ui/phonics-games/picture-match-3d.png" alt="">
+        <span class="label">Picture Match</span>
+        <span class="hint">Listen and match the correct Week 3 pictures!</span>
+      </a>
+    </nav>
+  </main>
   <script src="../../js/main.js"></script>
 </body>
 </html>

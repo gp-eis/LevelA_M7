@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en-US" translate="no">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Language" content="en-US">
+  <meta name="google" content="notranslate">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Literacy Week 4 — Page 6 — Olympic Sports</title>
+  <link rel="stylesheet" href="../css/styles.css">
+  <link rel="stylesheet" href="../css/week-4-page-06.css">
+</head>
+<body>
+  <main class="page">
+    <nav class="top-page-nav" aria-label="Page navigation">
+      <a class="back-link" href="week-4-page-04.html#lesson-focus">⬅️ Previous Page</a>
+      <span class="page-indicator" aria-current="page">📖 Page 6 of 6</span>
+    </nav>
+    <a class="literacy-list-link" href="../week-4.html#card-literacy">🏠 Week 4 Home</a>
+
+    <header class="center">
+      <h1 class="big-title" style="font-size:2.4rem">Week 4 — When are the Olympic Games?</h1>
+      <nav class="week-tools" aria-label="Week tools">
+        <a class="pill-btn orange" href="tpr.html?week=4">🎵 Week Song</a>
+        <a class="pill-btn blue" href="flashcards.html?week=4">🃏 Flashcards</a>
+      </nav>
+    </header>
+
+    <section id="lesson-focus" class="card sports-match-card" aria-label="Match each sport to the children playing it">
+      <svg id="sports-connection-lines" class="sports-connection-lines" aria-hidden="true">
+        <line data-sport="soccer"></line>
+        <line data-sport="tennis"></line>
+        <line data-sport="basketball"></line>
+      </svg>
+
+      <div class="sports-board">
+        <img class="sports-board-image" src="../assets/images/week-4/literacy/page-06-sports.webp" width="1412" height="1114" alt="Three groups of children playing tennis, basketball, and soccer, with blank answer spaces.">
+        <button id="sports-intro-replay" class="sentence-speaker board-instruction-speaker" type="button" aria-label="Listen to What are they playing again" disabled>🔊</button>
+        <div class="sports-drop-zones" role="group" aria-label="Sport answer spaces">
+          <button class="sport-drop-zone tennis-zone" type="button" data-answer="tennis" aria-label="Answer space for the children on the left" disabled></button>
+          <button class="sport-drop-zone basketball-zone" type="button" data-answer="basketball" aria-label="Answer space for the children in the middle" disabled></button>
+          <button class="sport-drop-zone soccer-zone" type="button" data-answer="soccer" aria-label="Answer space for the children on the right" disabled></button>
+        </div>
+
+        <div id="sports-start" class="sports-start">
+          <button id="sports-start-button" type="button">▶ Start Activity</button>
+        </div>
+
+        <div id="sports-completion" class="activity-completion-overlay" hidden>
+          <div class="activity-completion-frame sports-completion-frame">
+            <button id="sports-completion-close" class="activity-completion-close" type="button" aria-label="Close the celebration">×</button>
+            <video id="sports-good-job-video" class="activity-completion-video sports-completion-video" src="../assets/video/shared/wohoo-you-did-it.mp4" playsinline preload="metadata"></video>
+            <div class="activity-completion-actions"><button id="sports-popup-try-again" class="pill-btn blue" type="button">↻ Try Again</button></div>
+          </div>
+        </div>
+      </div>
+      <div class="sports-toolbar">
+        <p id="sports-status" role="status" aria-live="polite">Press Start Activity and listen.</p>
+      </div>
+
+      <div id="sports-word-bank" class="sports-word-bank" role="group" aria-label="Sport words to match">
+        <button class="sport-word soccer" type="button" draggable="true" data-sport="soccer" data-word-audio="../assets/audio/week-4/literacy/page-06/soccer.mp3" data-sentence-audio="../assets/audio/week-4/literacy/page-06/sentence-soccer.mp3" disabled>soccer</button>
+        <button class="sport-word tennis" type="button" draggable="true" data-sport="tennis" data-word-audio="../assets/audio/week-4/literacy/page-06/tennis.mp3" data-sentence-audio="../assets/audio/week-4/literacy/page-06/sentence-tennis.mp3" disabled>tennis</button>
+        <button class="sport-word basketball" type="button" draggable="true" data-sport="basketball" data-word-audio="../assets/audio/week-4/literacy/page-06/basketball.mp3" data-sentence-audio="../assets/audio/week-4/literacy/page-06/sentence-basketball.mp3" disabled>basketball</button>
+      </div>
+      <p class="sports-help">Tap a word, then tap its picture — or drag the word into the answer space.</p>
+    </section>
+
+    <audio id="sports-intro-audio" src="../assets/audio/week-4/literacy/page-06/intro.mp3" preload="auto"></audio>
+    <audio id="sports-word-audio" preload="auto"></audio>
+    <audio id="sports-sentence-audio" preload="auto"></audio>
+  </main>
+  <script src="../js/main.js"></script>
+  <script src="../js/week-4-page-06.js"></script>
+</body>
+</html>

@@ -1,0 +1,30 @@
+.match-card { max-width:1120px; margin:24px auto 0; padding:clamp(8px,1.5vw,14px); }
+.match-board { position:relative; overflow:hidden; width:100%; aspect-ratio:1411/1114; border:7px solid #fff; border-radius:28px; background:#ffe28e; box-shadow:0 10px 0 rgba(225,170,48,.24),0 18px 30px rgba(40,55,75,.18); }
+.match-background { position:absolute; inset:0; display:block; width:100%; height:100%; object-fit:contain; }
+.match-lines { position:absolute; z-index:3; inset:0; width:100%; height:100%; pointer-events:none; }
+.match-path { fill:none; stroke:#ef5350; stroke-width:7; stroke-linecap:round; stroke-dasharray:15 11; filter:drop-shadow(0 2px 0 rgba(255,255,255,.88)); }
+.match-path.is-fixed { stroke:#58ad40; stroke-dasharray:none; }
+.word-target { position:absolute; z-index:5; left:5.7%; width:22.8%; height:9.2%; border:5px solid transparent; border-radius:22px; background:transparent; cursor:pointer; transition:border-color .16s ease,background .16s ease,transform .16s ease; }
+.word-target[data-activity="running"] { top:40.8%; }
+.word-target[data-activity="jumping"] { top:55.5%; }
+.word-target[data-activity="stretching"] { top:70%; }
+.word-target[data-activity="twisting"] { top:84.3%; }
+.word-target:hover,.word-target:focus-visible,.word-target.is-selected { border-color:#ff9f43; background:rgba(255,244,181,.24); transform:scale(1.025); outline:none; }
+.word-target.is-matched { border-color:#65c943; background:rgba(230,255,224,.4); }
+.word-target .sentence-speaker { position:absolute; left:-54px; top:50%; width:42px; height:42px; transform:translateY(-50%); }
+.word-target .sentence-speaker:hover { transform:translateY(calc(-50% - 2px)); }
+.athlete-card { position:absolute; z-index:5; border:5px solid transparent; border-radius:28px; background:transparent; cursor:grab; touch-action:none; transition:border-color .16s ease,filter .16s ease,transform .16s ease; }
+.athlete-card[data-activity="twisting"] { left:54.4%; top:29.8%; width:13.4%; height:28%; }
+.athlete-card[data-activity="jumping"] { left:75.3%; top:36.4%; width:20.5%; height:33.6%; }
+.athlete-card[data-activity="running"] { left:52.8%; top:57.5%; width:18.2%; height:27.4%; }
+.athlete-card[data-activity="stretching"] { left:72.7%; top:71.5%; width:23.5%; height:25%; }
+.athlete-card:hover,.athlete-card:focus-visible,.athlete-card.is-selected { border-color:#ff9f43; filter:drop-shadow(0 0 8px rgba(255,159,67,.9)); transform:scale(1.025); outline:none; }
+.athlete-card.is-matched { border-color:#65c943; filter:drop-shadow(0 0 8px rgba(101,201,67,.9)); cursor:default; }
+.athlete-card img { width:100%; height:100%; object-fit:contain; opacity:0; pointer-events:none; }
+.drag-ghost { position:fixed; z-index:1000; width:clamp(100px,15vw,180px); height:clamp(130px,20vw,230px); object-fit:contain; opacity:1; border:5px solid #ffb74d; border-radius:22px; background:#fff7c7; box-shadow:0 14px 28px rgba(30,58,95,.28); pointer-events:none; transform:translate(-50%,-50%); }
+.match-start { position:absolute; z-index:10; inset:0; display:grid; place-items:center; background:rgba(17,41,68,.4); }
+.match-start[hidden] { display:none; }
+.practice-start-button { min-width:min(320px,72%); min-height:80px; border:7px solid #fff; border-radius:999px; background:linear-gradient(180deg,#ffad59,#f05d2d); color:#fff; box-shadow:0 9px 0 #b93e1d,0 16px 28px rgba(20,31,58,.38); font:900 clamp(1.25rem,3vw,2rem) 'Fredoka',sans-serif; cursor:pointer; }
+.match-status { margin:14px 0 0; min-height:1.5em; color:#315273; font-size:clamp(1rem,2vw,1.25rem); font-weight:800; text-align:center; }
+@media (max-width:700px) { .match-board{border-width:4px;border-radius:18px}.word-target{border-width:3px;border-radius:10px}.word-target .sentence-speaker{left:-18px;width:25px;height:25px;border-width:2px;font-size:.62rem}.athlete-card{border-width:3px;border-radius:12px}.match-path{stroke-width:5}.practice-start-button{min-height:60px;border-width:5px} }
+@media (prefers-reduced-motion:reduce) { .word-target,.athlete-card{transition:none}.match-path{stroke-dasharray:none} }

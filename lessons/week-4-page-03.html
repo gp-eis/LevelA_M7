@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en-US" translate="no">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Language" content="en-US">
+  <meta name="google" content="notranslate">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Literacy Week 4 — Page 4 — Athlete</title>
+  <link rel="stylesheet" href="../css/styles.css">
+  <link rel="stylesheet" href="../css/week-4-page-04.css">
+</head>
+<body>
+  <main class="page">
+    <nav class="top-page-nav" aria-label="Page navigation">
+      <a class="back-link" href="week-4-page-02.html#lesson-focus">⬅️ Previous Page</a>
+      <span class="page-indicator" aria-current="page">📖 Page 4 of 6</span>
+      <a class="back-link next-page-link" href="week-4-page-04.html#lesson-focus">Next Page ➡️</a>
+    </nav>
+    <a class="literacy-list-link" href="../week-4.html#card-literacy">🏠 Week 4 Home</a>
+
+    <header class="center">
+      <h1 class="big-title" style="font-size:2.4rem">Week 4 — When are the Olympic Games?</h1>
+      <nav class="week-tools" aria-label="Week tools">
+        <a class="pill-btn orange" href="tpr.html?week=4">🎵 Week Song</a>
+        <a class="pill-btn blue" href="flashcards.html?week=4">🃏 Flashcards</a>
+      </nav>
+    </header>
+
+    <section id="lesson-focus" class="card continent-activity-card" aria-label="Circle all the continents activity">
+      <div class="continent-board">
+        <img class="continent-board-image" src="../assets/images/week-4/literacy/page-04-continents-seven.webp" width="1412" height="1114" alt="A colorful map showing North America, South America, Europe, Africa, Asia, Oceania, and Antarctica. Circle all seven continents.">
+        <button id="continent-intro-replay" class="sentence-speaker board-instruction-speaker" type="button" aria-label="Listen to Circle the continents again" disabled>🔊</button>
+        <div class="continent-hotspots" role="group" aria-label="Select every continent">
+          <button class="continent-hotspot north-america" type="button" data-continent="North America" aria-label="North America" aria-pressed="false" disabled></button>
+          <button class="continent-hotspot south-america" type="button" data-continent="South America" aria-label="South America" aria-pressed="false" disabled></button>
+          <button class="continent-hotspot europe" type="button" data-continent="Europe" aria-label="Europe" aria-pressed="false" disabled></button>
+          <button class="continent-hotspot africa" type="button" data-continent="Africa" aria-label="Africa" aria-pressed="false" disabled></button>
+          <button class="continent-hotspot asia" type="button" data-continent="Asia" aria-label="Asia" aria-pressed="false" disabled></button>
+          <button class="continent-hotspot oceania" type="button" data-continent="Oceania" aria-label="Oceania" aria-pressed="false" disabled></button>
+          <button class="continent-hotspot antarctica" type="button" data-continent="Antarctica" aria-label="Antarctica" aria-pressed="false" disabled></button>
+        </div>
+
+        <div id="continent-start" class="continent-start">
+          <button id="continent-start-button" type="button">▶ Start Activity</button>
+        </div>
+
+        <div id="continent-completion" class="activity-completion-overlay" hidden>
+          <div class="activity-completion-frame">
+            <button id="continent-completion-close" class="activity-completion-close" type="button" aria-label="Close the celebration">×</button>
+            <video id="continent-good-job-video" class="activity-completion-video" src="../assets/video/shared/wohoo-you-did-it.mp4" playsinline preload="metadata"></video>
+            <div class="activity-completion-actions"><button id="continent-try-again" class="pill-btn blue" type="button">↻ Try Again</button></div>
+          </div>
+        </div>
+      </div>
+      <div class="continent-toolbar">
+        <p id="continent-status" role="status" aria-live="polite">Press Start Activity and listen.</p>
+      </div>
+    </section>
+
+    <audio id="continent-intro-audio" src="../assets/audio/week-4/literacy/page-04/intro.mp3" preload="auto"></audio>
+    <audio id="continent-name-audio" preload="auto"></audio>
+  </main>
+  <script src="../js/main.js"></script>
+  <script src="../js/week-4-page-04.js"></script>
+</body>
+</html>

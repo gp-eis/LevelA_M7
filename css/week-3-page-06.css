@@ -1,0 +1,38 @@
+:root{--week-yellow:#f6c934;--week-light:#ffe982;--week-dark:#c79a08}
+.week-3-flags-body{background:linear-gradient(180deg,#9cddff 0%,#fff8c9 62%,#e9fff3 100%)}
+.week-3-flags-title{color:var(--week-dark);text-shadow:3px 3px #fff,6px 6px rgba(199,154,8,.18)}
+.week-3-flags-card{max-width:1120px;margin:24px auto 0;padding:clamp(10px,2vw,18px);border-top:9px solid var(--week-yellow)}
+.week-3-flags-stage{position:relative;overflow:hidden;width:100%;aspect-ratio:1412/1114;border:7px solid #fff;border-radius:28px;background:#119de8;box-shadow:0 10px 0 rgba(199,154,8,.2),0 18px 30px rgba(40,55,75,.18)}
+.week-3-flags-background{display:block;width:100%;height:100%;object-fit:contain}
+.week-3-flags-play-area{position:absolute;z-index:1;inset:40% 0 0;background:linear-gradient(180deg,#16a4ed 0%,#0d9be8 54%,#0797e1 100%)}
+.week-3-country-row{position:absolute;z-index:4;left:6.3%;right:3.9%;top:41.2%;height:9.4%;display:grid;grid-template-columns:repeat(5,1fr);gap:2.2%;align-items:center}
+.country-label{display:flex;align-items:center;justify-content:center;width:100%;height:84%;border:3px solid rgba(255,255,255,.18);border-radius:14px;color:#111;box-shadow:0 6px 0 rgba(5,62,115,.34),inset 0 2px 3px rgba(255,255,255,.62);font:700 clamp(.85rem,3.1vw,2.55rem)/1 'Fredoka',sans-serif;transition:transform .18s ease,box-shadow .18s ease,filter .18s ease}
+.country-usa{background:linear-gradient(#ff6d67,#ed4138)}.country-greece{background:linear-gradient(#43e7ec,#1cc4d7)}.country-brazil{background:linear-gradient(#ffe667,#f6ca36)}.country-uk{background:linear-gradient(#eef7ff,#bdd9f7)}.country-australia{background:linear-gradient(#dafa6f,#9fda36)}
+.country-label.is-speaking{z-index:2;transform:translateY(-4px) scale(1.06);filter:brightness(1.08);box-shadow:0 0 0 7px #fff,0 0 0 13px #ffdc38,0 9px 0 rgba(5,62,115,.34)}
+.country-label.is-complete{box-shadow:0 0 0 5px rgba(255,255,255,.9),0 6px 0 rgba(5,62,115,.34)}
+.week-3-flags-grid{position:absolute;z-index:4;left:5.2%;right:3.3%;top:52.2%;height:44%;display:grid;grid-template-columns:repeat(5,1fr);gap:2.4%}
+.flag-column{position:relative;height:100%}
+.flag-choice{position:absolute;left:50%;width:94%;padding:0;border:0;border-radius:50%;background:transparent;transform:translateX(-50%);cursor:pointer;transition:top .28s ease,transform .16s ease,filter .16s ease,opacity .16s ease}
+.flag-choice img{display:block;width:100%;height:auto;border-radius:50%;clip-path:circle(49% at 50% 50%);pointer-events:none}
+.flag-choice:not(:disabled):hover{transform:translateX(-50%) translateY(-4px) scale(1.04);filter:brightness(1.06)}
+.flag-choice:disabled{cursor:default}
+.flag-choice.is-muted{opacity:.46;filter:grayscale(.24)}
+.flag-choice.is-correct{z-index:2;filter:drop-shadow(0 0 3px #fff) drop-shadow(0 0 9px #3eda55)}
+.flag-choice.is-wrong{animation:flag-shake .38s ease;filter:drop-shadow(0 0 8px #ff2d42)}
+.week-3-flags-path{position:absolute;z-index:3;inset:0;width:100%;height:100%;pointer-events:none}
+.week-3-flags-path polyline{fill:none;stroke:#fff;stroke-width:7;stroke-dasharray:15 12;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 3px 2px rgba(20,70,120,.45))}
+.week-3-flags-path .path-dot{fill:#111;stroke:#050505;stroke-width:3;filter:drop-shadow(0 3px 2px rgba(20,70,120,.45))}
+.week-3-flags-replay{position:absolute;z-index:7;right:2.2%;top:30.5%;width:clamp(40px,5vw,58px);aspect-ratio:1;border:4px solid #fff;border-radius:50%;background:#1769c7;color:#fff;font-size:clamp(18px,2.2vw,27px);box-shadow:0 5px 0 #0d4384;cursor:pointer}
+.week-3-flags-replay:disabled{opacity:.48;cursor:wait}
+.week-3-flags-page-number{position:absolute;z-index:5;right:1.2%;bottom:1%;display:grid;place-items:center;width:clamp(22px,3.1vw,34px);aspect-ratio:1;border-radius:50%;background:#111;color:#fff;font-weight:800}
+.week-3-flags-start{position:absolute;z-index:12;inset:0;display:grid;place-items:center;background:rgba(17,41,68,.42)}
+.week-3-flags-start[hidden]{display:none}
+.week-3-flags-start-button{min-width:min(320px,72%);min-height:80px;padding:16px 30px;border:7px solid #fff;border-radius:999px;background:linear-gradient(180deg,var(--week-light),var(--week-yellow));color:#664d00;box-shadow:0 9px 0 var(--week-dark),0 16px 28px rgba(20,31,58,.38);font:900 clamp(1.25rem,3vw,2rem) 'Fredoka',sans-serif;cursor:pointer}
+.week-3-flags-start-button:hover{transform:translateY(-3px)}
+.week-3-flags-status{margin:14px 0 0;min-height:1.5em;color:#315273;font-size:clamp(1rem,2vw,1.25rem);font-weight:800;text-align:center}
+.week-3-flags-status.is-correct{color:#27831f}.week-3-flags-status.is-wrong{color:#c62c3b}
+.week-3-flags-restart{display:flex;margin:12px auto 0}
+.week-3-flags-completion-frame{width:min(64%,540px);text-align:center}
+@keyframes flag-shake{25%{transform:translateX(calc(-50% - 8px))}50%{transform:translateX(calc(-50% + 8px))}75%{transform:translateX(calc(-50% - 4px))}}
+@media(max-width:650px){.week-3-flags-card{padding:8px}.week-3-flags-stage{border-width:4px;border-radius:18px}.country-label{border-width:1px;border-radius:7px;font-size:clamp(.55rem,3vw,1.05rem)}.country-label.is-speaking{box-shadow:0 0 0 3px #fff,0 0 0 6px #ffdc38}.week-3-flags-replay{right:1.5%;top:30%;width:36px;border-width:3px;font-size:1rem}.week-3-flags-start-button{min-height:64px;border-width:5px}.week-3-flags-path polyline{stroke-width:5}}
+@media(prefers-reduced-motion:reduce){.flag-choice,.country-label{transition:none}.flag-choice.is-wrong{animation:none}}
