@@ -1,11 +1,59 @@
 <!DOCTYPE html>
 <html lang="en-US" translate="no">
-<head><meta charset="UTF-8"><meta http-equiv="Content-Language" content="en-US"><meta name="google" content="notranslate"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Reading Week 2 — Athlete</title><link rel="stylesheet" href="../css/styles.css"></head>
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Language" content="en-US">
+  <meta name="google" content="notranslate">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Reading Week 2 — Athlete</title>
+  <link rel="stylesheet" href="../css/styles.css">
+  <style>
+    :root { --week-blue:#268ad8; --week-blue-dark:#1768ad; }
+    body { background:linear-gradient(180deg,#9cddff 0%,#f7fbff 62%,#e9fff3 100%); }
+    .week-2-title { color:var(--week-blue-dark); text-shadow:3px 3px #fff,6px 6px rgba(23,104,173,.18); }
+    .week-2-reading { border-top:9px solid var(--week-blue); }
+    .reading-story-video {
+      aspect-ratio:16/9;
+      height:auto;
+      max-height:72svh;
+      object-fit:contain;
+      background:#061c35;
+    }
+    .reading-story-video:fullscreen,
+    .reading-story-video:-webkit-full-screen {
+      width:100vw;
+      height:100vh;
+      max-height:none;
+      border-radius:0;
+      object-fit:contain;
+      background:#000;
+    }
+    .reading-note { margin:14px 0 0; color:#3d5a78; font-family:var(--font-friendly); font-weight:700; text-align:center; }
+    .reading-activity-link { display:flex; justify-content:center; }
+    .reading-activity-link .pill-btn { width:min(420px,90%); justify-content:center; }
+  </style>
+</head>
 <body>
   <main class="page">
     <a class="back-link" href="../week-2.html#card-reading">⬅️ Week 2 Home</a>
-    <header class="center" style="margin-top:16px;"><h1 class="big-title page-title-with-icon" style="font-size:2.4rem;"><img class="page-title-icon" src="../assets/images/ui/week-home/reading-guide.png" alt="">Reading — Week 2</h1><p class="subtitle">What do you practice?</p></header>
-    <section id="lesson-focus" class="card center" style="margin-top:24px;" aria-label="Week 2 Reading lesson shell"><h2 class="section-title">📚 Reading Lesson</h2><p>Lesson content will be added here.</p></section>
+    <header class="center" style="margin-top:16px">
+      <h1 class="big-title page-title-with-icon week-2-title" style="font-size:2.4rem"><img class="page-title-icon" src="../assets/images/ui/week-home/reading-guide.png" alt="">Reading — Week 2</h1>
+      <p class="subtitle">What do you practice?</p>
+    </header>
+    <section id="lesson-focus" class="card center week-2-reading" style="margin-top:24px" aria-label="Week 2 Reading video">
+      <h2 class="section-title">🎬 Reading Video</h2>
+      <div class="video-play-shell">
+        <video id="dialogue-video" class="lesson-video reading-story-video" controls playsinline preload="metadata" poster="../assets/images/week-2/reading/yo-yo-goes-up-and-down-thumbnail.webp?v=20260829-1" src="../assets/video/week-2/Reading/yo-yo-goes-up-and-down.mp4" aria-label="Yo-Yo Goes Up and Down reading video"></video>
+        <button class="center-video-play" type="button" aria-label="Play Yo-Yo Goes Up and Down">▶</button>
+      </div>
+      <p class="reading-note">Watch the story, then try the yo-yo activity!</p>
+    </section>
+    <section class="card center" style="margin-top:24px" aria-label="Week 2 Reading activity">
+      <h2 class="section-title">💬 Watch and Play!</h2>
+      <div class="reading-activity-link">
+        <a class="pill-btn green" href="week-2-activity.html"><span aria-hidden="true">🪀</span> Activity</a>
+      </div>
+    </section>
   </main>
   <script src="../js/main.js"></script>
 </body>
