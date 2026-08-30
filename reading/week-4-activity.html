@@ -19,17 +19,17 @@
     .progress-dot.done { border-color:var(--green-d); background:var(--green); }
     .progress-dot.current { border-color:var(--orange-d); background:var(--yellow); transform:scale(1.18); }
     .question-panel { display:grid; grid-template-columns:minmax(250px,1.1fr) minmax(240px,.9fr) auto; align-items:center; gap:18px; padding:14px; border:5px solid #78c8f5; border-radius:28px; background:rgba(255,255,255,.95); box-shadow:0 7px 0 rgba(57,149,203,.17); }
-    .question-image { display:block; width:100%; aspect-ratio:2.35/1; border-radius:20px; object-fit:cover; box-shadow:0 5px 0 rgba(57,149,203,.15); }
+    .question-image { display:block; width:100%; aspect-ratio:3.1/1; border-radius:20px; object-fit:cover; box-shadow:0 5px 0 rgba(57,149,203,.15); }
     .question-main { margin:0; color:var(--text); font-size:clamp(1.35rem,3vw,1.9rem); line-height:1.18; text-align:center; }
     .speaker-btn { display:grid; place-items:center; width:52px; height:52px; border:0; border-radius:50%; color:#fff; background:linear-gradient(180deg,#55c9ff,#198fd7); box-shadow:0 6px 0 #106caa; font-size:1.35rem; cursor:pointer; }
     .speaker-btn:hover { transform:translateY(-2px) scale(1.04); }
     .speaker-btn:active { transform:translateY(3px); }
     .speaker-btn:focus-visible,.answer-select:focus-visible { outline:5px solid var(--yellow); outline-offset:3px; }
-    .answers-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:clamp(12px,2vw,22px); margin-top:22px; }
+    .answers-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:clamp(14px,2.4vw,26px); width:min(900px,100%); margin:22px auto 0; }
     .answer-card { position:relative; min-width:0; overflow:hidden; border:5px solid #fff; border-radius:28px; background:linear-gradient(180deg,#fff,#f3fbff); box-shadow:0 8px 0 rgba(61,132,180,.18),0 14px 24px rgba(74,59,82,.08); transition:border-color .16s ease,background .16s ease; }
     .answer-select { display:flex; width:100%; min-height:255px; flex-direction:column; align-items:center; gap:10px; padding:12px 12px 18px; border:0; background:transparent; color:var(--text); font:inherit; cursor:pointer; }
     .answer-select:hover:not(:disabled) { transform:translateY(-3px); }
-    .answer-image { display:block; width:100%; aspect-ratio:1.15/1; border-radius:20px; object-fit:cover; }
+    .answer-image { display:block; width:100%; aspect-ratio:1.5/1; border-radius:20px; object-fit:cover; }
     .answer-label { font-family:var(--font-friendly); font-size:clamp(1.1rem,2.3vw,1.4rem); font-weight:800; line-height:1.18; text-align:center; }
     .answer-listen { position:absolute; top:15px; right:15px; z-index:2; width:42px; height:42px; font-size:1rem; box-shadow:0 4px 0 #106caa; }
     .answer-card.is-correct { border-color:var(--green-d); background:#eaffdf; animation:correct-pop .55s ease; }
@@ -52,7 +52,7 @@
       .question-image { grid-column:1/-1; }
       .answers-grid { grid-template-columns:1fr; }
       .answer-select { min-height:0; }
-      .answer-image { aspect-ratio:1.35/1; }
+      .answer-image { aspect-ratio:1.5/1; }
     }
     @media (prefers-reduced-motion:reduce) { .answer-card,.completion-card { animation-duration:.01ms!important; } }
   </style>
@@ -81,6 +81,6 @@
     </div>
   </div>
   <script src="../js/main.js"></script>
-  <script src="../js/reading-week-4-activity.js"></script>
+  <script src="../js/reading-week-4-activity.js?v=20260831-2"></script>
 </body>
 </html>

@@ -260,7 +260,7 @@
 
     <header style="margin-top:16px;">
       <h1 class="big-title page-title-with-icon" style="font-size:2.4rem;"><img class="page-title-icon" src="../../assets/images/ui/game-wheel.webp" alt="">Spin the Wheel</h1>
-      <p class="subtitle">Spin slowly, press stop, then flip your picture card!</p>
+      <p class="subtitle">Spin fast, press stop, then see what you get!</p>
     </header>
 
     <div class="wheel-wrap">
@@ -295,14 +295,16 @@
   </div>
 
   <script src="../../js/main.js"></script>
+  <script src="../../js/spin-wheel-bonus.js"></script>
   <script>
-    const SEGMENTS = [
+    const LESSON_SEGMENTS = [
       { word: 'twisting',   color: '#ff6fa5', sentence: 'I practice twisting.',   image: '../../assets/images/week-2/games/actions/twisting.webp' },
       { word: 'kicking',    color: '#ffd93d', sentence: 'I practice kicking.',    image: '../../assets/images/week-2/games/actions/kicking.webp' },
       { word: 'running',    color: '#4fc3f7', sentence: 'I practice running.',    image: '../../assets/images/week-2/games/actions/running.webp' },
       { word: 'stretching', color: '#7ed957', sentence: 'I practice stretching.', image: '../../assets/images/week-2/games/actions/stretching.webp' },
       { word: 'jumping',    color: '#b388ff', sentence: 'I practice jumping.',    image: '../../assets/images/week-2/games/actions/jumping.webp' }
     ];
+    const SEGMENTS = [...LESSON_SEGMENTS, ...window.SpinWheelBonus.createSegments()];
 
     const wheel = document.getElementById('wheel');
     const resultEl = document.getElementById('result');
@@ -315,7 +317,7 @@
     const backImage = document.getElementById('back-image');
     const cardWord = document.getElementById('card-word');
     const cardSentence = document.getElementById('card-sentence');
-    const SPIN_SPEED = 75;
+    const SPIN_SPEED = 540;
     const segmentAngle = 360 / SEGMENTS.length;
     let rotation = 0;
     let spinning = false;
@@ -337,6 +339,7 @@
       const label = document.createElement('span');
       const angle = (index * segmentAngle + segmentAngle / 2) * Math.PI / 180;
       label.className = 'wheel-label';
+      label.style.width = `${Math.max(16, 170 / SEGMENTS.length)}%`;
       const image = document.createElement('img');
       image.src = segment.image;
       image.alt = '';
@@ -391,7 +394,15 @@
       stopBtn.disabled = false;
       spinBtn.hidden = false;
       spinBtn.disabled = false;
-      showSelectedCard(SEGMENTS[index]);
+      const selected = SEGMENTS[index];
+      if (window.SpinWheelBonus.show(selected, {
+        onSpinAgain: () => spinBtn.click(),
+        onClose: () => spinBtn.focus({ preventScroll: true })
+      })) {
+        resultEl.textContent = selected.sentence;
+        return;
+      }
+      showSelectedCard(selected);
     }
 
     spinBtn.addEventListener('click', () => {

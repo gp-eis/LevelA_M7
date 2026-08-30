@@ -2,39 +2,35 @@
   const IMAGE_ROOT = '../assets/images/week-4/reading/activity';
   const ROUNDS = [
     {
-      question: 'What did the children see at the stadium?',
-      questionAlt: 'Two children arrive at an international sports stadium.',
+      question: 'How do you greet a new friend?',
+      questionAlt: 'A blue question mark and globe invite children to think about meeting a new friend.',
       choices: [
-        { text: 'Many flags.', alt: 'Many colorful flags around a stadium.', correct: true },
-        { text: 'Birthday balloons.', alt: 'Colorful balloons and party hats.' },
-        { text: 'Zoo animals.', alt: 'A giraffe, elephant, and lion at a zoo.' }
+        { text: 'Smile and say, “Hello!”', alt: 'Two children smile and wave hello to each other.', correct: true },
+        { text: 'Turn and walk away.', alt: 'One child turns away from another child.' }
       ]
     },
     {
-      question: 'What did the boy do when his friend fell?',
-      questionAlt: 'A girl has a harmless tumble on the field and her friend notices.',
+      question: 'Do friends eat different foods?',
+      questionAlt: 'An orange question mark in a classroom kitchen invites children to think about food around the world.',
       choices: [
-        { text: 'He helped her.', alt: 'The boy kindly helps the girl stand up.', correct: true },
-        { text: 'He laughed at her.', alt: 'The boy laughs while the girl feels sad.' },
-        { text: 'He walked away.', alt: 'The boy walks away while the girl sits alone.' }
+        { text: 'Yes, they can.', alt: 'Friends enjoy several different meals together.', correct: true },
+        { text: 'No, never.', alt: 'Every child has the same macaroni meal on an identical plate.' }
       ]
     },
     {
-      question: 'What do the children do together?',
-      questionAlt: 'Children enjoy an international sports celebration together.',
+      question: 'Can friends wear different clothes?',
+      questionAlt: 'A purple question mark in a classroom changing area invites children to think about clothing around the world.',
       choices: [
-        { text: 'They cheer, clap, and smile.', alt: 'A diverse group of children cheer and clap together.', correct: true },
-        { text: 'They argue and shout.', alt: 'Two children argue with crossed arms.' },
-        { text: 'They ignore everyone.', alt: 'Children sit apart and ignore one another.' }
+        { text: 'Yes, they can.', alt: 'Friends happily wear a variety of colorful clothes.', correct: true },
+        { text: 'No, never.', alt: 'Every child wears the same blue shirt and beige pants.' }
       ]
     },
     {
-      question: 'What can you do when a new friend comes from another country?',
-      questionAlt: 'A new child arrives while a friendly group plays at a playground.',
+      question: 'We may look different. Can we still be friends?',
+      questionAlt: 'A green question mark, globe, and hearts invite children to think about friendship around the world.',
       choices: [
-        { text: 'Welcome them and include them.', alt: 'Children warmly invite a new friend to play.', correct: true },
-        { text: 'Leave them alone.', alt: 'A new child sits alone while others play far away.' },
-        { text: 'Say they cannot play.', alt: 'Two children make a stop gesture instead of including the new child.' }
+        { text: 'Yes, we can!', alt: 'Diverse children happily play together in an inclusive circle.', correct: true },
+        { text: 'No, we cannot.', alt: 'A child stands alone while another group plays without them.' }
       ]
     }
   ];

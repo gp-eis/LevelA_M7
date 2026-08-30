@@ -1,6 +1,8 @@
 (() => {
   const colors = ['#ff83b8','#ef5c50','#ffad3b','#79d767','#9a72df','#ffd34f','#58bdf2'];
-  const segments = window.WEEK4_CONTINENTS.map((item,index) => ({...item,color:colors[index]}));
+  const lessonSegments = window.WEEK4_CONTINENTS.map((item,index) => ({...item,color:colors[index]}));
+  const bonus = window.SpinWheelBonus;
+  const segments = [...lessonSegments, ...bonus.createSegments()];
   const wheel = document.getElementById('wheel');
   const result = document.getElementById('result');
   const spinButton = document.getElementById('spin-btn');
@@ -14,7 +16,7 @@
   const cardSentence = document.getElementById('card-sentence');
   const flipHint = document.getElementById('flip-hint');
   const segmentAngle = 360 / segments.length;
-  const spinSpeed = 75;
+  const spinSpeed = 540;
   let rotation = 0;
   let spinning = false;
   let stopping = false;
@@ -28,6 +30,7 @@
     const angle = (index*segmentAngle+segmentAngle/2)*Math.PI/180;
     const image = document.createElement('img');
     label.className = 'wheel-label';
+    label.style.width=`${Math.max(16,170/segments.length)}%`;
     label.style.setProperty('--label-x',`${50+Math.sin(angle)*31}%`);
     label.style.setProperty('--label-y',`${50-Math.cos(angle)*31}%`);
     image.src = segment.image;
@@ -72,7 +75,12 @@
     document.body.classList.remove('wheel-is-spinning');
     stopButton.hidden=true; stopButton.disabled=false;
     spinButton.hidden=false; spinButton.disabled=false;
-    showSelectedCard(segments[index]);
+    const selected=segments[index];
+    if(bonus.show(selected,{onSpinAgain:()=>spinButton.click(),onClose:()=>spinButton.focus({preventScroll:true})})){
+      result.textContent=selected.sentence;
+      return;
+    }
+    showSelectedCard(selected);
   }
   spinButton.addEventListener('click',() => {
     if(spinning)return;

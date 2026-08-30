@@ -1,40 +1,40 @@
 (() => {
-  const ASSET = '../assets/images/week-2/reading/activity/';
+  const ASSET = '../assets/images/week-2/reading/philosophy/';
   const ROUNDS = [
     {
-      question: 'What is the girl practicing?',
+      question: 'Why do we practice?',
       picture: 'q1-question.webp',
-      pictureAlt: 'A girl holds a blue yo-yo and thinks about how to use it.',
+      pictureAlt: 'A golden question mark with a yo-yo, jump rope, and soccer ball.',
       options: [
-        { text: 'She is practicing with a yo-yo.', image: 'q1-yoyo.webp', alt: 'The girl practices with a blue yo-yo.', correct: true },
-        { text: 'She is practicing soccer.', image: 'q1-soccer.webp', alt: 'The girl kicks a soccer ball.' }
+        { text: 'To get better.', image: 'q1-get-better.webp', alt: 'A child improves at using a yo-yo through practice.', correct: true },
+        { text: 'To stop playing.', image: 'q1-no-play.webp', alt: 'A child sits apart while playground toys remain unused.' }
       ]
     },
     {
-      question: 'Which way does the yo-yo move?',
+      question: 'What should you do when it is hard?',
       picture: 'q2-question.webp',
-      pictureAlt: 'A girl watches her blue yo-yo move on its string.',
+      pictureAlt: 'A blue question mark above a tangled yo-yo.',
       options: [
-        { text: 'It moves up and down.', image: 'q2-up-down.webp', alt: 'A yo-yo moves up and down on a vertical string.', correct: true },
-        { text: 'It moves side to side.', image: 'q2-side-to-side.webp', alt: 'A yo-yo moves from side to side.' }
+        { text: 'Try again.', image: 'q2-try-again.webp', alt: 'A child happily tries the yo-yo again.', correct: true },
+        { text: 'Give up.', image: 'q2-give-up.webp', alt: 'A child leaves the yo-yo and walks away.' }
       ]
     },
     {
-      question: 'What helps the girl learn to use the yo-yo?',
+      question: 'What happens when we practice?',
       picture: 'q3-question.webp',
-      pictureAlt: 'The girl thinks after a difficult yo-yo try.',
+      pictureAlt: 'A green question mark between an upward star arrow and a downward cloud arrow.',
       options: [
-        { text: 'She practices again and again.', image: 'q3-practice-again.webp', alt: 'The girl practices the yo-yo several times.', correct: true },
-        { text: 'She gives up and walks away.', image: 'q3-give-up.webp', alt: 'The girl leaves the yo-yo on a bench and walks away.' }
+        { text: 'You get better.', image: 'q3-get-better.webp', alt: 'A child improves at using a yo-yo in three small stages.', correct: true },
+        { text: 'You forget how.', image: 'q3-get-worse.webp', alt: 'A child struggles with a tangled yo-yo string.' }
       ]
     },
     {
-      question: 'What should you do when something is hard?',
+      question: 'You tried again. What can happen?',
       picture: 'q4-question.webp',
-      pictureAlt: 'The girl thinks about what to do after a difficult yo-yo try.',
+      pictureAlt: 'A purple question mark beside a glowing seed and an unfinished path.',
       options: [
-        { text: 'Keep practicing and try again.', image: 'q4-keep-practicing.webp', alt: 'The girl keeps practicing and starts to succeed.', correct: true },
-        { text: 'Give up right away.', image: 'q4-give-up.webp', alt: 'The girl gives up and leaves the yo-yo on the ground.' }
+        { text: 'You can learn something new.', image: 'q4-learn-grow.webp', alt: 'A child climbs colorful learning steps toward a book and yo-yo.', correct: true },
+        { text: 'Nothing can change.', image: 'q4-nothing-changes.webp', alt: 'A child stands still beside a paused practice path.' }
       ]
     }
   ];
@@ -138,7 +138,7 @@
         locked = false;
         completion.hidden = false;
         tryAgain.focus();
-        speak('Great job! You finished the Yo-Yo Challenge. Keep practicing and trying again!');
+        speak('Great job! You finished the Little Thinkers activity. Keep practicing and trying again!');
       }
     }, 1800);
   }
@@ -204,9 +204,9 @@
     renderRound();
   }
 
-  introSpeaker.addEventListener('click', () => speak('Yo-Yo Challenge. Listen carefully, then choose the right answer!'));
+  introSpeaker.addEventListener('click', () => speak('Little Thinkers. Why do we practice? Listen, think, and choose the best answer!'));
   questionSpeaker.addEventListener('click', () => { if (!locked) speak(ROUNDS[roundIndex].question); });
-  completionSpeaker.addEventListener('click', () => speak('Great job! You finished the Yo-Yo Challenge. Keep practicing and trying again!'));
+  completionSpeaker.addEventListener('click', () => speak('Great job! You finished the Little Thinkers activity. Keep practicing and trying again!'));
   tryAgain.addEventListener('click', restart);
   window.addEventListener('pagehide', stopSpeech);
   renderRound();

@@ -156,6 +156,7 @@
     'Listen to the question, then pick the best answer!': '질문을 듣고 가장 알맞은 답을 골라 보세요!',
     'Listen, then choose athlete A, B, or C.': '잘 듣고 A, B, C 선수 중 한 명을 골라 보세요.',
     'Spin the wheel!': '룰렛을 돌려 보세요!',
+    'Spin fast, press stop, then see what you get!': '빠르게 도는 룰렛을 멈추고 무엇이 나오는지 확인해 보세요!',
     'Spin slowly, press stop, then flip your picture card!': '룰렛을 돌리고 멈춤을 누른 다음 그림 카드를 뒤집어 보세요!',
     'SPIN!': '돌리기!',
     'STOP!': '멈추기!',
