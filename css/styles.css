@@ -183,10 +183,11 @@ textarea {
 
 /* A game always keeps its normal Back button on the left; this returns to the
    current week's lesson-selection carousel. */
+.game-home-anchor-container { position: relative; }
 .game-week-home-link {
-  position: fixed !important;
-  top: max(10px, env(safe-area-inset-top)) !important;
-  right: max(10px, env(safe-area-inset-right)) !important;
+  position: absolute !important;
+  top: var(--game-home-top, 0) !important;
+  right: 0 !important;
   left: auto !important;
   z-index: 2500 !important;
   min-height: 44px;
@@ -196,6 +197,7 @@ textarea {
   color: #744200;
   box-shadow: 0 5px 0 #c77b08, 0 8px 18px rgba(67, 92, 121, .22);
 }
+.game-week-home-link.is-awaiting-position { visibility: hidden; }
 .game-week-home-link:hover { transform: translateY(-2px); }
 .game-week-home-link:focus-visible { outline: 4px solid #174f9d; outline-offset: 3px; }
 
