@@ -1369,6 +1369,18 @@ body.weekly-selection-page {
   background: linear-gradient(180deg, #8fd8ff 0%, #d9f8f3 100%);
 }
 .weekly-selection-content { width: min(1080px, 94vw); max-width: none; padding: 86px 16px 48px; text-align: center; }
+.gp-eis-link-row { position:absolute; top:16px; left:50%; z-index:5; transform:translateX(-50%); }
+.gp-eis-link {
+  min-width:210px; min-height:50px; display:inline-flex; align-items:center; justify-content:center; gap:8px;
+  padding:10px 24px; border:4px solid #fff; border-radius:999px;
+  background:linear-gradient(180deg,#ffd768,#f5a817); color:#704300;
+  font-family:var(--font-friendly); font-size:1.05rem; font-weight:900; line-height:1; text-decoration:none;
+  box-shadow:0 7px 0 #c97708,0 12px 22px rgba(30,58,95,.2);
+  transition:transform .16s ease,filter .16s ease,box-shadow .16s ease;
+}
+.gp-eis-link:hover { transform:translateY(-3px); filter:brightness(1.04); box-shadow:0 10px 0 #c97708,0 16px 26px rgba(30,58,95,.22); }
+.gp-eis-link:active { transform:translateY(5px); box-shadow:0 2px 0 #c97708,0 7px 14px rgba(30,58,95,.18); }
+.gp-eis-link:focus-visible { outline:4px solid #175fc5; outline-offset:4px; }
 .weekly-selection-header { text-align: center; }
 .weekly-selection-title-row { display: flex; align-items: center; justify-content: center; gap: 18px; }
 .weekly-selection-title-row img { width: clamp(58px, 8vw, 88px); height: clamp(58px, 8vw, 88px); object-fit: contain; filter: drop-shadow(0 7px 5px rgba(30,58,95,.18)); }
@@ -1391,6 +1403,8 @@ body.weekly-selection-page {
 @media (max-width: 860px) { .week-grid { grid-template-columns:repeat(2,1fr); } }
 @media (max-width: 650px) {
   .weekly-selection-content { padding-top:58px; }
+  .gp-eis-link-row { top:0; }
+  .gp-eis-link { min-width:190px; min-height:46px; padding:8px 18px; font-size:.98rem; }
   .weekly-selection-title-row img { width:48px; height:48px; }
   .week-grid { grid-template-columns:1fr; max-width:390px; gap:22px; margin-inline:auto; }
   .week-card__inner { min-height:190px; flex-direction:row; text-align:left; justify-content:flex-start; padding:18px; }
