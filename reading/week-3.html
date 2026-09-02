@@ -7,13 +7,15 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Reading Week 3 — Athlete</title>
   <link rel="stylesheet" href="../css/styles.css">
-  <link rel="stylesheet" href="../css/reading-video-disabled.css">
   <link rel="stylesheet" href="../css/reading-activity-modal.css?v=20260831-subtitle-layout">
   <style>
     :root{--week-yellow:#f6c934;--week-dark:#c79a08}
     body{background:linear-gradient(180deg,#9cddff 0%,#fff8c9 62%,#e9fff3 100%)}
     .week-3-title{color:var(--week-dark);text-shadow:3px 3px #fff,6px 6px rgba(199,154,8,.18)}
     .week-3-reading{border-top:9px solid var(--week-yellow)}
+    .reading-story-video{aspect-ratio:auto;height:auto;max-height:72svh;object-fit:contain;background:#000}
+    .reading-story-video:fullscreen,.reading-story-video:-webkit-full-screen{width:100vw;height:100vh;max-height:none;border-radius:0;object-fit:contain;background:#000}
+    .reading-note{margin-top:14px;font-family:var(--font-friendly);font-weight:600;font-size:1.05rem;color:#3d5a78;text-align:center}
   </style>
 </head>
 <body data-week="3" data-track="reading">
@@ -25,12 +27,11 @@
     </header>
     <section id="lesson-focus" class="card center week-3-reading" style="margin-top:24px" aria-label="Week 3 Reading lesson shell">
       <h2 class="section-title">🎬 Reading Video</h2>
-      <div class="reading-video-preview" aria-label="Let’s Watch Together video thumbnail. Video temporarily unavailable.">
-        <img class="reading-video-preview__image" src="../assets/images/week-3/reading/lets-watch-together-thumbnail.webp?v=20260829-2" width="1688" height="932" alt="Let’s Watch Together reading video thumbnail showing a mother and child watching television">
-        <button class="reading-video-preview__play" type="button" aria-label="Reading video temporarily unavailable" disabled>▶</button>
-        <span class="reading-video-preview__status">Video being updated</span>
+      <div class="video-play-shell">
+        <video id="dialogue-video" class="lesson-video reading-story-video" controls playsinline preload="metadata" poster="../assets/images/week-3/reading/lets-watch-together-thumbnail.webp?v=20260829-2" src="../assets/video/week-3/reading/lets-watch-together.mp4?v=20260902-1" aria-label="Let’s Watch Together reading video"></video>
+        <button class="center-video-play" type="button" aria-label="Play Let’s Watch Together">▶</button>
       </div>
-      <p class="reading-video-update-note">This reading video is being updated. Please check back soon!</p>
+      <p class="reading-note">Watch the story, then try the Family Time activity!</p>
     </section>
     <section class="card center track-activity-card" style="margin-top:24px" aria-label="Week 3 Reading activity">
       <h2 class="section-title">💬 Watch and Play!</h2>
