@@ -47,6 +47,7 @@
   let stepIndex = 0;
   let dragging = null;
   let ghost = null;
+  let activePointerId = null;
   let completeTimer = null;
 
   function clearCompleteTimer() {
@@ -301,11 +302,17 @@
   }
 
   function clearGhost() {
-    if (ghost) {
-      ghost.remove();
-      ghost = null;
+    if (dragging) {
+      dragging.classList.remove('is-dragging');
+      dragging.removeEventListener('pointermove', onPointerMove);
+      dragging.removeEventListener('pointerup', onPointerUp);
+      dragging.removeEventListener('pointercancel', cancelDrag);
+      dragging.removeEventListener('lostpointercapture', cancelDrag);
     }
+    document.querySelectorAll('.dressup-ghost').forEach((element) => element.remove());
+    ghost = null;
     dragging = null;
+    activePointerId = null;
   }
 
   function redoActivity() {
@@ -346,9 +353,11 @@
 
   function onPointerDown(event) {
     const item = event.target.closest('.dressup-item');
-    if (!item || item.hidden) return;
+    if (!item || item.hidden || !event.isPrimary || dragging || activePointerId !== null) return;
     event.preventDefault();
+    clearGhost();
     dragging = item;
+    activePointerId = event.pointerId;
     item.classList.add('is-dragging');
     item.setPointerCapture(event.pointerId);
 
@@ -362,11 +371,12 @@
 
     item.addEventListener('pointermove', onPointerMove);
     item.addEventListener('pointerup', onPointerUp);
-    item.addEventListener('pointercancel', onPointerUp);
+    item.addEventListener('pointercancel', cancelDrag);
+    item.addEventListener('lostpointercapture', cancelDrag);
   }
 
   function onPointerMove(event) {
-    if (!dragging || !ghost) return;
+    if (!dragging || !ghost || event.pointerId !== activePointerId) return;
     ghost.style.left = `${event.clientX}px`;
     ghost.style.top = `${event.clientY}px`;
     overlay.querySelector('.dressup-dropzone').classList.toggle(
@@ -376,16 +386,18 @@
   }
 
   function onPointerUp(event) {
-    if (!dragging) return;
+    if (!dragging || event.pointerId !== activePointerId) return;
     const item = dragging;
     const over = pointInDropzone(event.clientX, event.clientY);
-    item.classList.remove('is-dragging');
-    item.removeEventListener('pointermove', onPointerMove);
-    item.removeEventListener('pointerup', onPointerUp);
-    item.removeEventListener('pointercancel', onPointerUp);
     overlay.querySelector('.dressup-dropzone').classList.remove('is-target');
     clearGhost();
     if (over) advanceAfterPlace();
+  }
+
+  function cancelDrag(event) {
+    if (!dragging || event.pointerId !== activePointerId) return;
+    overlay.querySelector('.dressup-dropzone').classList.remove('is-target');
+    clearGhost();
   }
 
   function buildOverlay() {
